@@ -11,6 +11,7 @@ import { e } from '../common/publish.ts';
 interface ICodesignResult {
 	readonly exitCode: number;
 	readonly signal: NodeJS.Signals | null;
+	readonly error?: string;
 }
 
 async function main(): Promise<void> {
@@ -25,24 +26,37 @@ async function main(): Promise<void> {
 	]);
 
 	const log = fs.createWriteStream(logPath);
-	const child = cp.spawn('npx.cmd', ['zx', 'build/azure-pipelines/win32/codesign.ts'], {
-		windowsHide: true,
-		stdio: ['ignore', 'pipe', 'pipe']
-	});
+	let result: ICodesignResult;
+	try {
+		const child = cp.spawn(process.execPath, ['build/azure-pipelines/win32/codesign.ts'], {
+			windowsHide: true,
+			stdio: ['ignore', 'pipe', 'pipe']
+		});
 
-	child.stdout.on('data', data => {
-		process.stdout.write(data);
-		log.write(data);
-	});
-	child.stderr.on('data', data => {
-		process.stderr.write(data);
-		log.write(data);
-	});
+		child.stdout.on('data', data => {
+			process.stdout.write(data);
+			log.write(data);
+		});
+		child.stderr.on('data', data => {
+			process.stderr.write(data);
+			log.write(data);
+		});
 
-	const result = await new Promise<ICodesignResult>((resolve, reject) => {
-		child.on('error', reject);
-		child.on('close', (exitCode, signal) => resolve({ exitCode: exitCode ?? 1, signal }));
-	});
+		result = await new Promise<ICodesignResult>(resolve => {
+			child.once('error', error => {
+				const message = error.stack ?? error.message;
+				process.stderr.write(`${message}\n`);
+				log.write(`${message}\n`);
+				resolve({ exitCode: 1, signal: null, error: message });
+			});
+			child.once('close', (exitCode, signal) => resolve({ exitCode: exitCode ?? 1, signal }));
+		});
+	} catch (error) {
+		const message = error instanceof Error ? (error.stack ?? error.message) : String(error);
+		process.stderr.write(`${message}\n`);
+		log.write(`${message}\n`);
+		result = { exitCode: 1, signal: null, error: message };
+	}
 	await new Promise<void>(resolve => log.end(resolve));
 	await fs.promises.writeFile(resultPath, JSON.stringify(result));
 	process.exitCode = result.exitCode;

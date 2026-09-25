@@ -41,13 +41,13 @@ jobs:
             sbomEnabled: false
             isProduction: true
             condition: failed()
-          - output: pipelineArtifact
-            targetPath: $(Build.SourcesDirectory)/.build/logs
-            artifactName: logs-windows-$(VSCODE_ARCH)-$(System.JobAttempt)
-            displayName: Publish Log Files
-            sbomEnabled: false
-            isProduction: false
-            condition: always()
+        - output: pipelineArtifact
+          targetPath: $(Build.SourcesDirectory)/.build/logs
+          artifactName: logs-windows-$(VSCODE_ARCH)-$(System.JobAttempt)
+          displayName: Publish Log Files
+          sbomEnabled: false
+          isProduction: false
+          condition: always()
         - output: pipelineArtifact
           targetPath: $(Build.ArtifactStagingDirectory)/out/system-setup/VSCodeSetup-$(VSCODE_ARCH)-$(VSCODE_VERSION).exe
           artifactName: vscode_client_win32_$(VSCODE_ARCH)_setup
