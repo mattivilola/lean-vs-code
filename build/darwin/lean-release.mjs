@@ -48,9 +48,25 @@ function entitlementsForFile(filePath) {
 	return path.join(entitlementsDir, file);
 }
 
+async function removeSourceMaps(directory) {
+	let removed = 0;
+	for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
+		const entryPath = path.join(directory, entry.name);
+		if (entry.isDirectory()) {
+			removed += await removeSourceMaps(entryPath);
+		} else if (entry.isFile() && entry.name.endsWith('.map')) {
+			await fs.rm(entryPath);
+			removed++;
+		}
+	}
+	return removed;
+}
+
 try {
 	console.log(`Copying ${appName} to release staging`);
 	await run('ditto', [source, app]);
+	const removedSourceMaps = await removeSourceMaps(path.join(app, 'Contents/Resources/app/out'));
+	console.log(`Removed ${removedSourceMaps} development source maps from release copy`);
 	const info = path.join(app, 'Contents/Info.plist');
 	const shortVersion = version.split('-')[0];
 	await run('plutil', ['-replace', 'CFBundleShortVersionString', '-string', shortVersion, info]);

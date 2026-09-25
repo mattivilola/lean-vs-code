@@ -50,6 +50,7 @@
     "Other"
   ],
   "activationEvents": [
+    "workspaceContains:.git",
     "onCommand:workbench.view.scm",
     "onView:workbench.scm",
     "onEditSession:file",

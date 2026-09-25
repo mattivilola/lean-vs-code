@@ -27,7 +27,7 @@ import { IRemoteAgentService } from '../../../services/remote/common/remoteAgent
 import { isLinux, isMacintosh, isWindows, OperatingSystem as OS } from '../../../../base/common/platform.js';
 import { IExtensionManagementServerService } from '../../../services/extensionManagement/common/extensionManagement.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
-import { StartupPageEditorResolverContribution, StartupPageRunnerContribution } from './startupPage.js';
+import { StartupPageEditorResolverContribution } from './startupPage.js';
 import { Categories } from '../../../../platform/action/common/actionCommonCategories.js';
 import { DisposableStore } from '../../../../base/common/lifecycle.js';
 import { AccessibleViewRegistry } from '../../../../platform/accessibility/browser/accessibleViewRegistry.js';
@@ -354,7 +354,5 @@ configurationRegistry.registerConfiguration({
 
 registerWorkbenchContribution2(WorkspacePlatformContribution.ID, WorkspacePlatformContribution, WorkbenchPhase.AfterRestored);
 registerWorkbenchContribution2(StartupPageEditorResolverContribution.ID, StartupPageEditorResolverContribution, WorkbenchPhase.BlockRestore);
-registerWorkbenchContribution2(StartupPageRunnerContribution.ID, StartupPageRunnerContribution, WorkbenchPhase.AfterRestored);
 
 AccessibleViewRegistry.register(new GettingStartedAccessibleView());
-

@@ -473,6 +473,7 @@ import { Extensions as ConfigurationExtensions, type IConfigurationRegistry } fr
 Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).registerDefaultConfigurations([{
 	overrides: {
 		'chat.disableAIFeatures': true,
+		'chat.titleBar.openInAgentsWindow.enabled': false,
 		'workbench.enableExperiments': false,
 		'telemetry.telemetryLevel': 'off',
 		'extensions.autoUpdate': 'off',
@@ -480,6 +481,7 @@ Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).regis
 		'extensions.ignoreRecommendations': true,
 		'workbench.welcomePage.walkthroughs.openOnInstall': false,
 		'workbench.startupEditor': 'none',
+		'workbench.secondarySideBar.defaultVisibility': 'hidden',
 		'workbench.colorTheme': 'Lean Emerald',
 		'window.commandCenter': false,
 		'editor.minimap.enabled': false,
