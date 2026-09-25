@@ -14,7 +14,7 @@ For a source build and the maintainer's signing/notarization procedure, see [Bui
 
 - **Editing and review first.** Open a file, navigate a project, inspect local Git changes, and compare them side by side without an AI prompt or onboarding flow taking over the workbench.
 - **Small default extension set.** The [33 bundled extensions](lean/bundled-extensions.json) provide syntax, themes, and local Git. Only Git and Git Base have executable entry points in the packaged set. Add language servers, formatters, and other tools when you need them.
-- **Extensions remain available.** The Extensions view uses [Open VSX](https://open-vsx.org/) for deliberate searches and installs; local VSIX installation is also supported. Extensions may have their own resource use and network behavior.
+- **Extensions remain available.** The Extensions view uses [Open VSX](https://open-vsx.org/) for deliberate searches and installs, with verification against its pinned Ed25519 public key. Local VSIX installation is also supported. Extensions may have their own resource use and network behavior.
 - **A separate, recognizable app.** The emerald theme and icon make it easy to distinguish from VS Code; independent storage keeps settings and installed extensions separate.
 - **Less shipped development baggage.** Release packaging removes generated JavaScript source maps from the app copy, saving about 227 MiB of uncompressed disk space in this build. This does not by itself reduce runtime memory or prove faster startup.
 

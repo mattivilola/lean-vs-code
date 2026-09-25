@@ -14,6 +14,8 @@ npm run gulp vscode-darwin-arm64
 
 The app is written to `.build/lean-artifacts/LeanVSCode-darwin-arm64/Lean VS Code.app`. Run that app directly for local development. It uses its own bundle identifier and user-data directory, separate from Visual Studio Code. The build downloads Electron and compiles native dependencies; allow ample disk space. On a machine where the npm or Electron cache is restricted, point those caches to writable locations or adjust their permissions.
 
+Open VSX signs complete VSIX packages with Ed25519, while Code-OSS's default `vsce-sign` verifier expects Microsoft's PKCS#7 signature format. Lean VS Code verifies Open VSX packages against the registry public key pinned in `extensionSignatureVerificationService.ts`. A future registry key rotation needs a new app release; failed verification must not be bypassed for a release test.
+
 ## Create the signed DMG
 
 The release script stages a copy of the built app, removes generated JavaScript source maps from that copy, verifies the exact bundled-extension allowlist and extension-signature verifier, applies Lean VS Code's macOS version, signs the app and nested code with a Developer ID Application certificate, verifies the signature, and creates a drag-to-Applications DMG. It never modifies the source app.

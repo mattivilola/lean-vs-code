@@ -4,7 +4,7 @@ The first Apple Silicon release of Lean VS Code: a quiet, independent Code-OSS f
 
 - Emerald branding, separate app identity and storage, and a visible Lean release number alongside the Code-OSS extension API version.
 - Local Git changes and side-by-side diff review work out of the box.
-- 33 curated built-in extensions for syntax, themes, and Git; optional extensions are available through Open VSX or a local VSIX.
+- 33 curated built-in extensions for syntax, themes, and Git; optional extensions are available through Open VSX or a local VSIX. Signed Open VSX packages are checked against its pinned Ed25519 public key.
 - Default telemetry, experiments, update checks, extension recommendations, onboarding, and built-in AI surfaces are turned off.
 - The release app omits generated JavaScript source maps, reducing uncompressed disk usage by about 227 MiB without claiming a runtime-memory improvement.
 - Signed and notarized DMG for macOS on Apple Silicon; drag the app into Applications. No automatic app updater in this version.

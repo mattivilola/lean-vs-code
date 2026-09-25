@@ -3,11 +3,15 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { verify as verifyCryptographicSignature } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { getErrorMessage } from '../../../base/common/errors.js';
 import { isDefined } from '../../../base/common/types.js';
+import { buffer } from '../../../base/node/zip.js';
 import { TargetPlatform } from '../../extensions/common/extensions.js';
 import { createDecorator } from '../../instantiation/common/instantiation.js';
 import { ILogService, LogLevel } from '../../log/common/log.js';
+import { IProductService } from '../../product/common/productService.js';
 import { ITelemetryService } from '../../telemetry/common/telemetry.js';
 import { ExtensionSignatureVerificationCode } from '../common/extensionManagement.js';
 
@@ -48,6 +52,13 @@ export interface ExtensionSignatureVerificationResult {
 	readonly output?: string;
 }
 
+// Open VSX signs the complete VSIX with Ed25519. Its .sigzip contains .signature.sig;
+// the .signature.p7s placeholder is empty and cannot be checked by vsce-sign.
+// Pin the public key published by open-vsx.org instead of trusting a key supplied
+// alongside the downloaded package. A registry key rotation requires an app update.
+const openVSXGalleryUrl = 'https://open-vsx.org/vscode/gallery';
+const openVSXPublicKey = '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAje+vAaSS1zHV5WHCJSa5UXvxRo6+yerEU3IEmtuEuF4=\n-----END PUBLIC KEY-----';
+
 export class ExtensionSignatureVerificationService implements IExtensionSignatureVerificationService {
 	declare readonly _serviceBrand: undefined;
 
@@ -55,6 +66,7 @@ export class ExtensionSignatureVerificationService implements IExtensionSignatur
 
 	constructor(
 		@ILogService private readonly logService: ILogService,
+		@IProductService private readonly productService: IProductService,
 		@ITelemetryService private readonly telemetryService: ITelemetryService,
 	) { }
 
@@ -72,23 +84,24 @@ export class ExtensionSignatureVerificationService implements IExtensionSignatur
 	}
 
 	public async verify(extensionId: string, version: string, vsixFilePath: string, signatureArchiveFilePath: string, clientTargetPlatform?: TargetPlatform): Promise<IExtensionSignatureVerificationResult | undefined> {
-		let module: typeof vsceSign;
-
-		try {
-			module = await this.vsceSign();
-		} catch (error) {
-			this.logService.error('Could not load vsce-sign module', getErrorMessage(error));
-			this.logService.info(`Extension signature verification is not done: ${extensionId}`);
-			return undefined;
-		}
-
 		const startTime = new Date().getTime();
 		let result: ExtensionSignatureVerificationResult;
 
 		try {
 			this.logService.trace(`Verifying extension signature for ${extensionId}...`);
-			result = await module.verify(vsixFilePath, signatureArchiveFilePath, this.logService.getLevel() === LogLevel.Trace);
+			if (this.productService.extensionsGallery?.serviceUrl === openVSXGalleryUrl) {
+				const [vsix, signature] = await Promise.all([
+					readFile(vsixFilePath),
+					buffer(signatureArchiveFilePath, '.signature.sig')
+				]);
+				const valid = signature.length === 64 && verifyCryptographicSignature(null, vsix, openVSXPublicKey, signature);
+				result = { code: valid ? ExtensionSignatureVerificationCode.Success : ExtensionSignatureVerificationCode.SignatureIsInvalid, didExecute: true };
+			} else {
+				const module = await this.vsceSign();
+				result = await module.verify(vsixFilePath, signatureArchiveFilePath, this.logService.getLevel() === LogLevel.Trace);
+			}
 		} catch (e) {
+			this.logService.error('Extension signature verification failed', getErrorMessage(e));
 			result = {
 				code: ExtensionSignatureVerificationCode.UnknownError,
 				didExecute: false,
