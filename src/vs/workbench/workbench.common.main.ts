@@ -483,3 +483,25 @@ import './contrib/editTelemetry/browser/editTelemetry.contribution.js';
 import './contrib/opener/browser/opener.contribution.js';
 
 //#endregion
+
+// Lean VS Code starts with a quiet editor. These are defaults, so a user's
+// explicit settings and installed extensions can still opt into more features.
+import { Registry } from '../platform/registry/common/platform.js';
+import { Extensions as ConfigurationExtensions, type IConfigurationRegistry } from '../platform/configuration/common/configurationRegistry.js';
+
+Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).registerDefaultConfigurations([{
+	overrides: {
+		'chat.disableAIFeatures': true,
+		'workbench.enableExperiments': false,
+		'telemetry.telemetryLevel': 'off',
+		'extensions.autoUpdate': 'off',
+		'extensions.autoCheckUpdates': false,
+		'workbench.welcomePage.walkthroughs.openOnInstall': false,
+		'workbench.startupEditor': 'none',
+		'window.commandCenter': false,
+		'editor.minimap.enabled': false,
+		'breadcrumbs.enabled': false,
+		'editor.stickyScroll.enabled': false
+	},
+	source: 'Lean VS Code'
+}]);
