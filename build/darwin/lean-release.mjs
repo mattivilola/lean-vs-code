@@ -3,6 +3,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
@@ -50,6 +51,21 @@ function entitlementsForFile(filePath) {
 	else if (filePath.includes(' Helper (Plugin).app')) file = 'helper-plugin-entitlements.plist';
 	else if (filePath.includes(' Helper.app')) file = 'helper-entitlements.plist';
 	return path.join(entitlementsDir, file);
+}
+
+const machOMagic = new Set([0xfeedface, 0xfeedfacf, 0xcefaedfe, 0xcffaedfe, 0xcafebabe, 0xcafebabf, 0xbebafeca, 0xbfbafeca]);
+
+function ignoreNonCode(filePath) {
+	if (filePath.endsWith('.app') || filePath.endsWith('.framework')) {
+		return false;
+	}
+	const descriptor = fsSync.openSync(filePath, 'r');
+	try {
+		const header = Buffer.alloc(4);
+		return fsSync.readSync(descriptor, header, 0, 4, 0) !== 4 || !machOMagic.has(header.readUInt32BE(0));
+	} finally {
+		fsSync.closeSync(descriptor);
+	}
 }
 
 async function removeSourceMaps(directory) {
@@ -103,6 +119,9 @@ try {
 		app,
 		platform: 'darwin',
 		identity,
+		// osx-sign's binary heuristic also selects Electron .pak and snapshot data.
+		// Sign Mach-O code and nested bundles; the outer bundle seals resources.
+		ignore: ignoreNonCode,
 		preAutoEntitlements: false,
 		preEmbedProvisioningProfile: false,
 		optionsForFile: filePath => ({ entitlements: entitlementsForFile(filePath), hardenedRuntime: true })
