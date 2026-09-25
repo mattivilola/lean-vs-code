@@ -255,7 +255,9 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 				// and node-pty blocks the pty host on `ConnectNamedPipe`.
 				'**/node-pty/package.json',
 				'**/*.wasm',
+				// The platform verifier is spawned as an executable and cannot run from ASAR.
 				'**/@vscode/vsce-sign/bin/*',
+				'**/@vscode/vsce-sign-*/bin/*',
 			], [
 				'**/*.mk',
 			], [

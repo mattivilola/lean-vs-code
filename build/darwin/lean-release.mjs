@@ -13,6 +13,7 @@ import { sign } from '@electron/osx-sign';
 const run = promisify(execFile);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const version = (await fs.readFile(path.join(root, 'lean/VERSION'), 'utf8')).trim();
+const product = JSON.parse(await fs.readFile(path.join(root, 'product.json'), 'utf8'));
 const appName = 'Lean VS Code.app';
 const source = path.join(root, '.build/lean-artifacts/LeanVSCode-darwin-arm64', appName);
 const output = path.join(root, '.build/lean-artifacts/releases', `Lean-VS-Code-${version}-macos-arm64.dmg`);
@@ -21,8 +22,11 @@ const identity = process.env.CODESIGN_IDENTITY;
 if (!identity) {
 	throw new Error('Set CODESIGN_IDENTITY to a Developer ID Application identity.');
 }
-if (!/^0\.1\.\d+-alpha\.\d+$/.test(version)) {
-	throw new Error(`Unexpected prerelease version: ${version}`);
+if (!/^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/.test(version)) {
+	throw new Error(`Unexpected release version: ${version}`);
+}
+if (product.leanReleaseVersion !== version) {
+	throw new Error(`product.json leanReleaseVersion must match lean/VERSION (${version}).`);
 }
 await fs.access(source);
 try {
@@ -62,15 +66,36 @@ async function removeSourceMaps(directory) {
 	return removed;
 }
 
+async function verifyBundledExtensions(app) {
+	const expected = JSON.parse(await fs.readFile(path.join(root, 'lean/bundled-extensions.json'), 'utf8')).sort();
+	const extensionRoot = path.join(app, 'Contents/Resources/app/extensions');
+	const actual = (await fs.readdir(extensionRoot, { withFileTypes: true }))
+		.filter(entry => entry.isDirectory())
+		.map(entry => entry.name)
+		.sort();
+	if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+		throw new Error(`Bundled extension inventory differs from allowlist: ${actual.join(', ')}`);
+	}
+	for (const name of actual) {
+		const manifest = JSON.parse(await fs.readFile(path.join(extensionRoot, name, 'package.json'), 'utf8'));
+		if ((manifest.main || manifest.browser) && name !== 'git' && name !== 'git-base') {
+			throw new Error(`Unexpected executable bundled extension: ${name}`);
+		}
+	}
+	console.log(`Verified ${actual.length} bundled extensions; only Git and Git Base execute code`);
+}
+
 try {
 	console.log(`Copying ${appName} to release staging`);
 	await run('ditto', [source, app]);
 	const removedSourceMaps = await removeSourceMaps(path.join(app, 'Contents/Resources/app/out'));
 	console.log(`Removed ${removedSourceMaps} development source maps from release copy`);
+	await verifyBundledExtensions(app);
+	await fs.access(path.join(app, 'Contents/Resources/app/node_modules.asar.unpacked/@vscode/vsce-sign/bin/vsce-sign'));
 	const info = path.join(app, 'Contents/Info.plist');
 	const shortVersion = version.split('-')[0];
 	await run('plutil', ['-replace', 'CFBundleShortVersionString', '-string', shortVersion, info]);
-	await run('plutil', ['-replace', 'CFBundleVersion', '-string', '1', info]);
+	await run('plutil', ['-replace', 'CFBundleVersion', '-string', shortVersion, info]);
 	await run('plutil', ['-insert', 'CFBundleGetInfoString', '-string', `Lean VS Code ${version} (Code-OSS 1.139.1)`, info]);
 
 	console.log(`Signing ${appName} with Developer ID`);

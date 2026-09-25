@@ -26,6 +26,20 @@ export function createNativeAboutDialogDetails(productService: IProductService, 
 	const copilotSdkVersion = formatCopilotVersion(productService.copilotVersions?.sdk);
 
 	const getDetails = (useAgo: boolean): string => {
+		if (productService.leanReleaseVersion) {
+			return localize({ key: 'leanAboutDetail', comment: ['Electron, Chromium, Node.js and V8 are product names that need no translation'] },
+				"Lean release: {0}\nCode-OSS API: {1}\nCommit: {2}\nDate: {3}\nElectron: {4}\nChromium: {5}\nNode.js: {6}\nV8: {7}\nOS: {8}",
+				productService.leanReleaseVersion,
+				version,
+				productService.commit || 'Unknown',
+				productService.date ? `${productService.date}${useAgo ? ' (' + fromNow(new Date(productService.date), true) + ')' : ''}` : 'Unknown',
+				process.versions['electron'],
+				process.versions['chrome'],
+				process.versions['node'],
+				process.versions['v8'],
+				`${osProps.type} ${osProps.arch} ${osProps.release}${isLinuxSnap ? ' snap' : ''}`
+			);
+		}
 		return localize({ key: 'aboutDetail', comment: ['Electron, Chromium, Node.js, V8 and Copilot are product names that need no translation'] },
 			"Version: {0}\nCommit: {1}\nDate: {2}\nElectron: {3}\nElectronBuildId: {4}\nChromium: {5}\nNode.js: {6}\nV8: {7}\n@github/copilot: {8}\n@github/copilot-sdk: {9}\nOS: {10}",
 			version,

@@ -1,9 +1,9 @@
 # Lean Code: implementation plan
 
-Status: proposed architecture and delivery plan; no editor implementation or performance measurements yet.
+Status: original architecture plan. Lean VS Code v0.2.0 implements the identity, quiet defaults, curated extensions, local Git review, Open VSX, and Apple Silicon packaging. Later sections describe targets rather than verified release behavior, especially lazy extension-host startup and resource metrics.
 
 Prepared: 2026-09-25.
-Working name: **Lean Code**; confirm name and branding before distribution.
+Product name: **Lean VS Code**. Some proposed CLI and workflow examples below still use the old working name and have not been implemented.
 
 ## 1. Product decision
 

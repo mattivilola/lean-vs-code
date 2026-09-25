@@ -16,7 +16,7 @@ The app is written to `.build/lean-artifacts/LeanVSCode-darwin-arm64/Lean VS Cod
 
 ## Create the signed DMG
 
-The release script stages a copy of the built app, applies Lean VS Code's macOS version, signs the app and nested code with a Developer ID Application certificate, verifies the signature, and creates a drag-to-Applications DMG. It never modifies the source app.
+The release script stages a copy of the built app, removes generated JavaScript source maps from that copy, verifies the exact bundled-extension allowlist and extension-signature verifier, applies Lean VS Code's macOS version, signs the app and nested code with a Developer ID Application certificate, verifies the signature, and creates a drag-to-Applications DMG. It never modifies the source app.
 
 ```sh
 export CODESIGN_IDENTITY='Developer ID Application: Your Name (TEAMID)'
@@ -30,10 +30,10 @@ The DMG is placed in `.build/lean-artifacts/releases/`. The script refuses to ov
 Store Apple notarization credentials in Keychain with `xcrun notarytool store-credentials`; never put the app-specific password in a script, repository, or shell history. For the maintainer's local profile, the name is `lean-vs-code`.
 
 ```sh
-xcrun notarytool submit .build/lean-artifacts/releases/Lean-VS-Code-0.1.0-alpha.1-macos-arm64.dmg --keychain-profile lean-vs-code --wait
-xcrun stapler staple .build/lean-artifacts/releases/Lean-VS-Code-0.1.0-alpha.1-macos-arm64.dmg
-xcrun stapler validate .build/lean-artifacts/releases/Lean-VS-Code-0.1.0-alpha.1-macos-arm64.dmg
-shasum -a 256 .build/lean-artifacts/releases/Lean-VS-Code-0.1.0-alpha.1-macos-arm64.dmg
+xcrun notarytool submit .build/lean-artifacts/releases/Lean-VS-Code-0.2.0-macos-arm64.dmg --keychain-profile lean-vs-code --wait
+xcrun stapler staple .build/lean-artifacts/releases/Lean-VS-Code-0.2.0-macos-arm64.dmg
+xcrun stapler validate .build/lean-artifacts/releases/Lean-VS-Code-0.2.0-macos-arm64.dmg
+shasum -a 256 .build/lean-artifacts/releases/Lean-VS-Code-0.2.0-macos-arm64.dmg
 ```
 
-Before publishing, mount the DMG, copy the app to `/Applications`, launch it, and verify a local file, Git change review, and installation of a test extension. Record the exact fork commit, upstream commit, toolchain, extension inventory, artifact hash, notarization result, and known limitations in the GitHub release notes. App updates are not automatic in this alpha.
+Before publishing, mount the DMG, copy the app to `/Applications`, launch it, and verify a local file, Git change review, and installation of a test extension. Record the exact fork commit, upstream commit, toolchain, extension inventory, artifact hash, notarization result, and known limitations in the GitHub release notes. App updates are not automatic in v0.2.0.
