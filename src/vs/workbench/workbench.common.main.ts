@@ -223,17 +223,13 @@ import './contrib/performance/browser/performance.contribution.js';
 // Notebook
 import './contrib/notebook/browser/notebook.contribution.js';
 
-// Speech
+// Speech and chat services remain registered for extension API compatibility.
 import './contrib/speech/browser/speech.contribution.js';
-
-// Chat
 import './contrib/chat/browser/chat.shared.contribution.js';
 import './contrib/chat/browser/chat.contribution.js';
 import './contrib/chat/browser/agentSessions/agentHost/agentHost.contribution.js';
 import './contrib/chat/browser/chat.view.contribution.js';
 import './contrib/inlineChat/browser/inlineChat.contribution.js';
-
-// Copilot Voice
 import './contrib/agentsVoice/browser/agentsVoice.contribution.js';
 import './contrib/mcp/browser/mcp.contribution.js';
 import './contrib/mcp/browser/mcp.view.contribution.js';
@@ -385,22 +381,10 @@ import './contrib/themes/browser/themes.contribution.js';
 // Update
 import './contrib/update/browser/update.contribution.js';
 
-// Surveys
-import './contrib/surveys/browser/nps.contribution.js';
-import './contrib/surveys/browser/languageSurveys.contribution.js';
-
 // Welcome
 import './contrib/welcomeGettingStarted/browser/gettingStarted.contribution.js';
-import './contrib/welcomeAgentSessions/browser/agentSessionsWelcome.contribution.js';
-import './contrib/welcomeWalkthrough/browser/walkThrough.contribution.js';
 import './contrib/welcomeViews/common/viewsWelcome.contribution.js';
 import './contrib/welcomeViews/common/newFile.contribution.js';
-
-// Welcome Onboarding
-import './contrib/welcomeOnboarding/browser/welcomeOnboarding.contribution.js';
-
-// Onboarding (scenario engine)
-import './contrib/onboarding/browser/onboarding.contribution.js';
 
 // Call Hierarchy
 import './contrib/callHierarchy/browser/callHierarchy.contribution.js';
@@ -429,9 +413,6 @@ import './contrib/userDataProfile/browser/userDataProfile.contribution.js';
 
 // Continue Edit Session
 import './contrib/editSessions/browser/editSessions.contribution.js';
-
-// Remote Coding Agents
-import './contrib/remoteCodingAgents/browser/remoteCodingAgents.contribution.js';
 
 // Code Actions
 import './contrib/codeActions/browser/codeActions.contribution.js';
@@ -496,6 +477,7 @@ Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).regis
 		'telemetry.telemetryLevel': 'off',
 		'extensions.autoUpdate': 'off',
 		'extensions.autoCheckUpdates': false,
+		'extensions.ignoreRecommendations': true,
 		'workbench.welcomePage.walkthroughs.openOnInstall': false,
 		'workbench.startupEditor': 'none',
 		'workbench.colorTheme': 'Lean Emerald',

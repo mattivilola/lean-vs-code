@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { registerSingleton, InstantiationType } from '../../../../../../platform/instantiation/common/extensions.js';
+import product from '../../../../../../platform/product/common/product.js';
 import { MenuId, MenuRegistry, registerAction2 } from '../../../../../../platform/actions/common/actions.js';
 import { IAgentSessionProjectionService, AgentSessionProjectionService, AGENT_SESSION_PROJECTION_ENABLED_PROVIDERS } from './agentSessionProjectionService.js';
 import { EnterAgentSessionProjectionAction, ExitAgentSessionProjectionAction, ToggleUnifiedAgentsBarAction } from './agentSessionProjectionActions.js';
@@ -251,34 +252,34 @@ registerWorkbenchContribution2(AgentTitleBarStatusRendering.ID, AgentTitleBarSta
 registerWorkbenchContribution2(AgentSessionReadyContribution.ID, AgentSessionReadyContribution, WorkbenchPhase.AfterRestored);
 
 // Register Agent Status as a menu item in the command center (alongside the search box, not replacing it)
-MenuRegistry.appendMenuItem(MenuId.CommandCenter, {
-	submenu: MenuId.AgentsTitleBarControlMenu,
-	title: localize('agentsControl', "Agents"),
-	icon: Codicon.chatSparkle,
-	when: ContextKeyExpr.and(
-		ChatContextKeys.enabled,
-		ContextKeyExpr.notEquals(`config.${ChatConfiguration.AgentStatusEnabled}`, 'hidden'),
-		ContextKeyExpr.notEquals(`config.${ChatConfiguration.AgentStatusEnabled}`, false),
-		InEditorZenModeContext.negate()
-	),
-	order: 10002 // to the right of the chat button
-});
-
-// Add to the global title bar if command center is disabled
-MenuRegistry.appendMenuItem(MenuId.TitleBar, {
-	submenu: MenuId.ChatTitleBarMenu,
-	title: localize('title4', "Chat"),
-	group: 'navigation',
-	icon: Codicon.chatSparkle,
-	when: ContextKeyExpr.and(
-		ChatContextKeys.supported,
-		ContextKeyExpr.and(
-			ChatContextKeys.Setup.hidden.negate(),
+if (product.defaultChatAgent) {
+	MenuRegistry.appendMenuItem(MenuId.CommandCenter, {
+		submenu: MenuId.AgentsTitleBarControlMenu,
+		title: localize('agentsControl', "Agents"),
+		icon: Codicon.chatSparkle,
+		when: ContextKeyExpr.and(
+			ChatContextKeys.enabled,
+			ContextKeyExpr.notEquals(`config.${ChatConfiguration.AgentStatusEnabled}`, 'hidden'),
+			ContextKeyExpr.notEquals(`config.${ChatConfiguration.AgentStatusEnabled}`, false),
+			InEditorZenModeContext.negate()
 		),
-		ContextKeyExpr.has('config.window.commandCenter').negate(),
-	),
-	order: 1
-});
+		order: 10002 // to the right of the chat button
+	});
+
+	// Add to the global title bar if command center is disabled
+	MenuRegistry.appendMenuItem(MenuId.TitleBar, {
+		submenu: MenuId.ChatTitleBarMenu,
+		title: localize('title4', "Chat"),
+		group: 'navigation',
+		icon: Codicon.chatSparkle,
+		when: ContextKeyExpr.and(
+			ChatContextKeys.supported,
+			ChatContextKeys.Setup.hidden.negate(),
+			ContextKeyExpr.has('config.window.commandCenter').negate(),
+		),
+		order: 1
+	});
+}
 
 // Register a placeholder action to the submenu so it appears (required for submenus)
 MenuRegistry.appendMenuItem(MenuId.AgentsTitleBarControlMenu, {

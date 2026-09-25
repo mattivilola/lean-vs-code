@@ -116,6 +116,21 @@ function toDefaultAccountConfig(defaultChatAgent: IDefaultChatAgent): IDefaultAc
 	};
 }
 
+const noDefaultAccountConfig: IDefaultAccountConfig = {
+	preferredExtensions: [],
+	authenticationProvider: {
+		default: { id: '', name: '' },
+		enterprise: { id: '', name: '' },
+		enterpriseProviderConfig: '',
+		enterpriseProviderUriSetting: '',
+		scopes: []
+	},
+	tokenEntitlementUrl: '',
+	entitlementUrl: '',
+	mcpRegistryDataUrl: '',
+	managedSettingsUrl: ''
+};
+
 export class DefaultAccountService extends Disposable implements IDefaultAccountService {
 	declare _serviceBrand: undefined;
 
@@ -154,7 +169,12 @@ export class DefaultAccountService extends Disposable implements IDefaultAccount
 		@IProductService productService: IProductService,
 	) {
 		super();
-		this.defaultAccountConfig = toDefaultAccountConfig(productService.defaultChatAgent);
+		this.defaultAccountConfig = productService.defaultChatAgent
+			? toDefaultAccountConfig(productService.defaultChatAgent)
+			: noDefaultAccountConfig;
+		if (!productService.defaultChatAgent) {
+			this.initBarrier.open();
+		}
 	}
 
 	async getDefaultAccount(): Promise<IDefaultAccount | null> {
@@ -1645,6 +1665,9 @@ class DefaultAccountProviderContribution extends Disposable implements IWorkbenc
 		@IDefaultAccountService defaultAccountService: IDefaultAccountService,
 	) {
 		super();
+		if (!productService.defaultChatAgent) {
+			return;
+		}
 		const defaultAccountProvider = this._register(instantiationService.createInstance(DefaultAccountProvider, toDefaultAccountConfig(productService.defaultChatAgent)));
 		defaultAccountService.setDefaultAccountProvider(defaultAccountProvider);
 	}

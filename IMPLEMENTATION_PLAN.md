@@ -229,7 +229,7 @@ Phases are dependency-ordered. Begin distribution exclusions before invasive ser
 
 ### Proposed repository layout
 
-Keep upstream history in the actual fork, with project-specific material under a small `lean/` directory. This avoids a second full source copy and makes upstream merges reviewable. The current workspace contains only this plan; no fork has been created yet.
+Keep upstream history in the actual fork, with project-specific material under a small `lean/` directory. This avoids a second full source copy and makes upstream merges reviewable. The fork is now based on Code-OSS `1.139.1` (`04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1`); `main` is the Lean VS Code product branch.
 
 ```text
 src/, extensions/, build/, ...      upstream Code-OSS tree
@@ -245,11 +245,11 @@ Use separate commits for branding/defaults, package selection, contribution remo
 
 ### First implementation backlog
 
-- [ ] Pin stable upstream SHA, toolchain and lockfile; build a release-mode baseline.
+- [ ] Pin stable upstream SHA, toolchain and lockfile; build a release-mode baseline. (The SHA and toolchain are pinned; the unmodified comparison build remains.)
 - [ ] Capture baseline process tree, memory, file-ready time and extension activations.
 - [ ] Inventory product endpoints, shipping extensions and contribution roots.
-- [ ] Establish independent identity and user-data/extension directories.
-- [ ] Enforce a declarative package allowlist and quiet product defaults.
+- [x] Establish independent identity and user-data/extension directories.
+- [x] Enforce a declarative package allowlist and quiet product defaults.
 - [ ] Prove zero clean-session outbound requests and no automatic Git/language activity.
 - [ ] Resolve AI/MCP dependencies and verify build exclusions in output artifacts.
 - [ ] Add explicit Git/review activation covering both Git built-ins.
