@@ -498,6 +498,7 @@ Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).regis
 		'extensions.autoCheckUpdates': false,
 		'workbench.welcomePage.walkthroughs.openOnInstall': false,
 		'workbench.startupEditor': 'none',
+		'workbench.colorTheme': 'Lean Emerald',
 		'window.commandCenter': false,
 		'editor.minimap.enabled': false,
 		'breadcrumbs.enabled': false,

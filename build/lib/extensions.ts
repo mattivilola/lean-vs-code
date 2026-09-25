@@ -336,6 +336,7 @@ const marketplaceWebExtensionsExclude = new Set([
 const productJson = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../../product.json'), 'utf8'));
 const builtInExtensions: IExtensionDefinition[] = productJson.builtInExtensions || [];
 const webBuiltInExtensions: IExtensionDefinition[] = productJson.webBuiltInExtensions || [];
+const leanBundledExtensions = new Set<string>(JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../../lean/bundled-extensions.json'), 'utf8')));
 
 type ExtensionKind = 'ui' | 'workspace' | 'web';
 interface IExtensionManifest {
@@ -422,6 +423,7 @@ function doPackageLocalExtensionsStream(forWeb: boolean, native: boolean): Strea
 			})
 			.filter(({ name }) => native ? nativeExtensionsSet.has(name) : !nativeExtensionsSet.has(name))
 			.filter(({ name }) => excludedExtensions.indexOf(name) === -1)
+			.filter(({ name }) => leanBundledExtensions.has(name))
 			.filter(({ name }) => builtInExtensions.every(b => b.name !== name))
 			.filter(({ manifestPath }) => (forWeb ? isWebExtension(require(manifestPath)) : true))
 	);

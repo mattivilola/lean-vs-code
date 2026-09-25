@@ -50,7 +50,8 @@
     "Other"
   ],
   "activationEvents": [
-    "*",
+    "onCommand:workbench.view.scm",
+    "onView:workbench.scm",
     "onEditSession:file",
     "onFileSystem:git",
     "onFileSystem:git-show"

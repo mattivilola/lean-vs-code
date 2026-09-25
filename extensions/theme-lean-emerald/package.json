@@ -1,0 +1,24 @@
+{
+  "name": "theme-lean-emerald",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "version": "0.1.0",
+  "publisher": "mattivilola",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.139.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "id": "Lean Emerald",
+        "label": "%themeLabel%",
+        "uiTheme": "vs-dark",
+        "path": "./themes/lean-emerald.json"
+      }
+    ]
+  }
+}
