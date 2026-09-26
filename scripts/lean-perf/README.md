@@ -17,6 +17,8 @@ The default is 30 timed startup and 30 existing-window file-open samples per pro
 
 To compare a candidate against an earlier Lean VS Code release, pass that app as `--oss-app` and set `--oss-label 'Lean VS Code v0.2.0'` so the report identifies it correctly. The raw sample key remains `code-oss` for compatibility with the standard comparison parser; use the manifest's app paths and labels when interpreting such a run.
 
+Pass `--git-workspace` for a separate repository-opening benchmark. It creates a task-owned Git fixture under that run's report directory and opens the fixture file with the folder; the default run is a standalone file. Keep these results separate because bundled Git activation is relevant only to the repository case.
+
 First validate bundle paths and inspect the plan without launching either app:
 
 ```sh

@@ -21,6 +21,7 @@ const READY_TIMEOUT_MS = 120_000;
 const MEMORY_IDLE_MS = 30_000;
 const MEMORY_SAMPLES = 3;
 const EXISTING_WINDOW_WARMUP_MS = 5_000;
+const GIT_WORKSPACE_FILES = 10_000;
 
 const SUBJECTS = [
 	{ key: 'lean', label: 'Lean VS Code', option: '--lean-app' },
@@ -40,6 +41,7 @@ Options:
   --output-root <path>          Parent directory for a unique results directory
   --lean-label <text>           Display label for the first app (default: Lean VS Code)
   --oss-label <text>            Display label for the comparison app (default: Code-OSS)
+  --git-workspace               Open the fixture inside a generated Git workspace
   --startup-timeout-ms <n>      Maximum wait for an editable editor (default: 120000)
   --dry-run                     Validate apps and print the plan without launching them
   -h, --help                    Show this help
@@ -58,6 +60,7 @@ function parseArgs(argv) {
 		outputRoot: DEFAULT_OUTPUT_ROOT,
 		leanLabel: 'Lean VS Code',
 		ossLabel: 'Code-OSS',
+		gitWorkspace: false,
 		startupTimeoutMs: READY_TIMEOUT_MS,
 		dryRun: false,
 		help: false
@@ -83,6 +86,10 @@ function parseArgs(argv) {
 		}
 		if (arg === '--dry-run') {
 			result.dryRun = true;
+			continue;
+		}
+		if (arg === '--git-workspace') {
+			result.gitWorkspace = true;
 			continue;
 		}
 		const key = valueOptions.get(arg);
@@ -281,7 +288,7 @@ function sampleFootprint(pid) {
 	}
 }
 
-function appArguments(app, profile, extensionPath, controlDir, startupFile) {
+function appArguments(app, profile, extensionPath, controlDir, startupFile, workspaceFolder) {
 	const args = [
 		'--new-window',
 		`--user-data-dir=${path.join(profile, 'user-data')}`,
@@ -292,6 +299,7 @@ function appArguments(app, profile, extensionPath, controlDir, startupFile) {
 		'--skip-release-notes',
 		'--disable-updates',
 		'--disable-telemetry',
+		...(workspaceFolder ? [`--folder-uri=${pathToFileURL(workspaceFolder).toString()}`] : []),
 		startupFile
 	];
 	return {
@@ -304,15 +312,15 @@ function appArguments(app, profile, extensionPath, controlDir, startupFile) {
 	};
 }
 
-function startApp(app, profile, extensionPath, controlDir, startupFile) {
+function startApp(app, profile, extensionPath, controlDir, startupFile, workspaceFolder) {
 	fs.mkdirSync(path.join(profile, 'user-data'), { recursive: true });
 	fs.mkdirSync(path.join(profile, 'extensions'), { recursive: true });
 	fs.mkdirSync(controlDir, { recursive: true });
-	return launchApp(app, profile, extensionPath, controlDir, startupFile);
+	return launchApp(app, profile, extensionPath, controlDir, startupFile, workspaceFolder);
 }
 
-function launchApp(app, profile, extensionPath, controlDir, startupFile) {
-	const launch = appArguments(app, profile, extensionPath, controlDir, startupFile);
+function launchApp(app, profile, extensionPath, controlDir, startupFile, workspaceFolder) {
+	const launch = appArguments(app, profile, extensionPath, controlDir, startupFile, workspaceFolder);
 	const logFd = fs.openSync(path.join(controlDir, 'app.log'), 'a');
 	try {
 		return spawn(app.executable, launch.args, { stdio: ['ignore', logFd, logFd], env: launch.env });
@@ -448,7 +456,7 @@ async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileR
 	fs.mkdirSync(controlDir, { recursive: true });
 	const startedAt = new Date().toISOString();
 	const started = performance.now();
-	const child = launchApp(app, profile, extensionPath, controlDir, fixturePath);
+	const child = launchApp(app, profile, extensionPath, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined);
 	let sample;
 	try {
 		await spawnError(child);
@@ -543,7 +551,9 @@ async function verifyEditable(editor, expectedPath) {
 		}
 		if (editor.document.isDirty) {
 			const saved = await editor.document.save();
-			if (!saved) {
+			// An auto-save may win the race and make save() return false. The
+			// actual gate is that our probe has left the disk file unchanged.
+			if (!saved && fs.readFileSync(expectedPath, 'utf8') !== originalText) {
 				throw new Error('VS Code could not restore the benchmark fixture to disk.');
 			}
 		}
@@ -672,6 +682,8 @@ function appMetadata(apps, baseRevision, options) {
 			startupTimeoutMs: options.startupTimeoutMs,
 			fixtureBytes: FIXTURE_BYTES,
 			fixtureReadBeforeMeasurement: true,
+			gitWorkspace: options.gitWorkspace,
+			gitWorkspaceTrackedFiles: options.gitWorkspace ? GIT_WORKSPACE_FILES + 1 : 0,
 			userExtensions: 'isolated empty extensions-dir plus the same harness control extension loaded from --extensionDevelopmentPath',
 			launchFlags: ['--new-window', '--shared-data-dir', '--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry'],
 			existingWindowMethod: 'launch the app executable with --reuse-window and the file path; readiness is measured by the control extension',
@@ -682,7 +694,7 @@ function appMetadata(apps, baseRevision, options) {
 }
 
 async function waitForReady(app, fixturePath, profile, extensionPath, controlDir, options) {
-	const child = startApp(app, profile, extensionPath, controlDir, fixturePath);
+	const child = startApp(app, profile, extensionPath, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined);
 	try {
 		await spawnError(child);
 		const marker = await waitForPath(path.join(controlDir, 'startup-ready.json'), child, options.startupTimeoutMs, 'App readiness');
@@ -799,7 +811,8 @@ async function run(options) {
 		existingWindowWarmupMs: EXISTING_WINDOW_WARMUP_MS,
 		memorySamplesPerProduct: options.memorySamples,
 		memoryIdleMs: options.memoryIdleMs,
-		outputRoot: path.resolve(options.outputRoot)
+		outputRoot: path.resolve(options.outputRoot),
+		gitWorkspace: options.gitWorkspace
 	};
 	if (options.dryRun) {
 		process.stdout.write(`${JSON.stringify({ dryRun: true, plan }, null, 2)}\n`);
@@ -818,9 +831,33 @@ async function run(options) {
 	fs.writeFileSync(rawSamplesPath, '', { flag: 'wx' });
 	const extensionPath = path.join(runDir, 'harness-extension');
 	createExtension(extensionPath);
-	const fixturePath = path.join(runDir, 'fixtures', 'editable-100KiB.txt');
+	const workspaceFolder = options.gitWorkspace ? path.join(runDir, 'fixtures', 'git-workspace') : undefined;
+	if (workspaceFolder) {
+		fs.mkdirSync(workspaceFolder, { recursive: true });
+		const init = runCapture('git', ['init', '-q', workspaceFolder]);
+		if (init.status !== 0) {
+			throw new Error(`Could not initialize fixture Git workspace: ${init.stderr.trim()}`);
+		}
+	}
+	const fixturePath = path.join(workspaceFolder ?? path.join(runDir, 'fixtures'), 'editable-100KiB.txt');
 	fs.writeFileSync(fixturePath, makeFixtureContent(), { flag: 'wx' });
 	fs.readFileSync(fixturePath); // Warm the fixture contents before timed trials.
+	if (workspaceFolder) {
+		for (let index = 0; index < GIT_WORKSPACE_FILES; index++) {
+			const directory = path.join(workspaceFolder, 'src', String(Math.floor(index / 1000)).padStart(2, '0'));
+			fs.mkdirSync(directory, { recursive: true });
+			fs.writeFileSync(path.join(directory, `file-${String(index).padStart(5, '0')}.ts`), `export const value = ${index};\n`);
+		}
+		for (const args of [
+			['-C', workspaceFolder, 'add', '.'],
+			['-C', workspaceFolder, '-c', 'user.name=Lean Perf', '-c', 'user.email=lean-perf@example.invalid', 'commit', '-q', '-m', 'Benchmark fixture']
+		]) {
+			const result = runCapture('git', args);
+			if (result.status !== 0) {
+				throw new Error(`Could not prepare Git workspace: ${result.stderr.trim()}`);
+			}
+		}
+	}
 
 	const samples = [];
 	const append = sample => {
@@ -898,7 +935,7 @@ async function run(options) {
 async function runOneExistingOpen(state, sampleIndex, runDir, options) {
 	const { app, child, profile, controlDir } = state;
 	const id = `${app.key}-${String(sampleIndex + 1).padStart(3, '0')}`;
-	const targetPath = path.join(runDir, 'fixtures', `open-${app.key}-${String(sampleIndex + 1).padStart(3, '0')}.txt`);
+	const targetPath = path.join(runDir, 'fixtures', ...(options.gitWorkspace ? ['git-workspace'] : []), `open-${app.key}-${String(sampleIndex + 1).padStart(3, '0')}.txt`);
 	fs.writeFileSync(targetPath, makeFixtureContent(), { flag: 'wx' });
 	fs.readFileSync(targetPath);
 	const markerPath = path.join(controlDir, `open-${id}.json`);

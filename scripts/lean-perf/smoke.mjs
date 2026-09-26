@@ -24,6 +24,7 @@ const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'lean-perf-smoke-'))
 try {
 	assert.equal(makeFixtureContent().length, 100 * 1024);
 	assert.deepEqual(parseArgs(['--samples', '7', '--memory-idle-ms', '20']).samples, 7);
+	assert.equal(parseArgs(['--git-workspace']).gitWorkspace, true);
 	assert.equal(parseFootprintBytes('Auxiliary data:\n    phys_footprint: 123456 bytes\n'), 123456);
 	assert.equal(percentile([9, 2, 5, 1], 0.5), 2);
 	assert.equal(percentile([9, 2, 5, 1], 0.95), 9);
