@@ -33,6 +33,8 @@ node scripts/lean-perf/benchmark.mjs \
 
 Run the built-in fixture smoke check with `node scripts/lean-perf/smoke.mjs`. It uses fake app metadata and never launches an editor.
 
+For a real GUI feature check against a built or installed app, run `node scripts/lean-perf/functional-smoke.mjs "/path/to/Lean VS Code.app"`. This launches an isolated profile and temporary Git workspace, then verifies editing and saving, workspace search, an integrated terminal command, a local Git diff, and extension-host webview creation. It writes a per-check JSON result and app log under `.build/lean-artifacts/functional-smoke/`. It does not use the normal user profile. The window can take focus, so run it when the desktop is free.
+
 For a diagnostic renderer startup trace, run `node scripts/lean-perf/trace-startup.mjs "/path/to/Lean VS Code.app" "/path/to/file.txt" "/path/to/trace.json"`. This launches an isolated profile, records Monaco performance marks through the Chrome DevTools Protocol, and writes the Startup Performance report beside the JSON trace as `trace.json.perf.md`. The trace uses a temporary control extension to request the report, which can change the restored editor; use the paired benchmark above for release timing claims. Trace artifacts may include local file paths, so review them before publishing.
 
 ## Method
