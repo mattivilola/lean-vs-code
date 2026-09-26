@@ -8,7 +8,7 @@
 
 The current release supports **Apple Silicon Macs**. Download the signed and notarized [v0.3.1 DMG](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.3.1), open it, and drag **Lean VS Code** into **Applications**. Launch it from Applications and open a file or folder. It does not replace your existing VS Code installation or import its extensions automatically. If you have v0.3.0, install v0.3.1 once by hand; v0.3.0 did not include an updater.
 
-Starting with v0.3.1, the macOS app checks its **GitHub stable-release feed** after startup and periodically while running. It downloads a signed update ZIP when a newer release is available and offers **Restart to Update**; a staged update can also install on normal quit. Choose `update.mode` in Settings to use automatic, startup-only, manual, or no future checks. Previously staged updates may still apply after checks are disabled. Initial installs remain available as DMGs on the [Releases page](https://github.com/mattivilola/lean-vs-code/releases).
+Starting with v0.3.1, the macOS app checks its **GitHub stable-release feed** after startup and periodically while running. It downloads an update ZIP containing the signed and notarized app when a newer release is available and offers **Restart to Update**; a staged update can also install on normal quit. Choose `update.mode` in Settings to use automatic, startup-only, manual, or no future checks. Previously staged updates may still apply after checks are disabled. Initial installs remain available as DMGs on the [Releases page](https://github.com/mattivilola/lean-vs-code/releases).
 
 For a source build and the maintainer's signing/notarization procedure, see [Build and release on macOS](lean/docs/BUILDING.md).
 
