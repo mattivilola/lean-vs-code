@@ -147,6 +147,16 @@ try {
 	console.log(`Removed ${removedSourceMaps} development source maps from release copy`);
 	await verifyBundledExtensions(app);
 	await fs.access(path.join(app, 'Contents/Resources/app/node_modules.asar.unpacked/@vscode/vsce-sign/bin/vsce-sign'));
+	// Electron/Squirrel reads the packaged app version, not the upstream extension API version.
+	// Keep the source package at the Code-OSS API version while giving the app its own release version.
+	const appPackagePath = path.join(app, 'Contents/Resources/app/package.json');
+	const appPackage = JSON.parse(await fs.readFile(appPackagePath, 'utf8'));
+	const sourcePackage = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8'));
+	if (appPackage.version !== sourcePackage.version) {
+		throw new Error(`Unexpected packaged Code-OSS version: ${appPackage.version}`);
+	}
+	appPackage.version = version;
+	await fs.writeFile(appPackagePath, `${JSON.stringify(appPackage, null, 2)}\n`);
 	const info = path.join(app, 'Contents/Info.plist');
 	const shortVersion = version.split('-')[0];
 	await run('plutil', ['-replace', 'CFBundleShortVersionString', '-string', shortVersion, info]);
