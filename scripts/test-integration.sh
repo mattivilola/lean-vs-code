@@ -277,7 +277,11 @@ if should_run_suite git; then
 echo
 echo "### Git tests"
 echo
-"$INTEGRATION_TEST_ELECTRON_PATH" $(mktemp -d 2>/dev/null) --extensionDevelopmentPath=$ROOT/extensions/git --extensionTestsPath=$ROOT/extensions/git/out/test $API_TESTS_EXTRA_ARGS
+# Start in a real repository so activation tests can detect eager Git scans.
+# The Git smoke suite can safely reinitialize this otherwise empty fixture.
+GIT_TEST_WORKSPACE=$(mktemp -d 2>/dev/null)
+git -C "$GIT_TEST_WORKSPACE" init -b main >/dev/null
+"$INTEGRATION_TEST_ELECTRON_PATH" "$GIT_TEST_WORKSPACE" --extensionDevelopmentPath=$ROOT/extensions/git --extensionTestsPath=$ROOT/extensions/git/out/test --disable-extension=GitHub.copilot-chat $API_TESTS_EXTRA_ARGS
 kill_app
 fi
 
