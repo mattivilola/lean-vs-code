@@ -2992,6 +2992,24 @@ export default defineConfig(
 			],
 		}
 	},
+	// New Lean-owned files keep their own copyright notice.
+	{
+		files: [
+			'src/vs/platform/update/electron-main/leanMacUpdateFeed.ts',
+			'src/vs/platform/update/test/electron-main/leanMacUpdateFeed.test.ts',
+		],
+		rules: {
+			'header/header': [
+				2,
+				'block',
+				[
+					'---------------------------------------------------------------------------------------------',
+					' *  Copyright (c) Lean VS Code contributors. MIT License.',
+					' *--------------------------------------------------------------------------------------------'
+				]
+			]
+		}
+	},
 	// Forbid new JavaScript files - use TypeScript instead.
 	// The allowlist of pre-existing JS/CJS/MJS files lives in
 	// `.eslint-allowed-javascript-files`, which is gated by CODEOWNERS.

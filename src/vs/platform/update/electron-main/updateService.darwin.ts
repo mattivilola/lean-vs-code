@@ -19,6 +19,7 @@ import { ITelemetryService } from '../../telemetry/common/telemetry.js';
 import { AvailableForDownload, IUpdate, State, StateType, UpdateType } from '../common/update.js';
 import { IMeteredConnectionService } from '../../meteredConnection/common/meteredConnection.js';
 import { AbstractUpdateService, createUpdateURL, getUpdateRequestHeaders, IUpdateURLOptions, UpdateErrorClassification } from './abstractUpdateService.js';
+import { readLeanMacUpdateFeed } from './leanMacUpdateFeed.js';
 
 export class DarwinUpdateService extends AbstractUpdateService implements IRelaunchHandler {
 
@@ -27,9 +28,9 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 	@memoize private get onRawUpdateNotAvailable(): Event<void> { return Event.fromNodeEventEmitter<void>(electron.autoUpdater, 'update-not-available'); }
 	@memoize private get onRawUpdateAvailable(): Event<void> { return Event.fromNodeEventEmitter(electron.autoUpdater, 'update-available'); }
 	@memoize private get onRawUpdateDownloaded(): Event<IUpdate> {
-		return Event.fromNodeEventEmitter(electron.autoUpdater, 'update-downloaded', (_, version: string, productVersion: string, releaseDate: Date | number) => ({
-			version,
-			productVersion,
+		return Event.fromNodeEventEmitter(electron.autoUpdater, 'update-downloaded', (_, releaseNotes: string, releaseName: string, releaseDate: Date | number) => ({
+			version: this.productService.leanMacUpdateFeedUrl ? releaseName : releaseNotes,
+			productVersion: releaseName,
 			timestamp: releaseDate instanceof Date ? releaseDate.getTime() || undefined : releaseDate
 		}));
 	}
@@ -93,7 +94,31 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		this.setState(State.Idle(UpdateType.Archive, message));
 	}
 
+	protected override isUpdateConfigured(): boolean {
+		return this.productService.leanMacUpdateFeedUrl
+			? process.arch === 'arm64' && !!this.productService.commit && !!this.productService.leanReleaseVersion
+			: super.isUpdateConfigured();
+	}
+
+	protected override getProductQuality(updateMode: string): string | undefined {
+		return this.productService.leanMacUpdateFeedUrl && updateMode !== 'none' ? 'stable' : super.getProductQuality(updateMode);
+	}
+
 	protected buildUpdateFeedUrl(quality: string, commit: string, options?: IUpdateURLOptions): string | undefined {
+		if (this.productService.leanMacUpdateFeedUrl) {
+			const url = this.productService.leanMacUpdateFeedUrl;
+			try {
+				const parsed = new URL(url);
+				if (parsed.protocol !== 'https:' || parsed.hostname !== 'github.com' || parsed.pathname !== '/mattivilola/lean-vs-code/releases/latest/download/releases-darwin-arm64.json') {
+					return undefined;
+				}
+				electron.autoUpdater.setFeedURL({ url, serverType: 'json' });
+			} catch (error) {
+				this.logService.error('Failed to set Lean VS Code update feed URL', error);
+				return undefined;
+			}
+			return url;
+		}
 		const assetID = this.productService.darwinUniversalAssetId ?? (process.arch === 'x64' ? 'darwin' : 'darwin-arm64');
 		const url = createUpdateURL(this.productService.updateUrl!, assetID, quality, commit, options);
 		const headers = getUpdateRequestHeaders(this.productService.version);
@@ -149,6 +174,16 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 			const statusCode = context.res.statusCode;
 			this.logService.trace('update#checkForUpdateNoDownload - response', { statusCode });
 
+			if (this.productService.leanMacUpdateFeedUrl) {
+				const feed = readLeanMacUpdateFeed(await asJson<unknown>(context), this.productService.leanReleaseVersion!);
+				if (feed?.update) {
+					this.setState(State.AvailableForDownload(feed.update, canInstall));
+				} else {
+					this.setState(State.Idle(UpdateType.Archive));
+				}
+				return;
+			}
+
 			const update = await asJson<IUpdate>(context);
 			if (!update || !update.url || !update.version || !update.productVersion) {
 				this.logService.trace('update#checkForUpdateNoDownload - no update available');
@@ -161,6 +196,22 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		} catch (err) {
 			this.logService.error('update#checkForUpdateNoDownload - failed to check for update', err);
 			this.setState(State.Idle(UpdateType.Archive));
+		}
+	}
+
+	protected override async doIsLatestVersion(commit?: string, token: CancellationToken = CancellationToken.None): Promise<boolean | undefined> {
+		if (!this.productService.leanMacUpdateFeedUrl) {
+			return super.doIsLatestVersion(commit, token);
+		}
+		if (this.configurationService.getValue<string>('update.mode') === 'none') {
+			return undefined;
+		}
+		try {
+			const context = await this.requestService.request({ url: this.productService.leanMacUpdateFeedUrl, callSite: 'updateService.darwin.isLatestVersion' }, token);
+			return readLeanMacUpdateFeed(await asJson<unknown>(context), commit ?? this.productService.leanReleaseVersion!)?.latest;
+		} catch (error) {
+			this.logService.warn('Failed to check Lean VS Code update feed', error);
+			return undefined;
 		}
 	}
 

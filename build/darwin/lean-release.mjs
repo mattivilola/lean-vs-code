@@ -9,6 +9,7 @@ import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { sign } from '@electron/osx-sign';
 
 const run = promisify(execFile);
@@ -17,31 +18,44 @@ const version = (await fs.readFile(path.join(root, 'lean/VERSION'), 'utf8')).tri
 const product = JSON.parse(await fs.readFile(path.join(root, 'product.json'), 'utf8'));
 const appName = 'Lean VS Code.app';
 const source = path.join(root, '.build/lean-artifacts/LeanVSCode-darwin-arm64', appName);
-const output = path.join(root, '.build/lean-artifacts/releases', `Lean-VS-Code-${version}-macos-arm64.dmg`);
+const releaseDir = path.join(root, '.build/lean-artifacts/releases');
+const basename = `Lean-VS-Code-${version}-macos-arm64`;
+const output = path.join(releaseDir, `${basename}.dmg`);
+const zipOutput = path.join(releaseDir, `${basename}.zip`);
+const feedOutput = path.join(releaseDir, 'releases-darwin-arm64.json');
 const identity = process.env.CODESIGN_IDENTITY;
+const notaryProfile = process.env.NOTARY_KEYCHAIN_PROFILE;
 
 if (!identity) {
 	throw new Error('Set CODESIGN_IDENTITY to a Developer ID Application identity.');
 }
-if (!/^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/.test(version)) {
+if (!notaryProfile) {
+	throw new Error('Set NOTARY_KEYCHAIN_PROFILE to a validated notarytool Keychain profile.');
+}
+if (!/^\d+\.\d+\.\d+$/.test(version)) {
 	throw new Error(`Unexpected release version: ${version}`);
 }
 if (product.leanReleaseVersion !== version) {
 	throw new Error(`product.json leanReleaseVersion must match lean/VERSION (${version}).`);
 }
 await fs.access(source);
-try {
-	await fs.access(output);
-	throw new Error(`Release artifact already exists: ${output}`);
-} catch (error) {
-	if (error.code !== 'ENOENT') {
-		throw error;
+for (const artifact of [output, zipOutput]) {
+	try {
+		await fs.access(artifact);
+		throw new Error(`Release artifact already exists: ${artifact}`);
+	} catch (error) {
+		if (error.code !== 'ENOENT') {
+			throw error;
+		}
 	}
 }
 
 const stage = await fs.mkdtemp(path.join(os.tmpdir(), 'lean-vs-code-release-'));
 const app = path.join(stage, appName);
 const volume = path.join(stage, 'volume');
+const notarizationZip = path.join(stage, 'notarization.zip');
+const updateZip = path.join(stage, `${basename}.zip`);
+const dmg = path.join(stage, `${basename}.dmg`);
 const entitlementsDir = path.join(root, 'build/azure-pipelines/darwin');
 
 function entitlementsForFile(filePath) {
@@ -66,6 +80,14 @@ function ignoreNonCode(filePath) {
 	} finally {
 		fsSync.closeSync(descriptor);
 	}
+}
+
+async function sha256(filePath) {
+	const digest = createHash('sha256');
+	for await (const chunk of fsSync.createReadStream(filePath)) {
+		digest.update(chunk);
+	}
+	return digest.digest('hex');
 }
 
 async function removeSourceMaps(directory) {
@@ -127,16 +149,52 @@ try {
 		optionsForFile: filePath => ({ entitlements: entitlementsForFile(filePath), hardenedRuntime: true })
 	});
 	await run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app]);
+	console.log('Notarizing the signed app before packaging updates');
+	await run('ditto', ['-c', '-k', '--sequesterRsrc', '--keepParent', app, notarizationZip]);
+	await run('xcrun', ['notarytool', 'submit', notarizationZip, '--keychain-profile', notaryProfile, '--wait']);
+	await run('xcrun', ['stapler', 'staple', app]);
+	await run('xcrun', ['stapler', 'validate', app]);
+	await run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app]);
+	await run('spctl', ['-a', '-vv', app]);
+
+	await run('ditto', ['-c', '-k', '--sequesterRsrc', '--keepParent', app, updateZip]);
+	await run('unzip', ['-tq', updateZip]);
 
 	await fs.mkdir(volume);
 	await run('ditto', [app, path.join(volume, appName)]);
 	await fs.symlink('/Applications', path.join(volume, 'Applications'));
-	await fs.mkdir(path.dirname(output), { recursive: true });
-	console.log(`Creating ${path.basename(output)}`);
-	await run('hdiutil', ['create', '-volname', 'Lean VS Code', '-srcfolder', volume, '-format', 'UDZO', '-imagekey', 'zlib-level=9', output]);
-	await run('codesign', ['--force', '--sign', identity, '--timestamp', '--options', 'runtime', output]);
-	await run('codesign', ['--verify', '--verbose=2', output]);
-	console.log(`Signed DMG: ${output}`);
+	console.log(`Creating ${path.basename(dmg)}`);
+	await run('hdiutil', ['create', '-volname', 'Lean VS Code', '-srcfolder', volume, '-format', 'UDZO', '-imagekey', 'zlib-level=9', dmg]);
+	await run('codesign', ['--force', '--sign', identity, '--timestamp', '--options', 'runtime', dmg]);
+	await run('codesign', ['--verify', '--verbose=2', dmg]);
+	await run('xcrun', ['notarytool', 'submit', dmg, '--keychain-profile', notaryProfile, '--wait']);
+	await run('xcrun', ['stapler', 'staple', dmg]);
+	await run('xcrun', ['stapler', 'validate', dmg]);
+	await run('spctl', ['-a', '-vv', '-t', 'open', '--context', 'context:primary-signature', dmg]);
+
+	const zipHash = await sha256(updateZip);
+	const dmgHash = await sha256(dmg);
+	const feed = {
+		currentRelease: version,
+		releases: [{
+			version,
+			updateTo: {
+				version,
+				name: version,
+				notes: `Lean VS Code ${version}`,
+				url: `https://github.com/mattivilola/lean-vs-code/releases/download/v${version}/${basename}.zip`,
+				sha256: zipHash,
+				size: (await fs.stat(updateZip)).size
+			}
+		}]
+	};
+	await fs.mkdir(releaseDir, { recursive: true });
+	await fs.rename(updateZip, zipOutput);
+	await fs.rename(dmg, output);
+	await fs.writeFile(feedOutput, `${JSON.stringify(feed, null, 2)}\n`);
+	console.log(`Signed and notarized DMG: ${output} (SHA-256 ${dmgHash})`);
+	console.log(`Signed and notarized update ZIP: ${zipOutput} (SHA-256 ${zipHash})`);
+	console.log(`Static update feed: ${feedOutput}`);
 } finally {
 	await fs.rm(stage, { recursive: true, force: true });
 }

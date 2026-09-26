@@ -203,7 +203,7 @@ export abstract class AbstractUpdateService extends Disposable implements IUpdat
 			return;
 		}
 
-		if (!this.productService.updateUrl || !this.productService.commit) {
+		if (!this.isUpdateConfigured()) {
 			this.setDisabledPermanently(DisablementReason.MissingConfiguration);
 			this.logService.info('update#ctor - updates are disabled as there is no update URL');
 			return;
@@ -442,7 +442,11 @@ export abstract class AbstractUpdateService extends Disposable implements IUpdat
 		});
 	}
 
-	private getProductQuality(updateMode: string): string | undefined {
+	protected isUpdateConfigured(): boolean {
+		return !!this.productService.updateUrl && !!this.productService.commit;
+	}
+
+	protected getProductQuality(updateMode: string): string | undefined {
 		return updateMode === 'none' ? undefined : this.productService.quality;
 	}
 
