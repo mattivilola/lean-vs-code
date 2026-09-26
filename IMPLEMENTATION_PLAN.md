@@ -271,9 +271,9 @@ Required acceptance evidence:
 - **Resource correctness:** process traces, activation logs, bounded caches, no persistent child processes after app exit, no monotonic memory growth, and fresh-profile network capture.
 - **Distribution:** licenses, independent identity, signatures, clean-machine install, upgrade preserving settings/disabled states, rollback and CLI behavior.
 
-Track supported upstream releases and Electron security updates regularly; triage important fixes immediately. Each update must reapply the patch series, rerun contract tests and benchmarks, and inspect feature/endpoint drift. Never use a product upgrade to re-enable an extension or integration the user disabled.
+Track supported upstream releases and Electron security updates regularly; triage important fixes immediately. Each update must reapply the patch series, rerun contract tests, and inspect feature/endpoint drift. Run the full paired benchmark for each new minor release and targeted performance checks for patches when a regression is suspected or a change could affect performance. Never use a product upgrade to re-enable an extension or integration the user disabled.
 
-Publish exact upstream SHA, fork commit, build toolchain, artifact hashes, extension inventory, compatibility results, benchmark methodology/results, and known limits for each release. Keep a prior signed release available for rollback without deleting user data. Signing, publishing, and remote repository creation are later implementation/release work; this document performs none of them.
+Publish exact upstream SHA, fork commit, build toolchain, artifact hashes, extension inventory, compatibility results, and known limits for each release. Publish benchmark methodology and results for each new minor release; patch notes should link to the latest minor comparison and name the version actually measured. Keep a prior signed release available for rollback without deleting user data. Signing, publishing, and remote repository creation are later implementation/release work; this document performs none of them.
 
 ## 12. Main risks and decision gates
 

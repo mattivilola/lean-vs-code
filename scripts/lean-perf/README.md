@@ -2,6 +2,8 @@
 
 This harness compares an installed Lean VS Code app bundle with an unmodified Code-OSS app bundle on macOS Apple Silicon. It records startup-to-editable-file samples, file-open samples sent to an already-running window, and idle memory for the whole app process tree. It does not install or change user extensions or settings.
 
+For public release comparisons, run the full paired harness on each new minor version (`x.y.0`) and retain its raw results. Routine patch releases do not need a new full run; use targeted checks if a patch could affect performance or a regression is suspected. Always attribute published figures to the exact measured version. This GUI harness opens editor windows and can take desktop focus, so run it only when the desktop is available for testing.
+
 ## Run
 
 Build or install both app bundles from the same Code-OSS base revision, then run from the repository root:

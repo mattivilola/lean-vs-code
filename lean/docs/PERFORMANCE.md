@@ -2,6 +2,8 @@
 
 Lean VS Code's public comparison uses **unmodified Code-OSS 1.139.1 source at the fork's base revision** (`04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1`). It is a more useful causal baseline than a differently configured Visual Studio Code download. The reference Mac is an Apple M3 Max with 36 GiB of RAM running macOS 27.0.0. These are measured results on that machine, not guarantees for every project or Mac.
 
+**Benchmark cadence:** Run the full paired comparison for each new minor release (`x.y.0`) against original Code-OSS built from the same upstream revision, and retain earlier minor-release results for history. Routine patch releases (`x.y.z`, where `z > 0`) do not need a new full comparison. Keep the latest minor release's figures labeled with the exact version measured; do not present them as measurements of a later patch. Run a targeted performance check for a suspected regression, a performance-sensitive patch, or an explicit request. Functional, update, signing, and packaging checks still apply to every release. A direct Lean-version-to-Lean-version speedup claim needs its own same-run comparison.
+
 | Build | Editable file, median / p95 | Already-open window, median / p95 | Idle app-tree footprint, median | Against Code-OSS in the same run |
 | --- | ---: | ---: | ---: | --- |
 | [Code-OSS paired with v0.2.0](../performance/v0.2.0-vs-code-oss-1.139.1.json) | 2,010 / 2,151 ms | 403 / 434 ms | 878 MiB | Baseline |

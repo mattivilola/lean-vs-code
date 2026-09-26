@@ -11,7 +11,7 @@ Add user-visible changes here as they land. Before each release, move them under
 - Added automatic update checks and downloads for the Apple Silicon app through a GitHub-hosted stable feed and signed, notarized app ZIP. The familiar update controls offer restart to install; `update.mode` can change future checks.
 - Corrected the packaged Electron app version to the Lean release number while retaining Code-OSS 1.139.1 as the extension API version.
 - Published a signed, notarized DMG for first installs and manual recovery. Users of 0.3.0 or the withdrawn 0.3.1 candidate need this one-time manual install.
-- Retained the focused editor, local Git review, and optional Open VSX extensions. The public performance figures still refer to 0.3.0 pending a measured 0.3.2 comparison.
+- Retained the focused editor, local Git review, and optional Open VSX extensions. The public performance figures remain explicitly attributed to the measured 0.3.0 minor release; routine patch releases do not get a new full comparison.
 
 See [v0.3.2 release notes](lean/docs/RELEASE_NOTES_0.3.2.md) and the [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.3.2).
 
