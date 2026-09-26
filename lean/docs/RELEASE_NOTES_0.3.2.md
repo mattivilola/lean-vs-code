@@ -9,6 +9,8 @@ The signed app was built from fork commit `d896bbd416920fb87760927ba9e08b540d6e7
 - DMG SHA-256: `7a109806e3c649300e78cabaebfca58da49d7f1ba51954246cfe25f382033dfe`
 - Update ZIP SHA-256: `33021d1d55e07a65da319af6ed9b923fd55a0ce0809484ceb058bf372db1a7a9` (205,499,518 bytes)
 
-The native updater was exercised against the public stable feed using an isolated, signed v0.3.1 test app. It checked, downloaded v0.3.2, exposed **Restart to Update**, and replaced that test bundle with an app whose macOS bundle and Electron package versions both read 0.3.2. The updated bundle passed a strict code-signature verification, and the isolated user setting and installed EditorConfig extension remained in their profile directories. This verifies the v0.3.1-to-v0.3.2 update path; a future release still needs its own A-to-B trial.
+The native updater was exercised against the public stable feed using an isolated, signed v0.3.1 test app. It checked, downloaded v0.3.2, exposed **Restart to Update**, and replaced that test bundle with an app whose macOS bundle and Electron package versions both read 0.3.2. The updated bundle passed strict code-signature verification, Gatekeeper assessment, and stapled-ticket validation; the isolated user setting and installed EditorConfig extension remained in their profile directories. This verifies the v0.3.1-to-v0.3.2 update path; a future release still needs its own A-to-B trial.
 
 The [published v0.3.0 performance comparison](PERFORMANCE.md) measured 18% less time to an editable file and 13% lower idle app-tree footprint than the original Code-OSS build at the same revision on the reference Apple M3 Max. Those measurements are from v0.3.0; a new v0.3.2 comparison is pending. This release is Apple Silicon-only and distributes full ZIP updates; delta packages are not implemented.
+
+For changes across releases, see the [changelog](https://github.com/mattivilola/lean-vs-code/blob/main/CHANGELOG.md).
