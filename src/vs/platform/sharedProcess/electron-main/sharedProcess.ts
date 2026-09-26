@@ -20,6 +20,7 @@ import { parseSharedProcessDebugPort } from '../../environment/node/environmentS
 import { assertReturnsDefined } from '../../../base/common/types.js';
 import { SharedProcessChannelConnection, SharedProcessRawConnection, SharedProcessLifecycle } from '../common/sharedProcess.js';
 import { Emitter } from '../../../base/common/event.js';
+import { mark } from '../../../base/common/performance.js';
 
 export class SharedProcess extends Disposable {
 
@@ -27,6 +28,7 @@ export class SharedProcess extends Disposable {
 
 	private utilityProcess: UtilityProcess | undefined = undefined;
 	private utilityProcessLogListener: IDisposable | undefined = undefined;
+	private isShuttingDown = false;
 
 	private readonly _onDidCrash = this._register(new Emitter<void>());
 	readonly onDidCrash = this._onDidCrash.event;
@@ -93,9 +95,20 @@ export class SharedProcess extends Disposable {
 
 	private onWillShutdown(): void {
 		this.logService.trace('[SharedProcess] onWillShutdown');
+		this.isShuttingDown = true;
 
 		this.utilityProcess?.postMessage(SharedProcessLifecycle.exit);
 		this.utilityProcess = undefined;
+	}
+
+	/** Begin the existing single-flight startup after an actual window opens. */
+	warmup(): void {
+		if (this.isShuttingDown || this._store.isDisposed || this.firstWindowConnectionBarrier.isOpen()) {
+			return;
+		}
+		mark('code/willWarmupSharedProcess');
+		this.firstWindowConnectionBarrier.open();
+		void this.whenReady().catch(error => this.logService.error('[SharedProcess] Warmup failed', error));
 	}
 
 	private _whenReady: Promise<void> | undefined = undefined;
@@ -113,6 +126,7 @@ export class SharedProcess extends Disposable {
 				this.utilityProcess?.once(SharedProcessLifecycle.initDone, () => whenReady.complete());
 
 				await whenReady.p;
+				mark('code/didReadySharedProcess');
 				this.utilityProcessLogListener?.dispose();
 				this.logService.trace('[SharedProcess] Overall ready');
 			})();
@@ -145,6 +159,7 @@ export class SharedProcess extends Disposable {
 	}
 
 	private createUtilityProcess(): void {
+		mark('code/willCreateSharedProcess');
 		this.utilityProcess = this._register(new UtilityProcess(this.logService, NullTelemetryService, this.lifecycleMainService));
 
 		// Install a log listener for very early shared process warnings and errors
@@ -176,6 +191,7 @@ export class SharedProcess extends Disposable {
 			respondToAuthRequestsFromMainProcess: true,
 			execArgv
 		});
+		mark('code/didCreateSharedProcess');
 
 		this._register(this.utilityProcess.onCrash(() => this._onDidCrash.fire()));
 	}

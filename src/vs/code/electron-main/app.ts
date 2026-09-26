@@ -743,7 +743,7 @@ export class CodeApplication extends Disposable {
 		mark('code/didResolveMachineId');
 
 		// Shared process
-		const { sharedProcessReady, sharedProcessClient } = this.setupSharedProcess(machineId, sqmId, devDeviceId);
+		const { sharedProcessReady, sharedProcessClient, warmupSharedProcess } = this.setupSharedProcess(machineId, sqmId, devDeviceId);
 
 		// Services
 		mark('code/willInitAppServices');
@@ -790,8 +790,11 @@ export class CodeApplication extends Disposable {
 
 		// Open Windows
 		mark('code/willOpenFirstWindow');
-		await appInstantiationService.invokeFunction(accessor => this.openFirstWindow(accessor, initialProtocolUrls));
+		const openedWindows = await appInstantiationService.invokeFunction(accessor => this.openFirstWindow(accessor, initialProtocolUrls));
 		mark('code/didOpenFirstWindow');
+		if (openedWindows.length > 0) {
+			warmupSharedProcess();
+		}
 
 		// Signal phase: after window open
 		this.lifecycleMainService.phase = LifecycleMainPhase.AfterWindowOpen;
@@ -1157,7 +1160,7 @@ export class CodeApplication extends Disposable {
 		return false;
 	}
 
-	private setupSharedProcess(machineId: string, sqmId: string, devDeviceId: string): { sharedProcessReady: Promise<MessagePortClient>; sharedProcessClient: Promise<MessagePortClient> } {
+	private setupSharedProcess(machineId: string, sqmId: string, devDeviceId: string): { sharedProcessReady: Promise<MessagePortClient>; sharedProcessClient: Promise<MessagePortClient>; warmupSharedProcess: () => void } {
 		const sharedProcess = this._register(this.mainInstantiationService.createInstance(SharedProcess, machineId, sqmId, devDeviceId));
 
 		this._register(sharedProcess.onDidCrash(() => this.windowsMainService?.sendToFocused('vscode:reportSharedProcessCrash')));
@@ -1178,7 +1181,7 @@ export class CodeApplication extends Disposable {
 			return sharedProcessClient;
 		})();
 
-		return { sharedProcessReady, sharedProcessClient };
+		return { sharedProcessReady, sharedProcessClient, warmupSharedProcess: () => sharedProcess.warmup() };
 	}
 
 	private async initServices(machineId: string, sqmId: string, devDeviceId: string, sharedProcessReady: Promise<MessagePortClient>): Promise<IInstantiationService> {
