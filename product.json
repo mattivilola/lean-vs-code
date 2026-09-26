@@ -1,7 +1,7 @@
 {
 	"nameShort": "Lean VS Code",
 	"nameLong": "Lean VS Code",
-	"leanReleaseVersion": "0.3.1",
+	"leanReleaseVersion": "0.3.2",
 	"leanMacUpdateFeedUrl": "https://github.com/mattivilola/lean-vs-code/releases/latest/download/releases-darwin-arm64.json",
 	"applicationName": "lean-code",
 	"dataFolderName": ".lean-vs-code",

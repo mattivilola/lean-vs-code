@@ -32,7 +32,7 @@ The DMG, update ZIP, and `releases-darwin-arm64.json` are placed in `.build/lean
 
 ## Verify and publish
 
-Before publication, extract both archives and confirm the same bundle version, bundle ID, and signed app content. Check the update ZIP's hash and size against the JSON feed. Confirm Apple notarization and Gatekeeper acceptance on the app and DMG. Release only stable numeric versions such as `0.3.1`; the stable feed must never point to a prerelease.
+Before publication, extract both archives and confirm the same bundle version, bundle ID, and signed app content. Check the update ZIP's hash and size against the JSON feed. Confirm Apple notarization and Gatekeeper acceptance on the app and DMG. Release only stable numeric versions such as `0.3.2`; the stable feed must never point to a prerelease.
 
 ```sh
 release_version="$(cat lean/VERSION)"
