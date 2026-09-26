@@ -15,6 +15,8 @@ node scripts/lean-perf/benchmark.mjs \
 
 The default is 30 timed startup and 30 existing-window file-open samples per product, one startup warm-up per product, a 5-second existing-window settle period, 3 memory snapshots after 30 seconds of idle time, and an output directory under `scripts/lean-perf/results/`. Pass `--samples`, `--memory-samples`, `--memory-idle-ms`, or `--output-root` to adjust the run. Every run gets a new report directory and a short, isolated profile directory under `/private/tmp/lean-perf-*`; both are retained for inspection. No existing profile is opened or removed.
 
+To compare a candidate against an earlier Lean VS Code release, pass that app as `--oss-app` and set `--oss-label 'Lean VS Code v0.2.0'` so the report identifies it correctly. The raw sample key remains `code-oss` for compatibility with the standard comparison parser; use the manifest's app paths and labels when interpreting such a run.
+
 First validate bundle paths and inspect the plan without launching either app:
 
 ```sh

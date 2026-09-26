@@ -38,6 +38,8 @@ Options:
   --memory-samples <n>          Idle process-tree memory snapshots per product (default: 3)
   --memory-idle-ms <n>          Wait after editable file readiness before memory sampling (default: 30000)
   --output-root <path>          Parent directory for a unique results directory
+  --lean-label <text>           Display label for the first app (default: Lean VS Code)
+  --oss-label <text>            Display label for the comparison app (default: Code-OSS)
   --startup-timeout-ms <n>      Maximum wait for an editable editor (default: 120000)
   --dry-run                     Validate apps and print the plan without launching them
   -h, --help                    Show this help
@@ -54,6 +56,8 @@ function parseArgs(argv) {
 		memorySamples: MEMORY_SAMPLES,
 		memoryIdleMs: MEMORY_IDLE_MS,
 		outputRoot: DEFAULT_OUTPUT_ROOT,
+		leanLabel: 'Lean VS Code',
+		ossLabel: 'Code-OSS',
 		startupTimeoutMs: READY_TIMEOUT_MS,
 		dryRun: false,
 		help: false
@@ -66,6 +70,8 @@ function parseArgs(argv) {
 		['--memory-samples', 'memorySamples'],
 		['--memory-idle-ms', 'memoryIdleMs'],
 		['--output-root', 'outputRoot'],
+		['--lean-label', 'leanLabel'],
+		['--oss-label', 'ossLabel'],
 		['--startup-timeout-ms', 'startupTimeoutMs']
 	]);
 
@@ -779,7 +785,11 @@ function makeSummary(samples, apps) {
 
 async function run(options) {
 	validateOptions(options);
-	const apps = SUBJECTS.map(subject => readApp(options[subject.key === 'lean' ? 'leanApp' : 'ossApp'], subject.key, subject.label));
+	const apps = SUBJECTS.map(subject => readApp(
+		options[subject.key === 'lean' ? 'leanApp' : 'ossApp'],
+		subject.key,
+		options[subject.key === 'lean' ? 'leanLabel' : 'ossLabel']
+	));
 	const plan = {
 		products: apps.map(app => ({ label: app.label, version: app.version, productCommit: app.commit, appPath: app.appPath })),
 		comparisonBaseRevision: options.baseRevision,
