@@ -1,0 +1,12 @@
+# Lean VS Code v0.3.2
+
+Lean VS Code v0.3.2 adds automatic app updates for Apple Silicon Macs. It uses Electron's built-in Squirrel.Mac updater and the familiar Code-OSS update controls. The app checks a static stable feed on GitHub Releases after the first window opens, downloads a ZIP containing the signed and notarized app when a newer version is available, and offers **Restart to Update**. A downloaded update may also install on normal quit. The DMG remains available for first installs and manual recovery.
+
+**Install v0.3.2 once by hand if you use v0.3.0 or obtained the withdrawn v0.3.1 candidate.** v0.3.0 had no updater; v0.3.1 was withdrawn after a native trial exposed a packaged-version mismatch. v0.3.2 sets the macOS bundle and Electron package versions to the fork's release number while preserving Code-OSS **1.139.1** as the extension API version. The release keeps editing, search, terminal, local Git review, and Open VSX extension installation. Settings offer automatic, startup-only, manual, or disabled future update checks. A previously staged update can still apply after checking is disabled.
+
+The signed app was built from fork commit `d896bbd416920fb87760927ba9e08b540d6e7f50`. The DMG and update ZIP contain identical files and symlink targets across 2,236 app-bundle paths. Both the app and DMG passed Developer ID signature checks, Apple notarization and stapled-ticket validation, and Gatekeeper assessment. The feed's ZIP SHA-256 and byte count match the packaged ZIP. The extracted signed app installed and listed EditorConfig 0.18.2 from Open VSX in an isolated profile. The source build passed its production compile; the focused updater test suite previously passed 25 cases, and the TypeScript client check and changed-file lint passed for the updater implementation.
+
+- DMG SHA-256: `7a109806e3c649300e78cabaebfca58da49d7f1ba51954246cfe25f382033dfe`
+- Update ZIP SHA-256: `33021d1d55e07a65da319af6ed9b923fd55a0ce0809484ceb058bf372db1a7a9` (205,499,518 bytes)
+
+The [published v0.3.0 performance comparison](PERFORMANCE.md) measured 18% less time to an editable file and 13% lower idle app-tree footprint than the original Code-OSS build at the same revision on the reference Apple M3 Max. Those measurements are from v0.3.0; a new v0.3.2 comparison is pending. This release is Apple Silicon-only and distributes full ZIP updates; delta packages are not implemented. A native v0.3.1-to-v0.3.2 update trial must be completed against the public feed before the updater is considered end-to-end verified.
