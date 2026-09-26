@@ -33,6 +33,8 @@ node scripts/lean-perf/benchmark.mjs \
 
 Run the built-in fixture smoke check with `node scripts/lean-perf/smoke.mjs`. It uses fake app metadata and never launches an editor.
 
+For a diagnostic renderer startup trace, run `node scripts/lean-perf/trace-startup.mjs "/path/to/Lean VS Code.app" "/path/to/file.txt" "/path/to/trace.json"`. This launches an isolated profile, records Monaco performance marks through the Chrome DevTools Protocol, and writes the Startup Performance report beside the JSON trace as `trace.json.perf.md`. The trace uses a temporary control extension to request the report, which can change the restored editor; use the paired benchmark above for release timing claims. Trace artifacts may include local file paths, so review them before publishing.
+
 ## Method
 
 The harness requires `arm64` macOS. Each startup trial gets unique user-data and shared-data directories and an empty extensions directory, then loads the same small control extension into both apps. It performs one raw-only startup warm-up per product before the measured repetitions. The 100 KiB text fixture is read before timing to warm filesystem contents. Timed startup trials use a fresh profile and alternate product order each repetition. Existing-window trials keep one isolated window per product, settle for five seconds, then alternate which product opens a new fixture file first.

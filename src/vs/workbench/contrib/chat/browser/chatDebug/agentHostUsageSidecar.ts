@@ -4,15 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { VSBuffer } from '../../../../../base/common/buffer.js';
-import { Disposable, DisposableMap, DisposableStore } from '../../../../../base/common/lifecycle.js';
+import { Disposable } from '../../../../../base/common/lifecycle.js';
 import { LRUCache } from '../../../../../base/common/map.js';
 import { joinPath } from '../../../../../base/common/resources.js';
 import { URI } from '../../../../../base/common/uri.js';
 import { IFileService } from '../../../../../platform/files/common/files.js';
 import { ILogService } from '../../../../../platform/log/common/log.js';
 import { toErrorMessage } from '../../../../../base/common/errorMessage.js';
-import { IAgentHostService, type IAgentConnection } from '../../../../../platform/agentHost/common/agentService.js';
-import { agentHostAuthority } from '../../../../../platform/agentHost/common/agentHostUri.js';
+import { IAgentHostService } from '../../../../../platform/agentHost/common/agentService.js';
 import { IRemoteAgentHostService } from '../../../../../platform/agentHost/common/remoteAgentHostService.js';
 import { ActionType, NotificationType, type ActionEnvelope, type ChatUsageAction, type INotification, type SessionCustomizationsChangedAction } from '../../../../../platform/agentHost/common/state/sessionActions.js';
 import { isDefaultChatUri, parseChatUri, readUsageInfoMeta, type Customization } from '../../../../../platform/agentHost/common/state/sessionState.js';
@@ -148,9 +147,6 @@ type IAgentHostActionSource = Pick<IAgentHostService, 'onDidAction' | 'onDidNoti
  */
 abstract class AgentHostActionRecorder extends Disposable {
 
-	/** Live per-remote-connection listeners (actions + notifications), keyed by agent-host authority. */
-	private readonly _remoteListeners = this._register(new DisposableMap<string>());
-
 	/**
 	 * Per-session serialized file-operation queue shared by writes and cleanup,
 	 * so a delete can never be overtaken by an in-flight write for the same
@@ -158,20 +154,13 @@ abstract class AgentHostActionRecorder extends Disposable {
 	 */
 	private readonly _queues = new Map<string, Promise<void>>();
 
-	/**
-	 * The connection object currently subscribed for each authority. Tracked so
-	 * a reconnect (which replaces the connection object under the same
-	 * authority) is detected and the listener re-subscribed to the live object.
-	 */
-	private readonly _remoteConnections = new Map<string, IAgentConnection>();
-
 	constructor(
 		protected readonly _baseDir: URI,
 		protected readonly _isEnabled: () => boolean,
 		protected readonly _fileService: IFileService,
 		protected readonly _logService: ILogService,
 		agentHostService: IAgentHostActionSource,
-		private readonly _remoteAgentHostService: IRemoteAgentHostService,
+		remoteAgentHostService: IRemoteAgentHostService,
 	) {
 		super();
 
@@ -179,9 +168,10 @@ abstract class AgentHostActionRecorder extends Disposable {
 		this._register(agentHostService.onDidAction(envelope => this._dispatch(envelope)));
 		this._register(agentHostService.onDidNotification(notification => this._onNotification(notification)));
 
-		// Remote agent-host connections (rebuilt as connections come and go).
-		this._register(this._remoteAgentHostService.onDidChangeConnections(() => this._syncRemoteListeners()));
-		this._syncRemoteListeners();
+		// The service owns per-connection listeners, including connections still
+		// handshaking. Subscribing here does not construct the delayed service.
+		this._register(remoteAgentHostService.onDidAction(envelope => this._dispatch(envelope)));
+		this._register(remoteAgentHostService.onDidNotification(notification => this._onNotification(notification)));
 	}
 
 	/** Gate on the enable predicate before handing the action to the subclass. */
@@ -249,37 +239,6 @@ abstract class AgentHostActionRecorder extends Disposable {
 
 	/** The sidecar file owned by this recorder for the given raw session id. */
 	protected abstract _sidecarUri(rawSessionId: string): URI;
-
-	/** Subscribes to each current remote connection's streams; drops stale ones. */
-	private _syncRemoteListeners(): void {
-		const seen = new Set<string>();
-		for (const info of this._remoteAgentHostService.connections) {
-			const authority = agentHostAuthority(info.address);
-			seen.add(authority);
-			const connection = this._remoteAgentHostService.getConnectionByAuthority(authority);
-			if (!connection) {
-				continue;
-			}
-			// Skip only when already subscribed to this exact connection object.
-			// After a reconnect the object is replaced under the same authority,
-			// so we must re-subscribe to the live one (DisposableMap.set
-			// disposes the previous, now-dead listener).
-			if (this._remoteConnections.get(authority) === connection) {
-				continue;
-			}
-			this._remoteConnections.set(authority, connection);
-			const store = new DisposableStore();
-			store.add(connection.onDidAction(envelope => this._dispatch(envelope)));
-			store.add(connection.onDidNotification(notification => this._onNotification(notification)));
-			this._remoteListeners.set(authority, store);
-		}
-		for (const authority of [...this._remoteListeners.keys()]) {
-			if (!seen.has(authority)) {
-				this._remoteListeners.deleteAndDispose(authority);
-				this._remoteConnections.delete(authority);
-			}
-		}
-	}
 }
 
 /**

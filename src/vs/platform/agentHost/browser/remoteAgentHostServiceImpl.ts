@@ -50,6 +50,7 @@ import { type IVscodeUpgradeResult } from '../common/state/protocolUpgrade.js';
 import { agentsWindowAgentHostClientInfo, editorWindowAgentHostClientInfo } from '../common/agentHostClientInfo.js';
 import { ConnectionDiagnosticBuffer, ConnectionDiagnosticOperation, type ConnectionDiagnosticObserver, type IRemoteConnectionDiagnosticEvent } from '../common/connectionDiagnostics.js';
 import { generateUuid } from '../../../base/common/uuid.js';
+import type { ActionEnvelope, INotification } from '../common/state/sessionActions.js';
 
 /** Tracks a single remote connection through its lifecycle. */
 interface IConnectionEntry {
@@ -153,6 +154,10 @@ export class RemoteAgentHostService extends Disposable implements IRemoteAgentHo
 
 	private readonly _onDidChangeConnections = this._register(new Emitter<void>());
 	readonly onDidChangeConnections = this._onDidChangeConnections.event;
+	private readonly _onDidAction = this._register(new Emitter<ActionEnvelope>());
+	readonly onDidAction = this._onDidAction.event;
+	private readonly _onDidNotification = this._register(new Emitter<INotification>());
+	readonly onDidNotification = this._onDidNotification.event;
 	private readonly _onDidChangePendingConnections = this._register(new Emitter<void>());
 	readonly onDidChangePendingConnections = this._onDidChangePendingConnections.event;
 
@@ -674,6 +679,18 @@ export class RemoteAgentHostService extends Disposable implements IRemoteAgentHo
 		// Guard against stale callbacks: only act if the
 		// current entry for this address is still the one we created.
 		const isCurrentEntry = () => this._entries.get(address) === entry;
+		// Subscribe before the handshake: it may emit session events synchronously.
+		// The entry store tears down both streams when the connection is replaced.
+		store.add(client.onDidAction(envelope => {
+			if (isCurrentEntry()) {
+				this._onDidAction.fire(envelope);
+			}
+		}));
+		store.add(client.onDidNotification(notification => {
+			if (isCurrentEntry()) {
+				this._onDidNotification.fire(notification);
+			}
+		}));
 
 		store.add(client.onDidClose(reason => {
 			if (!isCurrentEntry()) {

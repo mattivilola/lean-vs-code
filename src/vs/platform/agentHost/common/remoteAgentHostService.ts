@@ -11,6 +11,7 @@ import { createDecorator } from '../../instantiation/common/instantiation.js';
 import { ConfigurationTarget, type IConfigurationService } from '../../configuration/common/configuration.js';
 import { StorageScope, StorageTarget, type IStorageService } from '../../storage/common/storage.js';
 import type { IAgentConnection } from './agentService.js';
+import type { ActionEnvelope, INotification } from './state/sessionActions.js';
 import type { UnsupportedProtocolVersionErrorData } from './state/protocol/errors.js';
 import { AHP_UNSUPPORTED_PROTOCOL_VERSION, ProtocolError } from './state/sessionProtocol.js';
 import { AgentHostTransportFailureReason } from './state/sessionTransport.js';
@@ -701,6 +702,10 @@ export interface IRemoteAgentHostService {
 
 	/** Fires when a remote connection is established or lost. */
 	readonly onDidChangeConnections: Event<void>;
+	/** Live protocol actions from managed remote connections, without replay. */
+	readonly onDidAction: Event<ActionEnvelope>;
+	/** Live protocol notifications from managed remote connections, without replay. */
+	readonly onDidNotification: Event<INotification>;
 
 	/**
 	 * Known remote addresses with metadata. This is a status catalog, not a
@@ -815,6 +820,8 @@ export class NullRemoteAgentHostService implements IRemoteAgentHostService {
 	declare readonly _serviceBrand: undefined;
 	getConnectionDiagnostics(): readonly IRemoteConnectionDiagnosticEvent[] { return []; }
 	readonly onDidChangeConnections = Event.None;
+	readonly onDidAction: Event<ActionEnvelope> = Event.None;
+	readonly onDidNotification: Event<INotification> = Event.None;
 	readonly onDidChangePendingConnections = Event.None;
 	readonly pendingConnections: readonly IRemoteAgentHostPendingConnection[] = [];
 	readonly connections: readonly IRemoteAgentHostConnectionInfo[] = [];

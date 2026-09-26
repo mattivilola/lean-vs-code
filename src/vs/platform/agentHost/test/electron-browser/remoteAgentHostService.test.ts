@@ -27,6 +27,7 @@ import { agentsWindowAgentHostClientInfo, editorWindowAgentHostClientInfo } from
 import { PROTOCOL_VERSION } from '../../common/state/protocol/version/registry.js';
 import { computeReconnectDelay } from '../../common/reconnectPolicy.js';
 import { AgentHostTransportFailureReason, NonReconnectableTransportError } from '../../common/state/sessionTransport.js';
+import type { ActionEnvelope, INotification } from '../../common/state/sessionActions.js';
 
 interface IRemoteAgentHostServiceTestAccess {
 	readonly _reconnectAttempts: Map<string, number>;
@@ -54,8 +55,11 @@ class MockProtocolClient extends Disposable {
 
 	private readonly _onDidClose = this._register(new Emitter<AgentHostTransportFailureReason | undefined>());
 	readonly onDidClose = this._onDidClose.event;
-	readonly onDidAction = Event.None;
-	readonly onDidNotification = Event.None;
+	private readonly _onDidAction = this._register(new Emitter<ActionEnvelope>());
+	readonly onDidAction = this._onDidAction.event;
+	private readonly _onDidNotification = this._register(new Emitter<INotification>());
+	readonly onDidNotification = this._onDidNotification.event;
+	onConnect: (() => void) | undefined;
 	private readonly _onDidChangeConnectionState = this._register(new Emitter<string>());
 	readonly onDidChangeConnectionState = this._onDidChangeConnectionState.event;
 	private readonly _onDidScheduleReconnect = this._register(new Emitter<void>());
@@ -77,8 +81,12 @@ class MockProtocolClient extends Disposable {
 	}
 
 	async connect(): Promise<void> {
+		this.onConnect?.();
 		return this.connectDeferred.p;
 	}
+
+	fireAction(action: ActionEnvelope): void { this._onDidAction.fire(action); }
+	fireNotification(notification: INotification): void { this._onDidNotification.fire(notification); }
 
 	reconnectNow(): boolean {
 		this.reconnectNowCalls++;
@@ -405,6 +413,34 @@ suite('RemoteAgentHostService', () => {
 		const connection = service.getConnection('ws://host1:8080');
 		assert.ok(connection);
 		assert.strictEqual(connection.clientId, createdClients[0].clientId);
+	});
+
+	test('forwards live actions and notifications through handshake and connection replacement', async () => {
+		const actions: ActionEnvelope[] = [];
+		const notifications: INotification[] = [];
+		disposables.add(service.onDidAction(action => actions.push(action)));
+		disposables.add(service.onDidNotification(notification => notifications.push(notification)));
+		const firstAction = { serverSeq: 1 } as ActionEnvelope;
+		const firstNotification = { type: 'root/sessionRemoved', session: 'copilotcli:/first' } as INotification;
+		configService.setEntries([{ name: 'Host 1', connection: { type: RemoteAgentHostEntryType.WebSocket, address: 'ws://host1:8080' } }]);
+		await waitForCreatedClients(1);
+		createdClients[0].fireAction(firstAction);
+		createdClients[0].fireNotification(firstNotification);
+		createdClients[0].connectDeferred.complete();
+		await waitForConnected();
+
+		service.reconnect('host1:8080');
+		await waitForCreatedClients(2);
+		const replacementAction = { serverSeq: 2 } as ActionEnvelope;
+		const replacementNotification = { type: 'root/sessionRemoved', session: 'copilotcli:/second' } as INotification;
+		createdClients[0].fireAction({ serverSeq: 99 } as ActionEnvelope);
+		createdClients[0].fireNotification({ type: 'root/sessionRemoved', session: 'copilotcli:/stale' } as INotification);
+		createdClients[1].fireAction(replacementAction);
+		createdClients[1].fireNotification(replacementNotification);
+		createdClients[1].connectDeferred.complete();
+		await waitForConnected();
+		assert.deepStrictEqual(actions, [firstAction, replacementAction]);
+		assert.deepStrictEqual(notifications, [firstNotification, replacementNotification]);
 	});
 
 	test('removes connection when setting entry is removed', async () => {
