@@ -90,6 +90,23 @@ async function sha256(filePath) {
 	return digest.digest('hex');
 }
 
+async function signDmg(filePath) {
+	let lastError;
+	for (let attempt = 1; attempt <= 3; attempt++) {
+		try {
+			await run('codesign', ['--force', '--sign', identity, '--timestamp', '--options', 'runtime', filePath]);
+			return;
+		} catch (error) {
+			lastError = error;
+			console.warn(`DMG signing attempt ${attempt}/3 failed: ${error.stderr?.trim() || error.message}`);
+			if (attempt < 3) {
+				await new Promise(resolve => setTimeout(resolve, 10_000));
+			}
+		}
+	}
+	throw lastError;
+}
+
 async function removeSourceMaps(directory) {
 	let removed = 0;
 	for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
@@ -165,7 +182,7 @@ try {
 	await fs.symlink('/Applications', path.join(volume, 'Applications'));
 	console.log(`Creating ${path.basename(dmg)}`);
 	await run('hdiutil', ['create', '-volname', 'Lean VS Code', '-srcfolder', volume, '-format', 'UDZO', '-imagekey', 'zlib-level=9', dmg]);
-	await run('codesign', ['--force', '--sign', identity, '--timestamp', '--options', 'runtime', dmg]);
+	await signDmg(dmg);
 	await run('codesign', ['--verify', '--verbose=2', dmg]);
 	await run('xcrun', ['notarytool', 'submit', dmg, '--keychain-profile', notaryProfile, '--wait']);
 	await run('xcrun', ['stapler', 'staple', dmg]);
