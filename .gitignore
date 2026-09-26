@@ -34,6 +34,8 @@ vscode-telemetry-docs/
 test-output.json
 test/componentFixtures/.screenshots/*
 dist
+# The website is a separate Sites source repository.
+/website/
 .playwright-cli
 .playwright-mcp
 .claude/
