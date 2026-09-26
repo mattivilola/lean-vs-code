@@ -1,7 +1,7 @@
 {
 	"nameShort": "Lean VS Code",
 	"nameLong": "Lean VS Code",
-	"leanReleaseVersion": "0.2.0",
+	"leanReleaseVersion": "0.3.0",
 	"applicationName": "lean-code",
 	"dataFolderName": ".lean-vs-code",
 	"sharedDataFolderName": ".lean-vs-code-shared",
