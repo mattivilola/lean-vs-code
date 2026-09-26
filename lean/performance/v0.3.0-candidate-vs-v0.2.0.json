@@ -1,0 +1,882 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-26T10:00:13.145Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v26.9.0"
+  },
+  "settings": {
+    "samples": 30,
+    "memorySamples": 3,
+    "memoryIdleMs": 30000,
+    "memorySampleIntervalMs": 1000,
+    "existingWindowWarmupMs": 5000,
+    "warmupLaunchesPerProduct": 1,
+    "startupTimeoutMs": 60000,
+    "fixtureBytes": 102400,
+    "fixtureReadBeforeMeasurement": true,
+    "userExtensions": "isolated empty extensions-dir plus the same harness control extension loaded from --extensionDevelopmentPath",
+    "launchFlags": [
+      "--new-window",
+      "--shared-data-dir",
+      "--skip-welcome",
+      "--skip-release-notes",
+      "--disable-updates",
+      "--disable-telemetry"
+    ],
+    "existingWindowMethod": "launch the app executable with --reuse-window and the file path; readiness is measured by the control extension",
+    "processEnvironment": "inherits the invoking environment; values are not recorded in this report"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code v0.3 candidate",
+      "version": "1.139.1",
+      "commit": "6a9f3927791e02421a2fc969039b1a520dc3cbdc"
+    },
+    {
+      "key": "code-oss",
+      "label": "Lean VS Code v0.2.0",
+      "version": "1.139.1",
+      "commit": "a6a44252769ce477da1ab517e2292d158804c733"
+    }
+  ],
+  "metrics": {
+    "lean.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1676.613,
+      "p95": 1769.488,
+      "min": 1606.322,
+      "max": 1773.378
+    },
+    "lean.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 384.056,
+      "p95": 407.753,
+      "min": 360.8,
+      "max": 459.294
+    },
+    "lean.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 768502632,
+      "p95": 774466408,
+      "min": 768502632,
+      "max": 774466408
+    },
+    "code-oss.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1688.224,
+      "p95": 1740.11,
+      "min": 1595.282,
+      "max": 1805.939
+    },
+    "code-oss.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 395.156,
+      "p95": 427.169,
+      "min": 371.933,
+      "max": 427.792
+    },
+    "code-oss.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 779856912,
+      "p95": 784362512,
+      "min": 779856912,
+      "max": 784362512
+    }
+  },
+  "samples": [
+    {
+      "type": "launchWarmup",
+      "subject": "code-oss",
+      "sample": 0,
+      "elapsedMs": 1624.891
+    },
+    {
+      "type": "launchWarmup",
+      "subject": "lean",
+      "sample": 0,
+      "elapsedMs": 2033.717
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 1683.246
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 1699.134
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 1671.981
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 1666.252
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 1645.048
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 1663.442
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 1668.842
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 1667.821
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 1683.566
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 1677.908
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 1650.521
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 1700.332
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 1655.873
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 1693.058
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 1661.049
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 1606.322
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 1690.479
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 1805.939
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 1678.709
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 1676.613
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 1670.881
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 1729.354
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 1696.246
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 1640.315
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 1662.619
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 1707.497
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 1690.711
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 1746.289
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 1671.407
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 1705.527
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 1623.139
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 1769.488
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 1656.914
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 1681.195
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 1644.808
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 1706.658
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 1744.674
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 1725.814
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 1595.282
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 1773.378
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 1669.561
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 1719.173
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 1701.118
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 1729.358
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 1683.651
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 1723.543
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 1688.539
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 1736.461
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 1636.332
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 1688.224
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 1646.006
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 1686.944
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 1641.107
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 1740.11
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 1643.124
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 1694.857
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 1632.63
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 1706.758
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 1663.894
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 1703.566
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 396.921
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 427.792
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 408.475
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 397.913
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 384.056
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 412.542
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 386.128
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 383.806
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 382.838
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 405.013
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 396.508
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 375.201
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 385.666
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 392.212
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 414.077
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 361.347
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 407.467
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 414.675
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 385.572
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 407.753
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 384.369
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 395.156
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 385.091
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 392.116
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 361.547
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 416.84
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 415.893
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 372.205
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 360.8
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 396.609
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 394.762
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 362.695
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 382.373
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 413.022
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 372.949
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 395.256
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 383.401
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 371.933
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 380.047
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 400.616
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 459.294
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 373.459
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 383.879
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 362.813
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 363.275
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 427.169
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 394.676
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 403.082
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 393.837
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 386.346
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 385.198
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 401.375
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 394.914
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 397.938
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 399.27
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 387.375
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 374.09
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 384.352
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 396.803
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 375.302
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 1,
+      "physicalFootprintBytes": 774466408,
+      "rssBytesDiagnostic": 1268596736,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 2,
+      "physicalFootprintBytes": 768502632,
+      "rssBytesDiagnostic": 1262551040,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 3,
+      "physicalFootprintBytes": 768502632,
+      "rssBytesDiagnostic": 1262551040,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 1,
+      "physicalFootprintBytes": 784362512,
+      "rssBytesDiagnostic": 1285783552,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 2,
+      "physicalFootprintBytes": 779856912,
+      "rssBytesDiagnostic": 1280704512,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 3,
+      "physicalFootprintBytes": 779856912,
+      "rssBytesDiagnostic": 1280704512,
+      "processCount": 7
+    }
+  ]
+}

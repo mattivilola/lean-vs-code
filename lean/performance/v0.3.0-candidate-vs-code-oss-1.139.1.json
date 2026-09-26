@@ -1,0 +1,882 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-26T09:53:59.752Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v26.9.0"
+  },
+  "settings": {
+    "samples": 30,
+    "memorySamples": 3,
+    "memoryIdleMs": 30000,
+    "memorySampleIntervalMs": 1000,
+    "existingWindowWarmupMs": 5000,
+    "warmupLaunchesPerProduct": 1,
+    "startupTimeoutMs": 60000,
+    "fixtureBytes": 102400,
+    "fixtureReadBeforeMeasurement": true,
+    "userExtensions": "isolated empty extensions-dir plus the same harness control extension loaded from --extensionDevelopmentPath",
+    "launchFlags": [
+      "--new-window",
+      "--shared-data-dir",
+      "--skip-welcome",
+      "--skip-release-notes",
+      "--disable-updates",
+      "--disable-telemetry"
+    ],
+    "existingWindowMethod": "launch the app executable with --reuse-window and the file path; readiness is measured by the control extension",
+    "processEnvironment": "inherits the invoking environment; values are not recorded in this report"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code",
+      "version": "1.139.1",
+      "commit": "6a9f3927791e02421a2fc969039b1a520dc3cbdc"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1631.011,
+      "p95": 1732.097,
+      "min": 1563.406,
+      "max": 1740.136
+    },
+    "lean.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 383.664,
+      "p95": 452.332,
+      "min": 337.747,
+      "max": 504.577
+    },
+    "lean.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 783510496,
+      "p95": 789294048,
+      "min": 783510496,
+      "max": 789294048
+    },
+    "code-oss.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 2006.626,
+      "p95": 2074.525,
+      "min": 1928.305,
+      "max": 2114.821
+    },
+    "code-oss.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 401.761,
+      "p95": 441.342,
+      "min": 360.074,
+      "max": 500.257
+    },
+    "code-oss.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 932427096,
+      "p95": 932443480,
+      "min": 932427096,
+      "max": 932443480
+    }
+  },
+  "samples": [
+    {
+      "type": "launchWarmup",
+      "subject": "code-oss",
+      "sample": 0,
+      "elapsedMs": 2043.573
+    },
+    {
+      "type": "launchWarmup",
+      "subject": "lean",
+      "sample": 0,
+      "elapsedMs": 2075.534
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 1667.446
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 2063.419
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 2010.392
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 1599.744
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 1652.46
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 1937.133
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 1979.48
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 1605.34
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 1621.825
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 2009.748
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 1939.819
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 1740.136
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 1616.077
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 1928.305
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 2011.79
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 1563.406
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 1607.556
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 2029.478
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 1969.551
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 1641.05
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 1702.597
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 2012.743
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 1954.87
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 1643.568
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 1697.913
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 2071.976
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 2007.058
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 1603.455
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 1704.183
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 2017.504
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 2056.296
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 1645.361
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 1608.15
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 1998.309
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 1991.107
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 1615.472
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 1631.011
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 2114.821
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 1978.926
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 1639.29
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 1628.128
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 2074.525
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 1940.872
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 1657.48
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 1638.737
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 1981.561
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 1934.569
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 1580.74
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 1633.393
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 1995.859
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 1952.976
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 1732.097
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 1599.911
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 2014.051
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 2059.17
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 1633.643
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 1626.6
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 2006.626
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 2065.087
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 1616.617
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 391.363
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 500.257
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 417.642
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 392.516
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 350.98
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 401.761
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 371.506
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 386.049
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 340.171
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 415.879
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 425.44
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 452.332
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 340.333
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 415.14
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 389.789
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 386.245
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 337.747
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 405.29
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 388.938
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 384.703
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 341.652
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 382.4
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 390.573
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 375.637
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 338.806
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 402.681
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 384.472
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 430.371
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 384.865
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 401.941
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 390.696
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 397.838
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 371.033
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 409.155
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 401.291
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 504.577
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 354.192
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 441.342
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 406.693
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 383.664
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 340.699
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 405.625
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 391.809
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 386.451
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 373.211
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 407.039
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 360.074
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 387.628
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 350.143
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 383.834
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 384.706
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 408.869
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 351.487
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 405.1
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 401.672
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 406.324
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 372.598
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 416.178
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 370.056
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 398.59
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 1,
+      "physicalFootprintBytes": 789294048,
+      "rssBytesDiagnostic": 1288306688,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 2,
+      "physicalFootprintBytes": 783510496,
+      "rssBytesDiagnostic": 1267662848,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 3,
+      "physicalFootprintBytes": 783510496,
+      "rssBytesDiagnostic": 1267662848,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 1,
+      "physicalFootprintBytes": 932427096,
+      "rssBytesDiagnostic": 1607925760,
+      "processCount": 9
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 2,
+      "physicalFootprintBytes": 932427096,
+      "rssBytesDiagnostic": 1600798720,
+      "processCount": 9
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 3,
+      "physicalFootprintBytes": 932443480,
+      "rssBytesDiagnostic": 1600815104,
+      "processCount": 9
+    }
+  ]
+}
