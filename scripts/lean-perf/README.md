@@ -13,7 +13,7 @@ node scripts/lean-perf/benchmark.mjs \
   --base-revision 04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1
 ```
 
-The default is 30 timed startup and 30 existing-window file-open samples per product, one startup warm-up per product, a 5-second existing-window settle period, 3 memory snapshots after 30 seconds of idle time, and an output directory under `scripts/lean-perf/results/`. Pass `--samples`, `--memory-samples`, `--memory-idle-ms`, or `--output-root` to adjust the run. Every run gets a new directory; profiles and reports are retained. No existing profile is opened or removed.
+The default is 30 timed startup and 30 existing-window file-open samples per product, one startup warm-up per product, a 5-second existing-window settle period, 3 memory snapshots after 30 seconds of idle time, and an output directory under `scripts/lean-perf/results/`. Pass `--samples`, `--memory-samples`, `--memory-idle-ms`, or `--output-root` to adjust the run. Every run gets a new report directory and a short, isolated profile directory under `/private/tmp/lean-perf-*`; both are retained for inspection. No existing profile is opened or removed.
 
 First validate bundle paths and inspect the plan without launching either app:
 
@@ -29,7 +29,7 @@ Run the built-in fixture smoke check with `node scripts/lean-perf/smoke.mjs`. It
 
 ## Method
 
-The harness requires `arm64` macOS. Each startup trial gets a unique user-data directory and empty extensions directory, then loads the same small control extension into both apps. It performs one raw-only startup warm-up per product before the measured repetitions. The 100 KiB text fixture is read before timing to warm filesystem contents. Timed startup trials use a fresh profile and alternate product order each repetition. Existing-window trials keep one isolated window per product, settle for five seconds, then alternate which product opens a new fixture file first.
+The harness requires `arm64` macOS. Each startup trial gets unique user-data and shared-data directories and an empty extensions directory, then loads the same small control extension into both apps. It performs one raw-only startup warm-up per product before the measured repetitions. The 100 KiB text fixture is read before timing to warm filesystem contents. Timed startup trials use a fresh profile and alternate product order each repetition. Existing-window trials keep one isolated window per product, settle for five seconds, then alternate which product opens a new fixture file first.
 
 Readiness is recorded after VS Code reports the requested file as the active text editor and accepts a reversible `TextEditor.edit` insertion/removal probe. This checks that the extension API can edit the document and restores the fixture contents. The startup number runs from process spawn until the harness sees that readiness marker. The existing-window number runs from spawning the app executable with `--reuse-window <file>` until the running app reports the matching editor as ready. These are app-level file-ready timings; the editability probe is not a hardware key-to-paint measurement.
 
@@ -46,6 +46,7 @@ Each unique result directory contains:
 - `manifest.json`: machine, product metadata, fixture size, flags, settings, and supplied comparison revision.
 - `samples.jsonl`: raw timing and memory observations, including startup warm-ups, written as the run proceeds. Warm-ups are excluded from percentile summaries.
 - `summary.json`: per-product p50/p95/min/max and sample counts. Percentiles use nearest rank (`sorted[ceil(p*n)-1]`); failed samples stay visible in the raw file and do not enter the percentile calculation.
-- `profiles/`, `trials/`, `fixtures/`, and `harness-extension/`: isolated profiles and harness-owned run artifacts for inspection.
+- `/private/tmp/lean-perf-*`: isolated per-run profiles, kept outside the report directory so Electron's Unix socket paths fit macOS's limit. The relative profile paths in raw samples point to them.
+- `trials/`, `fixtures/`, and `harness-extension/`: harness-owned run artifacts for inspection. Each trial's `control/app.log` captures launch errors.
 
 The default sample count follows the repository performance plan. Reduce it for a smoke run, then use at least 30 repetitions for reported warm-cache timing results. This harness does not reset the filesystem cache or claim reboot-cold startup.

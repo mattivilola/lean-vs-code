@@ -279,6 +279,7 @@ function appArguments(app, profile, extensionPath, controlDir, startupFile) {
 	const args = [
 		'--new-window',
 		`--user-data-dir=${path.join(profile, 'user-data')}`,
+		`--shared-data-dir=${path.join(profile, 'shared-data')}`,
 		`--extensions-dir=${path.join(profile, 'extensions')}`,
 		`--extensionDevelopmentPath=${extensionPath}`,
 		'--skip-welcome',
@@ -306,8 +307,12 @@ function startApp(app, profile, extensionPath, controlDir, startupFile) {
 
 function launchApp(app, profile, extensionPath, controlDir, startupFile) {
 	const launch = appArguments(app, profile, extensionPath, controlDir, startupFile);
-	const child = spawn(app.executable, launch.args, { stdio: 'ignore', env: launch.env });
-	return child;
+	const logFd = fs.openSync(path.join(controlDir, 'app.log'), 'a');
+	try {
+		return spawn(app.executable, launch.args, { stdio: ['ignore', logFd, logFd], env: launch.env });
+	} finally {
+		fs.closeSync(logFd);
+	}
 }
 
 async function waitForPath(filePath, child, timeoutMs, description) {
@@ -662,7 +667,7 @@ function appMetadata(apps, baseRevision, options) {
 			fixtureBytes: FIXTURE_BYTES,
 			fixtureReadBeforeMeasurement: true,
 			userExtensions: 'isolated empty extensions-dir plus the same harness control extension loaded from --extensionDevelopmentPath',
-			launchFlags: ['--new-window', '--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry'],
+			launchFlags: ['--new-window', '--shared-data-dir', '--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry'],
 			existingWindowMethod: 'launch the app executable with --reuse-window and the file path; readiness is measured by the control extension',
 			processEnvironment: 'inherits the invoking environment; values are not recorded in this report'
 		},
@@ -796,7 +801,9 @@ async function run(options) {
 	fs.mkdirSync(path.dirname(runDir), { recursive: true });
 	fs.mkdirSync(runDir, { recursive: false });
 	fs.mkdirSync(path.join(runDir, 'fixtures'), { recursive: true });
-	fs.mkdirSync(path.join(runDir, 'profiles'), { recursive: true });
+	// Electron's single-instance Unix socket lives beneath user-data-dir. Keep
+	// profiles short enough for macOS's 104-byte Unix-domain socket path limit.
+	const profileRoot = fs.mkdtempSync('/private/tmp/lean-perf-');
 	const rawSamplesPath = path.join(runDir, 'samples.jsonl');
 	fs.writeFileSync(rawSamplesPath, '', { flag: 'wx' });
 	const extensionPath = path.join(runDir, 'harness-extension');
@@ -816,19 +823,19 @@ async function run(options) {
 	process.stdout.write(`Writing benchmark output to ${runDir}\n`);
 	process.stdout.write('Running one startup warm-up per product; these are raw-only samples.\n');
 	for (const [appIndex, app] of [...apps].reverse().entries()) {
-		append(await runLaunchSample(app, appIndex, -1, fixturePath, path.join(runDir, 'profiles', app.key), extensionPath, runDir, baseOptions));
+		append(await runLaunchSample(app, appIndex, -1, fixturePath, path.join(profileRoot, app.key), extensionPath, runDir, baseOptions));
 	}
 	process.stdout.write(`Starting ${options.samples} alternating launch samples per product.\n`);
 
 	for (let index = 0; index < options.samples; index++) {
 		const order = index % 2 === 0 ? apps : [...apps].reverse();
 		for (const [appIndex, app] of order.entries()) {
-			append(await runLaunchSample(app, appIndex, index, fixturePath, path.join(runDir, 'profiles', app.key), extensionPath, runDir, baseOptions));
+			append(await runLaunchSample(app, appIndex, index, fixturePath, path.join(profileRoot, app.key), extensionPath, runDir, baseOptions));
 		}
 	}
 
 	process.stdout.write('Measuring existing-window file opens in alternating product order.\n');
-	const activeProfiles = path.join(runDir, 'profiles', 'existing-window');
+	const activeProfiles = path.join(profileRoot, 'existing-window');
 	const existingSessionApps = index => index % 2 === 0 ? apps : [...apps].reverse();
 	const sessionStates = new Map();
 	try {
@@ -858,7 +865,7 @@ async function run(options) {
 	for (const app of apps) {
 		let memorySamples;
 		try {
-			memorySamples = await runMemorySession(app, fixturePath, path.join(runDir, 'profiles', 'memory'), extensionPath, runDir, baseOptions);
+			memorySamples = await runMemorySession(app, fixturePath, path.join(profileRoot, 'memory'), extensionPath, runDir, baseOptions);
 		} catch (error) {
 			memorySamples = [{
 				type: 'wholeProcessTreeMemory', subject: app.key, sample: 1,
@@ -881,7 +888,7 @@ async function run(options) {
 async function runOneExistingOpen(state, sampleIndex, runDir, options) {
 	const { app, child, profile, controlDir } = state;
 	const id = `${app.key}-${String(sampleIndex + 1).padStart(3, '0')}`;
-	const targetPath = path.join(runDir, 'fixtures', `open-${String(sampleIndex + 1).padStart(3, '0')}.txt`);
+	const targetPath = path.join(runDir, 'fixtures', `open-${app.key}-${String(sampleIndex + 1).padStart(3, '0')}.txt`);
 	fs.writeFileSync(targetPath, makeFixtureContent(), { flag: 'wx' });
 	fs.readFileSync(targetPath);
 	const markerPath = path.join(controlDir, `open-${id}.json`);
@@ -892,7 +899,7 @@ async function runOneExistingOpen(state, sampleIndex, runDir, options) {
 		if (!armed?.armed) {
 			throw new Error(`Extension did not arm open sample ${id}.`);
 		}
-		const args = ['--reuse-window', `--user-data-dir=${path.join(profile, 'user-data')}`, `--extensions-dir=${path.join(profile, 'extensions')}`, targetPath];
+		const args = ['--reuse-window', `--user-data-dir=${path.join(profile, 'user-data')}`, `--shared-data-dir=${path.join(profile, 'shared-data')}`, `--extensions-dir=${path.join(profile, 'extensions')}`, targetPath];
 		startedAt = new Date().toISOString();
 		const start = performance.now();
 		cli = spawn(app.executable, args, { stdio: 'ignore', env: process.env });
