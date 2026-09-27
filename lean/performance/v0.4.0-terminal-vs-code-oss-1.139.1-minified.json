@@ -1,0 +1,534 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-27T16:05:34.032Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "osRelease": "27.0.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code v0.4.0 signed",
+      "version": "1.139.1",
+      "commit": "e54bdc8388a053f7ca6921bb6c67bea28c3ead01"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS 1.139.1 minified",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean": {
+      "count": 30,
+      "failed": 0,
+      "p50": 1905.684,
+      "p95": 1979.389,
+      "launchToWorkflowP50": 3116,
+      "launchToWorkflowP95": 3262
+    },
+    "code-oss": {
+      "count": 30,
+      "failed": 0,
+      "p50": 1975.131,
+      "p95": 2081.587,
+      "launchToWorkflowP50": 3598,
+      "launchToWorkflowP95": 3701
+    }
+  },
+  "kind": "first-use-workflow",
+  "scenario": "integratedTerminal",
+  "definition": "From a stopped app until a command in the integrated terminal writes a marker that the control extension verifies on disk. The separate action timing begins inside the temporary onStartupFinished extension. Each launch used an isolated one-file Git workspace.",
+  "settings": {
+    "samplesPerApp": 30,
+    "pollIntervalMs": 20,
+    "macOSIdleSleepPreventedWithCaffeinate": true,
+    "warmCache": true
+  },
+  "samples": [
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "elapsedMs": 1805.306,
+      "launchToWorkflowMs": 3078
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "elapsedMs": 1955.577,
+      "launchToWorkflowMs": 3598
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "elapsedMs": 1954.302,
+      "launchToWorkflowMs": 3537
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "elapsedMs": 1833.29,
+      "launchToWorkflowMs": 3083
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "elapsedMs": 1890.615,
+      "launchToWorkflowMs": 3113
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "elapsedMs": 1868.681,
+      "launchToWorkflowMs": 3445
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "elapsedMs": 2067.974,
+      "launchToWorkflowMs": 3701
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "elapsedMs": 1873.636,
+      "launchToWorkflowMs": 3101
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "elapsedMs": 1931.572,
+      "launchToWorkflowMs": 3125
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "elapsedMs": 1897.635,
+      "launchToWorkflowMs": 3509
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "elapsedMs": 2063.155,
+      "launchToWorkflowMs": 3676
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "elapsedMs": 1832.01,
+      "launchToWorkflowMs": 3025
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "elapsedMs": 1852.652,
+      "launchToWorkflowMs": 3046
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "elapsedMs": 2075.584,
+      "launchToWorkflowMs": 3688
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "elapsedMs": 1950.652,
+      "launchToWorkflowMs": 3553
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "elapsedMs": 1814.892,
+      "launchToWorkflowMs": 3071
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "elapsedMs": 1871.845,
+      "launchToWorkflowMs": 3082
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "elapsedMs": 1951.778,
+      "launchToWorkflowMs": 3588
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "elapsedMs": 1908.826,
+      "launchToWorkflowMs": 3564
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "elapsedMs": 1831.708,
+      "launchToWorkflowMs": 3064
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "elapsedMs": 1875.926,
+      "launchToWorkflowMs": 3110
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "elapsedMs": 1907.163,
+      "launchToWorkflowMs": 3540
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "elapsedMs": 1925.791,
+      "launchToWorkflowMs": 3482
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "elapsedMs": 1831.495,
+      "launchToWorkflowMs": 3083
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "elapsedMs": 1889.406,
+      "launchToWorkflowMs": 3103
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "elapsedMs": 1975.083,
+      "launchToWorkflowMs": 3519
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "elapsedMs": 1985.006,
+      "launchToWorkflowMs": 3605
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "elapsedMs": 1911.554,
+      "launchToWorkflowMs": 3116
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "elapsedMs": 1979.389,
+      "launchToWorkflowMs": 3262
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "elapsedMs": 1940.862,
+      "launchToWorkflowMs": 3586
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "elapsedMs": 1961.286,
+      "launchToWorkflowMs": 3607
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "elapsedMs": 1874.725,
+      "launchToWorkflowMs": 3123
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "elapsedMs": 1914.613,
+      "launchToWorkflowMs": 3147
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "elapsedMs": 1941.526,
+      "launchToWorkflowMs": 3551
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "elapsedMs": 1941.508,
+      "launchToWorkflowMs": 3542
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "elapsedMs": 1965.496,
+      "launchToWorkflowMs": 3220
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "elapsedMs": 1863.569,
+      "launchToWorkflowMs": 3099
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "elapsedMs": 2010.192,
+      "launchToWorkflowMs": 3682
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "elapsedMs": 2081.587,
+      "launchToWorkflowMs": 3656
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "elapsedMs": 1905.684,
+      "launchToWorkflowMs": 3113
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "elapsedMs": 1919.965,
+      "launchToWorkflowMs": 3172
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "elapsedMs": 2081.798,
+      "launchToWorkflowMs": 3644
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "elapsedMs": 1975.131,
+      "launchToWorkflowMs": 3574
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "elapsedMs": 1910.714,
+      "launchToWorkflowMs": 3123
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "elapsedMs": 1920.092,
+      "launchToWorkflowMs": 3203
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "elapsedMs": 2045.95,
+      "launchToWorkflowMs": 3755
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "elapsedMs": 2012.534,
+      "launchToWorkflowMs": 3610
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "elapsedMs": 2010.904,
+      "launchToWorkflowMs": 3290
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "elapsedMs": 1927.603,
+      "launchToWorkflowMs": 3130
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "elapsedMs": 2010.606,
+      "launchToWorkflowMs": 3662
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "elapsedMs": 2036.893,
+      "launchToWorkflowMs": 3668
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "elapsedMs": 1957.285,
+      "launchToWorkflowMs": 3221
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "elapsedMs": 1925.865,
+      "launchToWorkflowMs": 3170
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "elapsedMs": 2076.162,
+      "launchToWorkflowMs": 3644
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "elapsedMs": 2079.396,
+      "launchToWorkflowMs": 3698
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "elapsedMs": 1908.522,
+      "launchToWorkflowMs": 3140
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "elapsedMs": 1944.086,
+      "launchToWorkflowMs": 3154
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "elapsedMs": 1988.384,
+      "launchToWorkflowMs": 3565
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "elapsedMs": 2043.592,
+      "launchToWorkflowMs": 3701
+    },
+    {
+      "type": "integratedTerminal",
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "elapsedMs": 1918.663,
+      "launchToWorkflowMs": 3167
+    }
+  ]
+}
