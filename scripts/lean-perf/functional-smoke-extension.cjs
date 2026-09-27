@@ -9,6 +9,8 @@ const vscode = require('vscode');
 
 const workspaceRoot = process.env.LEAN_SMOKE_WORKSPACE;
 const resultPath = process.env.LEAN_SMOKE_RESULT;
+const scenario = process.env.LEAN_SMOKE_SCENARIO ?? 'all';
+const pollIntervalMs = scenario === 'all' ? 200 : 20;
 
 function assert(condition, message) {
 	if (!condition) {
@@ -23,7 +25,7 @@ async function waitFor(predicate, description, timeoutMs = 20000) {
 		if (value) {
 			return value;
 		}
-		await new Promise(resolve => setTimeout(resolve, 200));
+		await new Promise(resolve => setTimeout(resolve, pollIntervalMs));
 	}
 	throw new Error(`Timed out waiting for ${description}`);
 }
@@ -31,10 +33,15 @@ async function waitFor(predicate, description, timeoutMs = 20000) {
 async function run() {
 	const checks = {};
 	async function check(name, action) {
+		if (scenario !== 'all' && scenario !== name) {
+			return;
+		}
+		const started = performance.now();
 		try {
-			checks[name] = { ok: true, detail: await action() };
+			const detail = await action();
+			checks[name] = { ok: true, detail, durationMs: Number((performance.now() - started).toFixed(3)) };
 		} catch (error) {
-			checks[name] = { ok: false, error: String(error?.stack ?? error) };
+			checks[name] = { ok: false, error: String(error?.stack ?? error), durationMs: Number((performance.now() - started).toFixed(3)) };
 		}
 	}
 
@@ -75,6 +82,7 @@ async function run() {
 	});
 
 	await check('gitReview', async () => {
+		await waitFor(() => vscode.window.activeTextEditor?.document.uri.fsPath === sourcePath, 'requested file active in the editor');
 		await vscode.commands.executeCommand('workbench.view.scm');
 		const extension = await waitFor(() => vscode.extensions.getExtension('vscode.git'), 'bundled Git extension activation');
 		const exports = await extension.activate();
@@ -95,7 +103,7 @@ async function run() {
 		}
 	});
 
-	const result = { createdAt: new Date().toISOString(), app: vscode.env.appName, checks, passed: Object.values(checks).every(check => check.ok) };
+	const result = { createdAt: new Date().toISOString(), app: vscode.env.appName, scenario, checks, passed: Object.values(checks).every(check => check.ok) };
 	fs.mkdirSync(path.dirname(resultPath), { recursive: true });
 	fs.writeFileSync(resultPath, JSON.stringify(result, null, 2) + '\n');
 	setTimeout(() => { void vscode.commands.executeCommand('workbench.action.quit'); }, 100);

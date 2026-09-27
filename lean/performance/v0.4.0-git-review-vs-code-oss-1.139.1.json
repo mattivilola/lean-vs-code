@@ -1,0 +1,530 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-27T12:05:56.752Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "osRelease": "27.0.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "version": "1.139.1",
+      "commit": "e54bdc8388a053f7ca6921bb6c67bea28c3ead01"
+    },
+    {
+      "key": "code-oss",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean": {
+      "count": 30,
+      "failed": 0,
+      "p50": 129.762,
+      "p95": 151.943,
+      "launchToWorkflowP50": 1492,
+      "launchToWorkflowP95": 1557
+    },
+    "code-oss": {
+      "count": 30,
+      "failed": 0,
+      "p50": 50.039,
+      "p95": 74.984,
+      "launchToWorkflowP50": 2002,
+      "launchToWorkflowP95": 2060
+    }
+  },
+  "kind": "first-use-workflow",
+  "scenario": "gitReview",
+  "definition": "Two metrics: first-use action duration inside the temporary onStartupFinished extension, and process spawn to completed workflow. Each fresh app launch uses an isolated profile and one-file Git fixture.",
+  "settings": {
+    "samplesPerApp": 30,
+    "pollIntervalMs": 20
+  },
+  "samples": [
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "elapsedMs": 118.95,
+      "launchToWorkflowMs": 1499
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "elapsedMs": 51.119,
+      "launchToWorkflowMs": 2025
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "elapsedMs": 51.908,
+      "launchToWorkflowMs": 1986
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "elapsedMs": 129.199,
+      "launchToWorkflowMs": 1462
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "elapsedMs": 151.943,
+      "launchToWorkflowMs": 1503
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "elapsedMs": 49.186,
+      "launchToWorkflowMs": 2013
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "elapsedMs": 56.692,
+      "launchToWorkflowMs": 1975
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "elapsedMs": 118.396,
+      "launchToWorkflowMs": 1497
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "elapsedMs": 125.814,
+      "launchToWorkflowMs": 1469
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "elapsedMs": 56.291,
+      "launchToWorkflowMs": 2060
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "elapsedMs": 67.357,
+      "launchToWorkflowMs": 1991
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "elapsedMs": 124.155,
+      "launchToWorkflowMs": 1520
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "elapsedMs": 137.98,
+      "launchToWorkflowMs": 1544
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "elapsedMs": 45.235,
+      "launchToWorkflowMs": 2046
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "elapsedMs": 49.405,
+      "launchToWorkflowMs": 2081
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "elapsedMs": 116.163,
+      "launchToWorkflowMs": 1471
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "elapsedMs": 134.847,
+      "launchToWorkflowMs": 1469
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "elapsedMs": 58.618,
+      "launchToWorkflowMs": 1979
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "elapsedMs": 50.039,
+      "launchToWorkflowMs": 2043
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "elapsedMs": 147.956,
+      "launchToWorkflowMs": 1505
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "elapsedMs": 117.357,
+      "launchToWorkflowMs": 1468
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "elapsedMs": 62.581,
+      "launchToWorkflowMs": 1979
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "elapsedMs": 63.347,
+      "launchToWorkflowMs": 2002
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "elapsedMs": 123.793,
+      "launchToWorkflowMs": 1473
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "elapsedMs": 128.541,
+      "launchToWorkflowMs": 1535
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "elapsedMs": 42.521,
+      "launchToWorkflowMs": 1998
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "elapsedMs": 75.383,
+      "launchToWorkflowMs": 2058
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "elapsedMs": 136.689,
+      "launchToWorkflowMs": 1507
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "elapsedMs": 141.288,
+      "launchToWorkflowMs": 1483
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "elapsedMs": 74.984,
+      "launchToWorkflowMs": 2002
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "elapsedMs": 43.838,
+      "launchToWorkflowMs": 2028
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "elapsedMs": 134.351,
+      "launchToWorkflowMs": 1526
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "elapsedMs": 140.619,
+      "launchToWorkflowMs": 1488
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "elapsedMs": 53.897,
+      "launchToWorkflowMs": 2003
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "elapsedMs": 27.068,
+      "launchToWorkflowMs": 1991
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "elapsedMs": 147.69,
+      "launchToWorkflowMs": 1516
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "elapsedMs": 125.214,
+      "launchToWorkflowMs": 1557
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "elapsedMs": 48.526,
+      "launchToWorkflowMs": 2008
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "elapsedMs": 66.209,
+      "launchToWorkflowMs": 2043
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "elapsedMs": 147.049,
+      "launchToWorkflowMs": 1499
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "elapsedMs": 137.435,
+      "launchToWorkflowMs": 1466
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "elapsedMs": 65.007,
+      "launchToWorkflowMs": 1995
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "elapsedMs": 51.505,
+      "launchToWorkflowMs": 1948
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "elapsedMs": 159.477,
+      "launchToWorkflowMs": 1925
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "elapsedMs": 147.534,
+      "launchToWorkflowMs": 1482
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "elapsedMs": 47.937,
+      "launchToWorkflowMs": 2018
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "elapsedMs": 48.589,
+      "launchToWorkflowMs": 2046
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "elapsedMs": 133.398,
+      "launchToWorkflowMs": 1521
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "elapsedMs": 128.416,
+      "launchToWorkflowMs": 1492
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "elapsedMs": 70.023,
+      "launchToWorkflowMs": 1988
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "elapsedMs": 45.46,
+      "launchToWorkflowMs": 2018
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "elapsedMs": 129.429,
+      "launchToWorkflowMs": 1473
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "elapsedMs": 132.378,
+      "launchToWorkflowMs": 1489
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "elapsedMs": 48.633,
+      "launchToWorkflowMs": 1962
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "elapsedMs": 43.064,
+      "launchToWorkflowMs": 1976
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "elapsedMs": 129.762,
+      "launchToWorkflowMs": 1512
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "elapsedMs": 123.034,
+      "launchToWorkflowMs": 1468
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "elapsedMs": 44.126,
+      "launchToWorkflowMs": 2018
+    },
+    {
+      "type": "gitReview",
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "elapsedMs": 44.972,
+      "launchToWorkflowMs": 2000
+    },
+    {
+      "type": "gitReview",
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "elapsedMs": 124.264,
+      "launchToWorkflowMs": 1430
+    }
+  ]
+}
