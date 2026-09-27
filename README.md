@@ -38,6 +38,8 @@ v0.4.0 ships an optimized macOS bundle, removes synchronous remote-listener work
 
 Our [startup roadmap](lean/docs/STARTUP_ROADMAP.md) ranks the next measured experiments toward an editable file in under one second, including Apple Silicon and Electron work. It preserves extension compatibility as a release gate.
 
+The [optimization ledger](lean/docs/OPTIMIZATION_LEDGER.md) records what shipped, what was tried and rejected, the evidence behind each decision, and the next use cases to test. It also defines the final release-summary checklist, so proposed gains stay separate from measured Code-OSS results.
+
 The [developer workflow benchmark matrix](lean/docs/BENCHMARK_MATRIX.md) defines the tasks and completion events we will test next. Public speed claims compare Lean with the original, same-revision Code-OSS source build; Lean-version comparisons are retained only for development history.
 
 - **Editing and review first.** Open a file, navigate a project, inspect local Git changes, and compare them side by side without an AI prompt or onboarding flow taking over the workbench.
