@@ -7,6 +7,7 @@ The primary goal remains stopped-process launch to an **editable requested file*
 | Workload | Completion event | Why it matters | Current evidence |
 | --- | --- | --- | --- |
 | Open a 100 KiB file | Requested editor is active and accepts a reversible edit | Direct measure of the sub-1-second startup goal | [30 paired launches, v0.4.0](../performance/v0.4.0-vs-code-oss-1.139.1-minified.json) |
+| Show requested file text | Unique requested text appears in a visible-size Monaco editor DOM element | Separates visible content from later extension-backed editability | [30 paired diagnostic launches, v0.4.0](../performance/v0.4.0-visible-file-vs-code-oss-1.139.1-minified.json); DOM proxy, not physical paint |
 | Open a 10,000-file Git workspace | Requested tracked file is editable | Exercises repository startup without conflating it with standalone-file launch | [30 paired launches, v0.4.0](../performance/v0.4.0-git-workspace-vs-code-oss-1.139.1-minified.json) |
 | Review a local Git change | Bundled Git API discovers the repository and returns the changed file's diff | Measures first-use code review, including Git activation | [30 paired launches, v0.4.0](../performance/v0.4.0-git-review-vs-code-oss-1.139.1-minified.json) |
 | Edit and save the requested file | Insert succeeds, document saves, and changed bytes are verified on disk | Tests the path from app launch to a completed editing task | [30 paired launches, v0.4.0](../performance/v0.4.0-edit-save-vs-code-oss-1.139.1-minified.json) |
