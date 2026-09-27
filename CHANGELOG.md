@@ -9,6 +9,7 @@ Add user-visible changes here as they land. Before each release, move them under
 ## 0.4.0 benchmark addendum — 27 September 2026
 
 - Validated a minified, same-revision original Code-OSS source comparator and ran 30-pair standalone-file, 10,000-file repository, Git-review, first saved-edit, integrated-terminal, and verified workspace text-search benchmarks. The matched-build median differences are 17%, 19%, 21%, 25%, 13%, and 25% less full-workflow time, respectively, for signed Lean v0.4.0. Earlier unminified-comparator results remain labeled for audit; the public headline now uses the minified baseline. See the [method and raw observations](lean/docs/PERFORMANCE.md).
+- Added a separate first-visible-file diagnostic: requested text reached the editor DOM in 0.999 s median / 1.073 s p95 for Lean versus 1.115 / 1.134 s for same-revision Code-OSS. This is a DOM visibility proxy, not the primary editable-file result or a sub-one-second p95 claim.
 
 ## 0.4.0
 
