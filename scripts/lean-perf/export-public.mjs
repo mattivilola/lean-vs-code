@@ -45,6 +45,19 @@ const report = manifest.scenario ? {
 	samples: samples.map(({ type, subject, sample, order, elapsedMs, launchToWorkflowMs }) => ({
 		type, subject, sample, order, elapsedMs, launchToWorkflowMs
 	}))
+} : typeof manifest.inputProbe === 'boolean' ? {
+	...common,
+	kind: manifest.inputProbe ? 'first-ui-edit-diagnostic' : 'first-visible-file-diagnostic',
+	definition: manifest.definition,
+	settings: {
+		samplesPerApp: manifest.samplesPerApp,
+		warmupsPerApp: 1,
+		pollIntervalMs: 20,
+		remoteDebuggingPortEnabledForBothApps: true,
+		macOSIdleSleepPreventedWithCaffeinate: true,
+		warmCache: true
+	},
+	samples: samples.map(({ subject, sample, order, warmup, elapsedMs }) => ({ subject, sample, order, warmup, elapsedMs }))
 } : {
 	...common,
 	settings: manifest.settings,
@@ -61,6 +74,11 @@ if (manifest.scenario && (samples.length !== 2 * manifest.samplesPerApp
 	|| samples.some(sample => !Number.isFinite(sample.elapsedMs) || !Number.isFinite(sample.launchToWorkflowMs))
 	|| Object.values(summary.metrics).some(metric => metric.count !== manifest.samplesPerApp || metric.failed !== 0))) {
 	throw new Error('Do not publish an incomplete workflow benchmark.');
+}
+if (typeof manifest.inputProbe === 'boolean' && (samples.length !== 2 * (manifest.samplesPerApp + 1)
+	|| samples.some(sample => !Number.isFinite(sample.elapsedMs))
+	|| Object.values(summary.metrics).some(metric => metric.count !== manifest.samplesPerApp || metric.failed !== 0))) {
+	throw new Error('Do not publish an incomplete visible-file or first-typing benchmark.');
 }
 
 fs.mkdirSync(path.dirname(output), { recursive: true });
