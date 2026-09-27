@@ -47,7 +47,7 @@ const report = manifest.scenario ? {
 	}))
 } : typeof manifest.inputProbe === 'boolean' ? {
 	...common,
-	kind: manifest.inputProbe ? 'first-ui-edit-diagnostic' : 'first-visible-file-diagnostic',
+	kind: manifest.secondWindow ? 'second-window-first-ui-edit-diagnostic' : manifest.inputProbe ? 'first-ui-edit-diagnostic' : 'first-visible-file-diagnostic',
 	definition: manifest.definition,
 	settings: {
 		samplesPerApp: manifest.samplesPerApp,
@@ -57,7 +57,10 @@ const report = manifest.scenario ? {
 		macOSIdleSleepPreventedWithCaffeinate: true,
 		warmCache: true
 	},
-	samples: samples.map(({ subject, sample, order, warmup, elapsedMs }) => ({ subject, sample, order, warmup, elapsedMs }))
+	samples: samples.map(({ subject, sample, order, warmup, elapsedMs, firstWindowReadyMs }) => ({
+		subject, sample, order, warmup, elapsedMs,
+		...(manifest.secondWindow ? { firstWindowReadyMs } : {})
+	}))
 } : {
 	...common,
 	settings: manifest.settings,
@@ -77,6 +80,7 @@ if (manifest.scenario && (samples.length !== 2 * manifest.samplesPerApp
 }
 if (typeof manifest.inputProbe === 'boolean' && (samples.length !== 2 * (manifest.samplesPerApp + 1)
 	|| samples.some(sample => !Number.isFinite(sample.elapsedMs))
+	|| (manifest.secondWindow && samples.some(sample => !Number.isFinite(sample.firstWindowReadyMs)))
 	|| Object.values(summary.metrics).some(metric => metric.count !== manifest.samplesPerApp || metric.failed !== 0))) {
 	throw new Error('Do not publish an incomplete visible-file or first-typing benchmark.');
 }

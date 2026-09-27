@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-27T21:02:45.597Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "osRelease": "27.0.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "version": "1.139.1",
+      "commit": "e54bdc8388a053f7ca6921bb6c67bea28c3ead01"
+    },
+    {
+      "key": "code-oss",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean": {
+      "count": 30,
+      "failed": 0,
+      "p50": 901,
+      "p95": 1147
+    },
+    "code-oss": {
+      "count": 30,
+      "failed": 0,
+      "p50": 1177,
+      "p95": 1348
+    }
+  },
+  "kind": "second-window-first-ui-edit-diagnostic",
+  "definition": "With one project-folder window already showing its requested file, launch a window on a distinct project folder in the same app profile. Measure from the second-window CLI spawn until synthetic text sent through Chrome DevTools Protocol appears in the second file's visible Monaco editor line. This is a UI edit response, not a physical keyboard or display photon timestamp.",
+  "settings": {
+    "samplesPerApp": 30,
+    "warmupsPerApp": 1,
+    "pollIntervalMs": 20,
+    "remoteDebuggingPortEnabledForBothApps": true,
+    "macOSIdleSleepPreventedWithCaffeinate": true,
+    "warmCache": true
+  },
+  "samples": [
+    {
+      "subject": "lean",
+      "sample": 0,
+      "order": 0,
+      "warmup": true,
+      "elapsedMs": 1142,
+      "firstWindowReadyMs": 1300
+    },
+    {
+      "subject": "code-oss",
+      "sample": 0,
+      "order": 0,
+      "warmup": true,
+      "elapsedMs": 1378,
+      "firstWindowReadyMs": 1579
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1284,
+      "firstWindowReadyMs": 1470
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1321,
+      "firstWindowReadyMs": 1475
+    },
+    {
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1315,
+      "firstWindowReadyMs": 1526
+    },
+    {
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1069,
+      "firstWindowReadyMs": 1430
+    },
+    {
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1008,
+      "firstWindowReadyMs": 1299
+    },
+    {
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1348,
+      "firstWindowReadyMs": 1399
+    },
+    {
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1363,
+      "firstWindowReadyMs": 1366
+    },
+    {
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1025,
+      "firstWindowReadyMs": 1383
+    },
+    {
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1020,
+      "firstWindowReadyMs": 1301
+    },
+    {
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1272,
+      "firstWindowReadyMs": 1554
+    },
+    {
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1279,
+      "firstWindowReadyMs": 1322
+    },
+    {
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1070,
+      "firstWindowReadyMs": 1374
+    },
+    {
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 984,
+      "firstWindowReadyMs": 1295
+    },
+    {
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1268,
+      "firstWindowReadyMs": 1316
+    },
+    {
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1252,
+      "firstWindowReadyMs": 1284
+    },
+    {
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1147,
+      "firstWindowReadyMs": 1572
+    },
+    {
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 961,
+      "firstWindowReadyMs": 1438
+    },
+    {
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1238,
+      "firstWindowReadyMs": 1325
+    },
+    {
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1184,
+      "firstWindowReadyMs": 1332
+    },
+    {
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1018,
+      "firstWindowReadyMs": 1215
+    },
+    {
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1057,
+      "firstWindowReadyMs": 1187
+    },
+    {
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1248,
+      "firstWindowReadyMs": 1299
+    },
+    {
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1205,
+      "firstWindowReadyMs": 1308
+    },
+    {
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 960,
+      "firstWindowReadyMs": 1181
+    },
+    {
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 899,
+      "firstWindowReadyMs": 1187
+    },
+    {
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1252,
+      "firstWindowReadyMs": 1357
+    },
+    {
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1177,
+      "firstWindowReadyMs": 1460
+    },
+    {
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 951,
+      "firstWindowReadyMs": 1241
+    },
+    {
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 894,
+      "firstWindowReadyMs": 1147
+    },
+    {
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1207,
+      "firstWindowReadyMs": 1427
+    },
+    {
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1076,
+      "firstWindowReadyMs": 1291
+    },
+    {
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 888,
+      "firstWindowReadyMs": 1144
+    },
+    {
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 884,
+      "firstWindowReadyMs": 1157
+    },
+    {
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1074,
+      "firstWindowReadyMs": 1295
+    },
+    {
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1064,
+      "firstWindowReadyMs": 1311
+    },
+    {
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 959,
+      "firstWindowReadyMs": 1215
+    },
+    {
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 852,
+      "firstWindowReadyMs": 1193
+    },
+    {
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1049,
+      "firstWindowReadyMs": 1278
+    },
+    {
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1130,
+      "firstWindowReadyMs": 1341
+    },
+    {
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 901,
+      "firstWindowReadyMs": 1230
+    },
+    {
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 872,
+      "firstWindowReadyMs": 1114
+    },
+    {
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1057,
+      "firstWindowReadyMs": 1274
+    },
+    {
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 984,
+      "firstWindowReadyMs": 1300
+    },
+    {
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 838,
+      "firstWindowReadyMs": 1218
+    },
+    {
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 867,
+      "firstWindowReadyMs": 1144
+    },
+    {
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1061,
+      "firstWindowReadyMs": 1250
+    },
+    {
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 995,
+      "firstWindowReadyMs": 1283
+    },
+    {
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 875,
+      "firstWindowReadyMs": 1166
+    },
+    {
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 888,
+      "firstWindowReadyMs": 1142
+    },
+    {
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1005,
+      "firstWindowReadyMs": 1273
+    },
+    {
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1020,
+      "firstWindowReadyMs": 1296
+    },
+    {
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 926,
+      "firstWindowReadyMs": 1200
+    },
+    {
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 866,
+      "firstWindowReadyMs": 1115
+    },
+    {
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1240,
+      "firstWindowReadyMs": 1332
+    },
+    {
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1024,
+      "firstWindowReadyMs": 1316
+    },
+    {
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 859,
+      "firstWindowReadyMs": 1179
+    },
+    {
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 838,
+      "firstWindowReadyMs": 1181
+    },
+    {
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1046,
+      "firstWindowReadyMs": 1286
+    },
+    {
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1010,
+      "firstWindowReadyMs": 1334
+    },
+    {
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 881,
+      "firstWindowReadyMs": 1164
+    }
+  ]
+}
