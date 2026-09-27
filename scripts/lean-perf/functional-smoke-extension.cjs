@@ -78,6 +78,19 @@ async function run() {
 		return `${files.length} TypeScript files found; search UI opened`;
 	});
 
+	await check('workspaceTextSearch', async () => {
+		assert(typeof vscode.workspace.findTextInFiles === 'function', 'Workspace text-search API unavailable');
+		const matches = [];
+		await vscode.workspace.findTextInFiles(
+			{ pattern: 'lean-search-target' },
+			{ include: 'src/**/*.ts' },
+			result => matches.push(result)
+		);
+		assert(matches.length === 10, `Expected 10 verified text matches, got ${matches.length}`);
+		assert(matches.every(result => result.uri.fsPath.startsWith(path.join(workspaceRoot, 'src') + path.sep)), 'Search returned an unrelated file');
+		return `${matches.length} expected text matches returned across 400 source files`;
+	});
+
 	await check('integratedTerminal', async () => {
 		const marker = path.join(workspaceRoot, 'terminal-result.txt');
 		const terminal = vscode.window.createTerminal({ name: 'Lean release smoke', cwd: workspaceRoot });

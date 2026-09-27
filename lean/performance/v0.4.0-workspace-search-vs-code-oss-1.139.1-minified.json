@@ -1,0 +1,537 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-27T16:47:58.776Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "osRelease": "27.0.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code v0.4.0 signed",
+      "version": "1.139.1",
+      "commit": "e54bdc8388a053f7ca6921bb6c67bea28c3ead01"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS 1.139.1 minified",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean": {
+      "count": 30,
+      "failed": 0,
+      "p50": 29.276,
+      "p95": 42.337,
+      "launchToWorkflowP50": 1242,
+      "launchToWorkflowP95": 1288
+    },
+    "code-oss": {
+      "count": 30,
+      "failed": 0,
+      "p50": 36.223,
+      "p95": 59.36,
+      "launchToWorkflowP50": 1665,
+      "launchToWorkflowP95": 1759
+    }
+  },
+  "kind": "first-use-workflow",
+  "scenario": "workspaceTextSearch",
+  "definition": "From a stopped app until the same proposed workspace text-search API returns and verifies all 10 expected matches in a 400-source-file Git fixture. The separate action timing begins inside the temporary onStartupFinished extension. This does not measure Search-panel paint.",
+  "settings": {
+    "samplesPerApp": 30,
+    "pollIntervalMs": 20,
+    "sourceFiles": 400,
+    "expectedMatches": 10,
+    "proposedApi": "findTextInFiles",
+    "macOSIdleSleepPreventedWithCaffeinate": true,
+    "warmCache": true
+  },
+  "samples": [
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "elapsedMs": 40.978,
+      "launchToWorkflowMs": 1250
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "elapsedMs": 56.935,
+      "launchToWorkflowMs": 1654
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "elapsedMs": 24.318,
+      "launchToWorkflowMs": 1669
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "elapsedMs": 33.441,
+      "launchToWorkflowMs": 1241
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "elapsedMs": 31.185,
+      "launchToWorkflowMs": 1224
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "elapsedMs": 36.781,
+      "launchToWorkflowMs": 1623
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "elapsedMs": 28.972,
+      "launchToWorkflowMs": 1656
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "elapsedMs": 28.524,
+      "launchToWorkflowMs": 1232
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "elapsedMs": 31.558,
+      "launchToWorkflowMs": 1235
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "elapsedMs": 39.887,
+      "launchToWorkflowMs": 1651
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "elapsedMs": 26.231,
+      "launchToWorkflowMs": 1637
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "elapsedMs": 32.876,
+      "launchToWorkflowMs": 1255
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "elapsedMs": 42.337,
+      "launchToWorkflowMs": 1228
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "elapsedMs": 34.179,
+      "launchToWorkflowMs": 1644
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "elapsedMs": 31.323,
+      "launchToWorkflowMs": 1800
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "elapsedMs": 27.937,
+      "launchToWorkflowMs": 1246
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "elapsedMs": 25.846,
+      "launchToWorkflowMs": 1229
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "elapsedMs": 37.3,
+      "launchToWorkflowMs": 1704
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "elapsedMs": 38.878,
+      "launchToWorkflowMs": 1705
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "elapsedMs": 26.983,
+      "launchToWorkflowMs": 1249
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "elapsedMs": 27.249,
+      "launchToWorkflowMs": 1230
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "elapsedMs": 36.223,
+      "launchToWorkflowMs": 1737
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "elapsedMs": 39.88,
+      "launchToWorkflowMs": 1677
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "elapsedMs": 30.45,
+      "launchToWorkflowMs": 1280
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "elapsedMs": 32.926,
+      "launchToWorkflowMs": 1244
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "elapsedMs": 54.261,
+      "launchToWorkflowMs": 1688
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "elapsedMs": 46.182,
+      "launchToWorkflowMs": 1716
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "elapsedMs": 33.05,
+      "launchToWorkflowMs": 1263
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "elapsedMs": 29.293,
+      "launchToWorkflowMs": 1240
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "elapsedMs": 59.36,
+      "launchToWorkflowMs": 1759
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "elapsedMs": 32.367,
+      "launchToWorkflowMs": 1663
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "elapsedMs": 29.671,
+      "launchToWorkflowMs": 1317
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "elapsedMs": 27.29,
+      "launchToWorkflowMs": 1240
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "elapsedMs": 34.413,
+      "launchToWorkflowMs": 1628
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "elapsedMs": 29.585,
+      "launchToWorkflowMs": 1684
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "elapsedMs": 28.369,
+      "launchToWorkflowMs": 1235
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "elapsedMs": 25.601,
+      "launchToWorkflowMs": 1226
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "elapsedMs": 43.052,
+      "launchToWorkflowMs": 1668
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "elapsedMs": 31.253,
+      "launchToWorkflowMs": 1665
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "elapsedMs": 28.747,
+      "launchToWorkflowMs": 1249
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "elapsedMs": 28.088,
+      "launchToWorkflowMs": 1231
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "elapsedMs": 38.388,
+      "launchToWorkflowMs": 1693
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "elapsedMs": 41.118,
+      "launchToWorkflowMs": 1661
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "elapsedMs": 26.2,
+      "launchToWorkflowMs": 1241
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "elapsedMs": 23.813,
+      "launchToWorkflowMs": 1242
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "elapsedMs": 28.961,
+      "launchToWorkflowMs": 1644
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "elapsedMs": 38.32,
+      "launchToWorkflowMs": 1640
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "elapsedMs": 31.711,
+      "launchToWorkflowMs": 1256
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "elapsedMs": 31.549,
+      "launchToWorkflowMs": 1225
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "elapsedMs": 38.471,
+      "launchToWorkflowMs": 1666
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "elapsedMs": 28.166,
+      "launchToWorkflowMs": 1653
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "elapsedMs": 28.149,
+      "launchToWorkflowMs": 1255
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "elapsedMs": 29.276,
+      "launchToWorkflowMs": 1257
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "elapsedMs": 31.766,
+      "launchToWorkflowMs": 1649
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "elapsedMs": 31.836,
+      "launchToWorkflowMs": 1675
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "elapsedMs": 24.158,
+      "launchToWorkflowMs": 1263
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "elapsedMs": 29.989,
+      "launchToWorkflowMs": 1245
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "elapsedMs": 34.553,
+      "launchToWorkflowMs": 1657
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "elapsedMs": 65.258,
+      "launchToWorkflowMs": 1732
+    },
+    {
+      "type": "workspaceTextSearch",
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "elapsedMs": 42.671,
+      "launchToWorkflowMs": 1288
+    }
+  ]
+}

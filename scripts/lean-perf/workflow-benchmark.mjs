@@ -32,7 +32,7 @@ if (!/^[0-9a-f]{40}$/i.test(options['--base-revision'])) {
 	throw new Error('--base-revision must be a 40-character Git SHA.');
 }
 const scenario = options['--scenario'];
-if (!new Set(['gitReview', 'integratedTerminal', 'workspaceSearch', 'editableFileAndSave', 'extensionWebview']).has(scenario)) {
+if (!new Set(['gitReview', 'integratedTerminal', 'workspaceSearch', 'workspaceTextSearch', 'editableFileAndSave', 'extensionWebview']).has(scenario)) {
 	throw new Error(`Unsupported scenario: ${scenario}`);
 }
 const count = Number(options['--samples'] ?? 30);
@@ -42,6 +42,10 @@ if (!Number.isSafeInteger(count) || count < 1) {
 if (process.platform !== 'darwin' || process.arch !== 'arm64') {
 	throw new Error('This benchmark requires macOS Apple Silicon.');
 }
+
+const fixtureDescription = scenario === 'workspaceTextSearch'
+	? '400-source-file Git fixture with 10 expected text matches and the same proposed search API enabled in both apps'
+	: 'one-file Git fixture';
 
 const apps = [
 	readApp(options['--lean-app'], 'lean', 'Lean VS Code'),
@@ -53,7 +57,7 @@ fs.mkdirSync(runDir, { recursive: true });
 fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify({
 	createdAt: new Date().toISOString(),
 	scenario,
-	definition: `Two metrics: first-use action duration inside the temporary onStartupFinished extension, and process spawn to completed workflow. Each fresh app launch uses an isolated profile and one-file Git fixture.`,
+	definition: `Two metrics: first-use action duration inside the temporary onStartupFinished extension, and process spawn to completed workflow. Each fresh app launch uses an isolated profile and ${fixtureDescription}.`,
 	pollIntervalMs: 20,
 	comparisonBaseRevision: options['--base-revision'],
 	machine: { platform: process.platform, architecture: process.arch, cpuModel: os.cpus()[0]?.model, osRelease: os.release() },

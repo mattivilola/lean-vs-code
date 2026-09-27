@@ -15,7 +15,7 @@ if (!appArg) {
 	process.exit(2);
 }
 const scenario = process.argv[3] ?? 'all';
-const scenarios = new Set(['all', 'editableFileAndSave', 'workspaceSearch', 'integratedTerminal', 'gitReview', 'extensionWebview']);
+const scenarios = new Set(['all', 'editableFileAndSave', 'workspaceSearch', 'workspaceTextSearch', 'integratedTerminal', 'gitReview', 'extensionWebview']);
 if (!scenarios.has(scenario)) {
 	throw new Error(`Unknown functional smoke scenario: ${scenario}`);
 }
@@ -44,6 +44,12 @@ fs.writeFileSync(path.join(profile, 'user-data/User/settings.json'), JSON.string
 	'terminal.integrated.defaultProfile.osx': 'zsh'
 }, null, 2) + '\n');
 fs.writeFileSync(path.join(workspace, 'src/main.ts'), 'export const value = 1;\n');
+if (scenario === 'workspaceTextSearch') {
+	for (let index = 0; index < 400; index++) {
+		const marker = index % 40 === 0 ? '// lean-search-target\n' : '';
+		fs.writeFileSync(path.join(workspace, 'src', `module${String(index).padStart(3, '0')}.ts`), `${marker}export const value${index} = ${index};\n`);
+	}
+}
 
 function git(...args) {
 	const result = spawnSync('git', args, { cwd: workspace, encoding: 'utf8' });
@@ -60,7 +66,8 @@ fs.appendFileSync(path.join(workspace, 'src/main.ts'), '// lean-smoke-marker\n')
 
 fs.writeFileSync(path.join(extension, 'package.json'), JSON.stringify({
 	name: 'lean-functional-smoke', publisher: 'lean-smoke', version: '0.0.1',
-	engines: { vscode: '^1.80.0' }, main: './extension.cjs', activationEvents: ['onStartupFinished']
+	engines: { vscode: '^1.80.0' }, main: './extension.cjs', activationEvents: ['onStartupFinished'],
+	...(scenario === 'workspaceTextSearch' ? { enabledApiProposals: ['findTextInFiles'] } : {})
 }, null, 2) + '\n');
 fs.copyFileSync(path.join(root, 'scripts/lean-perf/functional-smoke-extension.cjs'), path.join(extension, 'extension.cjs'));
 
@@ -69,6 +76,7 @@ const args = [
 	`--shared-data-dir=${path.join(profile, 'shared-data')}`,
 	`--extensions-dir=${path.join(profile, 'extensions')}`,
 	`--extensionDevelopmentPath=${extension}`,
+	...(scenario === 'workspaceTextSearch' ? ['--enable-proposed-api=lean-smoke.lean-functional-smoke'] : []),
 	'--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry',
 	`--folder-uri=${pathToFileURL(workspace)}`, path.join(workspace, 'src/main.ts')
 ];
