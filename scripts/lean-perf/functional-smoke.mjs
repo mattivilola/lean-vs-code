@@ -11,8 +11,13 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const appArg = process.argv[2];
 if (!appArg) {
-	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app>');
+	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app> [scenario]');
 	process.exit(2);
+}
+const scenario = process.argv[3] ?? 'all';
+const scenarios = new Set(['all', 'editableFileAndSave', 'workspaceSearch', 'integratedTerminal', 'gitReview', 'extensionWebview']);
+if (!scenarios.has(scenario)) {
+	throw new Error(`Unknown functional smoke scenario: ${scenario}`);
 }
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -68,9 +73,10 @@ const args = [
 	`--folder-uri=${pathToFileURL(workspace)}`, path.join(workspace, 'src/main.ts')
 ];
 const logFd = fs.openSync(appLog, 'w');
+const appLaunchedAtMs = Date.now();
 const child = spawn(executable, args, {
 	cwd: workspace,
-	env: { ...process.env, LEAN_SMOKE_WORKSPACE: workspace, LEAN_SMOKE_RESULT: resultPath },
+	env: { ...process.env, LEAN_SMOKE_WORKSPACE: workspace, LEAN_SMOKE_RESULT: resultPath, LEAN_SMOKE_SCENARIO: scenario },
 	stdio: ['ignore', logFd, logFd]
 });
 fs.closeSync(logFd);
@@ -87,6 +93,11 @@ try {
 		throw new Error('Timed out waiting for functional checks');
 	}
 	const result = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
+	const completedAtMs = Date.parse(result.createdAt);
+	if (Number.isFinite(completedAtMs)) {
+		result.launchToChecksMs = completedAtMs - appLaunchedAtMs;
+		fs.writeFileSync(resultPath, JSON.stringify(result, null, 2) + '\n');
+	}
 	console.log(JSON.stringify(result, null, 2));
 	if (!result.passed) {
 		process.exitCode = 1;

@@ -27,14 +27,27 @@ for (const metric of Object.values(summary.metrics)) {
 	}
 }
 
-const report = {
+const common = {
 	schemaVersion: 1,
 	createdAt: manifest.createdAt,
 	comparisonBaseRevision: manifest.comparisonBaseRevision,
 	machine: manifest.machine,
-	settings: manifest.settings,
 	apps: manifest.apps.map(({ key, label, version, commit }) => ({ key, label, version, commit })),
-	metrics: summary.metrics,
+	metrics: summary.metrics
+};
+
+const report = manifest.scenario ? {
+	...common,
+	kind: 'first-use-workflow',
+	scenario: manifest.scenario,
+	definition: manifest.definition,
+	settings: { samplesPerApp: manifest.samplesPerApp, pollIntervalMs: manifest.pollIntervalMs },
+	samples: samples.map(({ type, subject, sample, order, elapsedMs, launchToWorkflowMs }) => ({
+		type, subject, sample, order, elapsedMs, launchToWorkflowMs
+	}))
+} : {
+	...common,
+	settings: manifest.settings,
 	samples: samples.map(({ type, subject, sample, elapsedMs, physicalFootprintBytes, rssBytesDiagnostic, processCount }) => ({
 		type, subject, sample,
 		...(elapsedMs !== undefined ? { elapsedMs } : {}),
@@ -43,6 +56,10 @@ const report = {
 		...(processCount !== undefined ? { processCount } : {})
 	}))
 };
+
+if (manifest.scenario && Object.values(summary.metrics).some(metric => metric.count !== manifest.samplesPerApp || metric.failed !== 0)) {
+	throw new Error('Do not publish an incomplete workflow benchmark.');
+}
 
 fs.mkdirSync(path.dirname(output), { recursive: true });
 fs.writeFileSync(output, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
