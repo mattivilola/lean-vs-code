@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-27T20:40:40.418Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "osRelease": "27.0.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "version": "1.139.1",
+      "commit": "e54bdc8388a053f7ca6921bb6c67bea28c3ead01"
+    },
+    {
+      "key": "code-oss",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean": {
+      "count": 30,
+      "failed": 0,
+      "p50": 1203,
+      "p95": 1248
+    },
+    "code-oss": {
+      "count": 30,
+      "failed": 0,
+      "p50": 1334,
+      "p95": 1368
+    }
+  },
+  "kind": "first-ui-edit-diagnostic",
+  "definition": "Stopped-process spawn until synthetic text sent through Chrome DevTools Protocol appears in the requested file's visible Monaco editor line. The input is not saved. This tests UI edit response, not extension-host API readiness, a physical keyboard, or display photons.",
+  "settings": {
+    "samplesPerApp": 30,
+    "warmupsPerApp": 1,
+    "pollIntervalMs": 20,
+    "remoteDebuggingPortEnabledForBothApps": true,
+    "macOSIdleSleepPreventedWithCaffeinate": true,
+    "warmCache": true
+  },
+  "samples": [
+    {
+      "subject": "lean",
+      "sample": 0,
+      "order": 0,
+      "warmup": true,
+      "elapsedMs": 1194
+    },
+    {
+      "subject": "code-oss",
+      "sample": 0,
+      "order": 0,
+      "warmup": true,
+      "elapsedMs": 1356
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1229
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1319
+    },
+    {
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1326
+    },
+    {
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1203
+    },
+    {
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1198
+    },
+    {
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1341
+    },
+    {
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1368
+    },
+    {
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1263
+    },
+    {
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1209
+    },
+    {
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1339
+    },
+    {
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1352
+    },
+    {
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1189
+    },
+    {
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1191
+    },
+    {
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1314
+    },
+    {
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1312
+    },
+    {
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1189
+    },
+    {
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1193
+    },
+    {
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1337
+    },
+    {
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1327
+    },
+    {
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1170
+    },
+    {
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1186
+    },
+    {
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1334
+    },
+    {
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1323
+    },
+    {
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1197
+    },
+    {
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1207
+    },
+    {
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1332
+    },
+    {
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1314
+    },
+    {
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1248
+    },
+    {
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1226
+    },
+    {
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1329
+    },
+    {
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1323
+    },
+    {
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1211
+    },
+    {
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1186
+    },
+    {
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1349
+    },
+    {
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1309
+    },
+    {
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1211
+    },
+    {
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1200
+    },
+    {
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1338
+    },
+    {
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1342
+    },
+    {
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1167
+    },
+    {
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1217
+    },
+    {
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1351
+    },
+    {
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1303
+    },
+    {
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1216
+    },
+    {
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1209
+    },
+    {
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1334
+    },
+    {
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1330
+    },
+    {
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1183
+    },
+    {
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1217
+    },
+    {
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1354
+    },
+    {
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1360
+    },
+    {
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1203
+    },
+    {
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1201
+    },
+    {
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1317
+    },
+    {
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1378
+    },
+    {
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1208
+    },
+    {
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1201
+    },
+    {
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1354
+    },
+    {
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "warmup": false,
+      "elapsedMs": 1347
+    },
+    {
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "warmup": false,
+      "elapsedMs": 1211
+    }
+  ]
+}

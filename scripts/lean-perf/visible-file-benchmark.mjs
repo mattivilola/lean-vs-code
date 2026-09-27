@@ -3,7 +3,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 // Diagnostic: stopped-process launch until the requested file's text is visible
-// in the Monaco editor DOM. Keep separate from the extension-backed edit probe.
+// in the Monaco editor DOM, optionally followed by a verified synthetic edit.
+// Keep both endpoints separate from the extension-backed edit probe.
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import net from 'node:net';
@@ -17,6 +18,10 @@ const valueOptions = new Set(['--lean-app', '--oss-app', '--base-revision', '--s
 const options = {};
 for (let index = 2; index < process.argv.length; index++) {
 	const key = process.argv[index];
+	if (key === '--input-probe') {
+		options[key] = true;
+		continue;
+	}
 	const value = process.argv[++index];
 	if (!valueOptions.has(key) || !value || value.startsWith('--')) {
 		throw new Error(`Expected one value after ${key}.`);
@@ -38,6 +43,7 @@ const count = Number(options['--samples'] ?? 30);
 if (!Number.isSafeInteger(count) || count < 1) {
 	throw new Error('--samples must be a positive integer.');
 }
+const inputProbe = options['--input-probe'] === true;
 
 const apps = [
 	readApp(options['--lean-app'], 'lean', 'Lean VS Code'),
@@ -49,7 +55,10 @@ const rawPath = path.join(runDir, 'samples.jsonl');
 fs.writeFileSync(rawPath, '');
 fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify({
 	createdAt: new Date().toISOString(),
-	definition: 'Stopped-process spawn to the requested unique text being visible in a nonzero-size Monaco editor view-lines DOM element, detected through the Chrome DevTools Protocol. This is a painted-content proxy, not an editable-file or hardware photon timestamp.',
+	definition: inputProbe
+		? 'Stopped-process spawn until synthetic text sent through Chrome DevTools Protocol appears in the requested file\'s visible Monaco editor line. The input is not saved. This tests UI edit response, not extension-host API readiness, a physical keyboard, or display photons.'
+		: 'Stopped-process spawn to the requested unique text being visible in a nonzero-size Monaco editor view-lines DOM element, detected through the Chrome DevTools Protocol. This is a DOM visibility proxy, not an editable-file or hardware photon timestamp.',
+	inputProbe,
 	comparisonBaseRevision: options['--base-revision'],
 	machine: { platform: process.platform, architecture: process.arch, cpuModel: os.cpus()[0]?.model, osRelease: os.release() },
 	samplesPerApp: count,
@@ -95,12 +104,12 @@ async function connectDebugger(url) {
 	});
 	let nextId = 0;
 	return {
-		async evaluate(expression) {
+		async send(method, params) {
 			const id = ++nextId;
 			return new Promise((resolve, reject) => {
 				const timer = setTimeout(() => {
 					socket.removeEventListener('message', onMessage);
-					reject(new Error('Timed out reading editor DOM.'));
+					reject(new Error(`Timed out waiting for ${method}.`));
 				}, 5000);
 				function onMessage(event) {
 					const message = JSON.parse(event.data);
@@ -112,12 +121,16 @@ async function connectDebugger(url) {
 					if (message.error || message.result?.exceptionDetails) {
 						reject(new Error(JSON.stringify(message.error ?? message.result.exceptionDetails)));
 					} else {
-						resolve(message.result?.result?.value);
+						resolve(message.result);
 					}
 				}
 				socket.addEventListener('message', onMessage);
-				socket.send(JSON.stringify({ id, method: 'Runtime.evaluate', params: { expression, returnByValue: true } }));
+				socket.send(JSON.stringify({ id, method, params }));
 			});
+		},
+		async evaluate(expression) {
+			const result = await this.send('Runtime.evaluate', { expression, returnByValue: true });
+			return result?.result?.value;
 		},
 		close() { socket.close(); }
 	};
@@ -130,6 +143,7 @@ async function trial(app, index, order, warmup = false) {
 	const fixture = path.join(runDir, 'fixtures', `${name}.txt`);
 	fs.mkdirSync(path.dirname(fixture), { recursive: true });
 	const marker = `LEAN_VISIBLE_${randomUUID().replaceAll('-', '')}`;
+	const typedMarker = `LEAN_TYPED_${randomUUID().replaceAll('-', '')}`;
 	fs.writeFileSync(fixture, `${marker}\n${'editor content\n'.repeat(7300)}`);
 	const port = await availablePort();
 	const logPath = path.join(runDir, `${name}.app.log`);
@@ -151,11 +165,28 @@ async function trial(app, index, order, warmup = false) {
 	try {
 		client = await connectDebugger(await findWorkbenchTarget(port, child));
 		const expression = `Array.from(document.querySelectorAll('.monaco-editor .view-lines')).some(el => el.textContent?.includes(${JSON.stringify(marker)}) && el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0)`;
+		const typedExpression = `Array.from(document.querySelectorAll('.monaco-editor .view-lines')).some(el => el.textContent?.includes(${JSON.stringify(typedMarker)}) && el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0)`;
 		const deadline = Date.now() + 30000;
+		let visible = false;
+		let inputAttempts = 0;
 		while (Date.now() < deadline) {
-			if (await client.evaluate(expression)) {
-				elapsedMs = Date.now() - launchedAt;
-				break;
+			if (!visible) {
+				visible = !!await client.evaluate(expression);
+				if (visible && !inputProbe) {
+					elapsedMs = Date.now() - launchedAt;
+					break;
+				}
+			}
+			if (visible && inputProbe) {
+				if (await client.evaluate(typedExpression)) {
+					elapsedMs = Date.now() - launchedAt;
+					break;
+				}
+				const focused = await client.evaluate(`(() => { const input = document.querySelector('.monaco-editor .native-edit-context, .monaco-editor textarea.inputarea'); if (input) input.focus(); return document.activeElement === input || document.activeElement?.classList.contains('native-edit-context'); })()`);
+				if (focused) {
+					inputAttempts++;
+					await client.send('Input.insertText', { text: typedMarker });
+				}
 			}
 			if (child.exitCode !== null || child.signalCode !== null) {
 				throw new Error(`App exited before requested content appeared: ${child.exitCode ?? child.signalCode}`);
@@ -163,7 +194,8 @@ async function trial(app, index, order, warmup = false) {
 			await delay(20);
 		}
 		if (elapsedMs === null) {
-			throw new Error('Timed out waiting for requested text in visible Monaco editor lines.');
+			const diagnostic = inputProbe ? await client.evaluate(`({ inputCount: document.querySelectorAll('.monaco-editor textarea.inputarea, .monaco-editor .native-edit-context').length, activeClass: document.activeElement?.className, typedVisible: Array.from(document.querySelectorAll('.monaco-editor .view-lines')).some(el => el.textContent?.includes(${JSON.stringify(typedMarker)})) })`) : undefined;
+			throw new Error(inputProbe ? `Timed out waiting for a verified synthetic edit in the visible Monaco editor (visible=${visible}, inputAttempts=${inputAttempts}, diagnostic=${JSON.stringify(diagnostic)}).` : 'Timed out waiting for requested text in visible Monaco editor lines.');
 		}
 	} catch (caught) {
 		error = String(caught?.stack ?? caught);
@@ -179,7 +211,7 @@ async function trial(app, index, order, warmup = false) {
 	return sample;
 }
 
-console.log(`Writing visible-file benchmark to ${runDir}`);
+console.log(`Writing ${inputProbe ? 'first UI edit' : 'visible-file'} benchmark to ${runDir}`);
 for (const app of apps) {
 	const sample = await trial(app, 0, 0, true);
 	console.log(`${app.key} warmup: ${sample.elapsedMs ?? sample.error}`);
