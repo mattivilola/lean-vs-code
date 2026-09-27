@@ -12,6 +12,8 @@ The signed app passed a GUI smoke after installation in `/Applications`: editing
 
 The update ZIP and DMG contain **identical bytes and symlink targets across 2,236 app-bundle paths**. The app and DMG passed strict Developer ID signature, Apple notarization, stapled-ticket, and Gatekeeper checks. The feed's ZIP hash and size match the artifact. The installed app reports bundle version 0.4.0 and identifier `com.mattivilola.leanvscode`; the Code-OSS extension API remains 1.139.1. The embedded product commit `e54bdc8388a053f7ca6921bb6c67bea28c3ead01` identifies the last runtime-code commit; release-version metadata was committed afterward. The release is for Apple Silicon macOS and includes the existing GitHub-hosted updater.
 
+A native updater trial used a separate signed v0.3.2 app and an isolated profile. The app checked the public stable feed, downloaded v0.4.0, displayed its update control, and applied **Restart to Update**. The replaced bundle reports both macOS and Electron package version 0.4.0, passes strict signature, Gatekeeper, and stapled-ticket checks, and reopens the requested editor file. The isolated font-size setting and EditorConfig 0.18.2 extension remained in the profile. This verifies the v0.3.2-to-v0.4.0 path; subsequent releases still need their own native update trial.
+
 - DMG SHA-256: `2735455f610a11a4bd3509be3d7f47e9a8673fe79264a27c53a1932977c23428` (206,823,232 bytes)
 - Update ZIP SHA-256: `952e65dc13cd055791ab716818b76ddd5906c5b2299ba9638f42fa332f645eb3` (198,656,136 bytes)
 
