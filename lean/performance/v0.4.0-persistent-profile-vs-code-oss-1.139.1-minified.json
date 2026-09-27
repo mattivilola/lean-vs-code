@@ -1,0 +1,853 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-27T18:17:07.604Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v26.9.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code",
+      "version": "1.139.1",
+      "commit": "e54bdc8388a053f7ca6921bb6c67bea28c3ead01"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1413.091,
+      "p95": 1459.67,
+      "min": 1370.228,
+      "max": 1573.757
+    },
+    "lean.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 347.383,
+      "p95": 363.43,
+      "min": 315.84,
+      "max": 397.633
+    },
+    "lean.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 1,
+      "p50": 1063397984,
+      "p95": 1063397984,
+      "min": 1063397984,
+      "max": 1063397984
+    },
+    "code-oss.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1461.14,
+      "p95": 1502.024,
+      "min": 1416.516,
+      "max": 1505.305
+    },
+    "code-oss.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 353.656,
+      "p95": 387.639,
+      "min": 327.128,
+      "max": 388.888
+    },
+    "code-oss.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 1,
+      "p50": 1374876992,
+      "p95": 1374876992,
+      "min": 1374876992,
+      "max": 1374876992
+    }
+  },
+  "settings": {
+    "samples": 30,
+    "memorySamples": 1,
+    "memoryIdleMs": 1000,
+    "memorySampleIntervalMs": 1000,
+    "existingWindowWarmupMs": 5000,
+    "warmupLaunchesPerProduct": 1,
+    "startupTimeoutMs": 120000,
+    "fixtureBytes": 102400,
+    "fixtureReadBeforeMeasurement": true,
+    "gitWorkspace": false,
+    "startupProfile": "reused after warm-up",
+    "gitWorkspaceTrackedFiles": 0,
+    "userExtensions": "isolated empty extensions-dir plus the same harness control extension loaded from --extensionDevelopmentPath",
+    "launchFlags": [
+      "--new-window",
+      "--shared-data-dir",
+      "--skip-welcome",
+      "--skip-release-notes",
+      "--disable-updates",
+      "--disable-telemetry"
+    ],
+    "existingWindowMethod": "launch the app executable with --reuse-window and the file path; readiness is measured by the control extension",
+    "processEnvironment": "inherits the invoking environment; values are not recorded in this report"
+  },
+  "samples": [
+    {
+      "type": "launchWarmup",
+      "subject": "code-oss",
+      "sample": 0,
+      "elapsedMs": 1684.957
+    },
+    {
+      "type": "launchWarmup",
+      "subject": "lean",
+      "sample": 0,
+      "elapsedMs": 1420.927
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 1420.232
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 1473.594
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 1441.463
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 1429.34
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 1413.091
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 1492.844
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 1460.063
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 1573.757
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 1377.491
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 1479.818
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 1438.21
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 1417.151
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 1407.874
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 1471.461
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 1498.343
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 1418.398
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 1411.163
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 1502.024
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 1429.31
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 1421.971
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 1402.14
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 1483.843
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 1420.939
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 1421.205
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 1395.26
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 1498.823
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 1448.146
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 1454.377
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 1382.867
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 1475.011
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 1460.389
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 1448.76
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 1370.713
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 1464.167
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 1426.837
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 1404.818
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 1459.67
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 1483.47
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 1425.967
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 1437.172
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 1370.228
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 1492.797
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 1416.516
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 1411.146
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 1410.526
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 1477.359
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 1425.308
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 1427.754
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 1405.142
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 1505.305
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 1447.013
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 1418.487
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 1405.248
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 1461.14
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 1444.701
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 1445.341
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 1393.023
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 1483.052
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 1435.934
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 1455.537
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 397.633
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 387.061
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 348.999
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 362.404
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 340.287
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 353.656
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 340.76
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 362.929
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 330.059
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 388.888
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 349.306
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 363.43
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 320.316
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 349.505
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 359.534
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 349.553
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 316.009
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 353.088
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 360.625
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 351.636
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 338.295
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 384.059
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 336.538
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 347.383
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 330.006
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 366.131
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 360.802
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 351.078
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 348.06
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 387.639
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 341.507
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 337.182
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 349.459
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 365.933
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 341.44
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 349.386
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 352.079
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 353.046
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 360.732
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 351.512
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 325.693
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 381.502
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 341.363
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 343.702
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 335.474
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 375.959
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 352.419
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 350.454
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 325.123
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 374.097
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 360.006
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 340.809
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 315.84
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 350.685
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 327.128
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 360.445
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 337.12
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 362.244
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 350.199
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 351.631
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 1,
+      "physicalFootprintBytes": 1063397984,
+      "rssBytesDiagnostic": 1231388672,
+      "processCount": 7
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 1,
+      "physicalFootprintBytes": 1374876992,
+      "rssBytesDiagnostic": 1624932352,
+      "processCount": 9
+    }
+  ]
+}
