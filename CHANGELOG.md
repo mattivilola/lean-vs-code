@@ -6,6 +6,15 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Add user-visible changes here as they land. Before each release, move them under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.4.0
+
+- Built the Apple Silicon release with the production-minified workbench. In a 30-pair GUI trial on the reference Mac, the signed app reached an editable file in 1.239 s median / 1.268 s p95, versus 1.310 s / 1.353 s for signed v0.3.2 in the same run: about 5% less median time and 6% less p95 time.
+- Removed an eager remote-service listener lookup from the renderer startup path and began the shared utility process's existing initialization after the first real window opens. Editing, workspace search, terminal, local Git review, an extension webview, and signed Open VSX installation passed release checks.
+- Added a startup trace helper, a repeatable GUI functional smoke, and path-sanitized public benchmark reports. A bundled-extension index and early scan were tested but not shipped because they did not improve the editable-file result.
+- Kept the existing signed GitHub auto-update mechanism. The v0.4.0 release remains Apple Silicon-only. The sub-second p95 goal is still open, and this release does not claim lower idle memory than v0.3.2.
+
+See [v0.4.0 release notes](lean/docs/RELEASE_NOTES_0.4.0.md) and the [performance method and history](lean/docs/PERFORMANCE.md).
+
 ## 0.3.2
 
 - Added automatic update checks and downloads for the Apple Silicon app through a GitHub-hosted stable feed and signed, notarized app ZIP. The familiar update controls offer restart to install; `update.mode` can change future checks.
