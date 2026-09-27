@@ -17,7 +17,7 @@ node scripts/lean-perf/benchmark.mjs \
 
 The default is 30 timed startup and 30 existing-window file-open samples per product, one startup warm-up per product, a 5-second existing-window settle period, 3 memory snapshots after 30 seconds of idle time, and an output directory under `scripts/lean-perf/results/`. Pass `--samples`, `--memory-samples`, `--memory-idle-ms`, or `--output-root` to adjust the run. Every run gets a new report directory and a short, isolated profile directory under `/private/tmp/lean-perf-*`; both are retained for inspection. No existing profile is opened or removed.
 
-To compare a candidate against an earlier Lean VS Code release, pass that app as `--oss-app` and set `--oss-label 'Lean VS Code v0.2.0'` so the report identifies it correctly. The raw sample key remains `code-oss` for compatibility with the standard comparison parser; use the manifest's app paths and labels when interpreting such a run.
+For internal regression diagnosis, a candidate may be compared against an earlier Lean VS Code release by passing that app as `--oss-app` and setting `--oss-label 'Lean VS Code v0.2.0'`. Do not use that trial as a public speed claim: published performance comparisons use original same-revision Code-OSS. The raw sample key remains `code-oss` for compatibility with the standard comparison parser; use the manifest's app paths and labels when interpreting such a run.
 
 Pass `--git-workspace` for a separate repository-opening benchmark. It creates a task-owned Git fixture under that run's report directory and opens the fixture file with the folder; the default run is a standalone file. Keep these results separate because bundled Git activation is relevant only to the repository case.
 
