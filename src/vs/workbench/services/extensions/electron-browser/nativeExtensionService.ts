@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { runWhenWindowIdle } from '../../../../base/browser/dom.js';
-import { mainWindow } from '../../../../base/browser/window.js';
 import { CancellationToken } from '../../../../base/common/cancellation.js';
 import { Schemas } from '../../../../base/common/network.js';
 import * as performance from '../../../../base/common/performance.js';
@@ -128,17 +126,12 @@ export class NativeExtensionService extends AbstractExtensionService implements 
 
 		this._extensionScanner = extensionScanner;
 
-		// delay extension host creation and extension scanning
-		// until the workbench is running. we cannot defer the
-		// extension host more (LifecyclePhase.Restored) because
-		// some editors require the extension host to restore
-		// and this would result in a deadlock
-		// see https://github.com/microsoft/vscode/issues/41322
+		// Start extension host creation and scanning once the workbench is ready.
+		// Some restored editors need the host during restoration, so waiting
+		// for an idle callback adds to their critical path.
+		// See https://github.com/microsoft/vscode/issues/41322.
 		lifecycleService.when(LifecyclePhase.Ready).then(() => {
-			// reschedule to ensure this runs after restoring viewlets, panels, and editors
-			runWhenWindowIdle(mainWindow, () => {
-				this._initializeIfNeeded();
-			}, 50 /*max delay*/);
+			this._initializeIfNeeded();
 		});
 	}
 
