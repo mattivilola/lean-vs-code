@@ -59,6 +59,7 @@ const options = {
 	out: getArgValue('--out'),
 	target: getArgValue('--target') ?? 'desktop', // 'desktop' | 'server' | 'server-web' | 'web'
 	sourceMapBaseUrl: getArgValue('--source-map-base-url'),
+	metafileOutput: getArgValue('--metafile-output'),
 };
 
 const SRC_DIR = 'src';
@@ -496,6 +497,7 @@ async function bundle(outDir: string, doMinify: boolean, doNls: boolean, doMangl
 
 		const buildOptions: esbuild.BuildOptions = {
 			...getBundleOptions(doMinify, 'neutral'),
+			metafile: !!options.metafileOutput && entryPoint === 'vs/workbench/workbench.desktop.main',
 			entryPoints: needsCssBundling
 				? [{ in: entryPath, out: entryPoint }]
 				: [entryPath],
@@ -513,6 +515,10 @@ async function bundle(outDir: string, doMinify: boolean, doNls: boolean, doMangl
 		};
 
 		const result = await esbuild.build(buildOptions);
+		if (result.metafile && options.metafileOutput) {
+			await fs.promises.mkdir(path.dirname(options.metafileOutput), { recursive: true });
+			await fs.promises.writeFile(options.metafileOutput, JSON.stringify(result.metafile));
+		}
 
 		buildResults.push({ outPath, result });
 	}));
@@ -823,6 +829,7 @@ Options for 'bundle':
 	--out <dir>        Output directory (default: out-vscode)
 	--target <target>  Build target: desktop (default), server, server-web, web
 	--source-map-base-url <url>  Rewrite sourceMappingURL to CDN URL
+	--metafile-output <path>      Write the desktop workbench esbuild input/output graph
 
 Examples:
 	npx tsx build/next/index.ts build-fast
