@@ -37,16 +37,25 @@ async function run() {
 			return;
 		}
 		const started = performance.now();
+		let completedAtMs;
+		let completedDurationMs;
+		const markCompleted = () => {
+			if (completedAtMs === undefined) {
+				completedAtMs = Date.now();
+				completedDurationMs = performance.now() - started;
+			}
+		};
 		try {
-			const detail = await action();
-			checks[name] = { ok: true, detail, durationMs: Number((performance.now() - started).toFixed(3)) };
+			const detail = await action(markCompleted);
+			markCompleted();
+			checks[name] = { ok: true, detail, completedAtMs, durationMs: Number(completedDurationMs.toFixed(3)) };
 		} catch (error) {
 			checks[name] = { ok: false, error: String(error?.stack ?? error), durationMs: Number((performance.now() - started).toFixed(3)) };
 		}
 	}
 
 	const sourcePath = path.join(workspaceRoot, 'src', 'main.ts');
-	await check('editableFileAndSave', async () => {
+	await check('editableFileAndSave', async (markCompleted) => {
 		const original = fs.readFileSync(sourcePath, 'utf8');
 		const document = await vscode.workspace.openTextDocument(vscode.Uri.file(sourcePath));
 		const editor = await vscode.window.showTextDocument(document);
@@ -54,6 +63,7 @@ async function run() {
 			assert(await editor.edit(builder => builder.insert(new vscode.Position(0, 0), '// lean smoke\n')), 'Editor rejected insertion');
 			assert(await document.save(), 'Editor did not save');
 			assert(fs.readFileSync(sourcePath, 'utf8').startsWith('// lean smoke\n'), 'Saved bytes differ');
+			markCompleted();
 			return 'inserted, saved, and verified on disk';
 		} finally {
 			await editor.edit(builder => builder.replace(new vscode.Range(document.positionAt(0), document.positionAt(document.getText().length)), original));

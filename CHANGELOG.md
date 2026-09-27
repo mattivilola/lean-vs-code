@@ -8,7 +8,7 @@ Add user-visible changes here as they land. Before each release, move them under
 
 ## 0.4.0 benchmark addendum — 27 September 2026
 
-- Validated a minified, same-revision original Code-OSS source comparator and reran 30-pair standalone-file, 10,000-file repository, and Git-review workflow benchmarks. The matched-build median differences are 17%, 19%, and 21% less time, respectively, for signed Lean v0.4.0. Earlier unminified-comparator results remain labeled for audit; the public headline now uses the minified baseline. See the [method and raw observations](lean/docs/PERFORMANCE.md).
+- Validated a minified, same-revision original Code-OSS source comparator and ran 30-pair standalone-file, 10,000-file repository, Git-review, and first saved-edit benchmarks. The matched-build median differences are 17%, 19%, 21%, and 25% less time, respectively, for signed Lean v0.4.0. Earlier unminified-comparator results remain labeled for audit; the public headline now uses the minified baseline. See the [method and raw observations](lean/docs/PERFORMANCE.md).
 
 ## 0.4.0
 

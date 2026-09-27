@@ -93,7 +93,9 @@ try {
 		throw new Error('Timed out waiting for functional checks');
 	}
 	const result = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
-	const completedAtMs = Date.parse(result.createdAt);
+	const completedAtMs = scenario === 'all'
+		? Date.parse(result.createdAt)
+		: result.checks?.[scenario]?.completedAtMs;
 	if (Number.isFinite(completedAtMs)) {
 		result.launchToChecksMs = completedAtMs - appLaunchedAtMs;
 		fs.writeFileSync(resultPath, JSON.stringify(result, null, 2) + '\n');

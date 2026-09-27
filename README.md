@@ -20,9 +20,13 @@ A separate [30-pair repository-opening trial](lean/performance/v0.4.0-git-worksp
 
 A third [30-pair Git-review workflow trial](lean/performance/v0.4.0-git-review-vs-code-oss-1.139.1-minified.json) measured from a stopped app until its Git extension returned the local diff for the active file. Lean completed that workflow in **1.497 s versus 1.906 s median**, about **21% less time** than minified original Code-OSS; p95 was **1.672 s versus 2.105 s**. The Git action itself took longer after startup in Lean (**135 versus 56 ms median**), so this is a full launch-to-workflow gain, not a faster Git operation. The endpoint is a returned diff, not a painted diff editor.
 
+In a [30-pair first saved-edit trial](lean/performance/v0.4.0-edit-save-vs-code-oss-1.139.1-minified.json), signed v0.4.0 inserted text into the requested file, saved it, and verified the bytes on disk in **1.425 s versus 1.901 s median** from a stopped app—**25% less time** than the same-revision, minified Code-OSS source build. P95 was **1.693 s versus 1.946 s**. The edit action by itself had a slower p95 in Lean (**85 versus 81 ms**), so the claim is about the full launch-to-save workflow. The test used an isolated one-file Git fixture, not a large project.
+
 v0.4.0 ships an optimized macOS bundle, removes synchronous remote-listener work from the editor's startup path, and begins the shared utility process's normal initialization once a real window opens. The workbench still registers its commands and extension APIs at startup. The paired result measures the whole fork against Code-OSS; it does not assign the 17% difference to any one change. We kept the changes that improved file-ready timing and set aside an extension-index experiment that did not.
 
 Our [startup roadmap](lean/docs/STARTUP_ROADMAP.md) ranks the next measured experiments toward an editable file in under one second, including Apple Silicon and Electron work. It preserves extension compatibility as a release gate.
+
+The [developer workflow benchmark matrix](lean/docs/BENCHMARK_MATRIX.md) defines the tasks and completion events we will test next. Public speed claims compare Lean with the original, same-revision Code-OSS source build; Lean-version comparisons are retained only for development history.
 
 - **Editing and review first.** Open a file, navigate a project, inspect local Git changes, and compare them side by side without an AI prompt or onboarding flow taking over the workbench.
 - **Small default extension set.** The [33 bundled extensions](lean/bundled-extensions.json) provide syntax, themes, and local Git. Only Git and Git Base have executable entry points in the packaged set. Add language servers, formatters, and other tools when you need them.
