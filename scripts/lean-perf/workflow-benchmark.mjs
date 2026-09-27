@@ -13,7 +13,7 @@ import { percentile, readApp } from './benchmark.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const smokeScript = path.join(root, 'scripts/lean-perf/functional-smoke.mjs');
-const valueOptions = new Set(['--lean-app', '--oss-app', '--base-revision', '--scenario', '--samples', '--output-root']);
+const valueOptions = new Set(['--lean-app', '--oss-app', '--base-revision', '--scenario', '--samples', '--output-root', '--lean-label', '--oss-label']);
 const options = {};
 for (let index = 2; index < process.argv.length; index++) {
 	const key = process.argv[index];
@@ -58,7 +58,12 @@ fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify({
 	comparisonBaseRevision: options['--base-revision'],
 	machine: { platform: process.platform, architecture: process.arch, cpuModel: os.cpus()[0]?.model, osRelease: os.release() },
 	samplesPerApp: count,
-	apps: apps.map(({ key, version, commit }) => ({ key, version, commit }))
+	apps: apps.map(({ key, version, commit }) => ({
+		key,
+		label: key === 'lean' ? (options['--lean-label'] ?? 'Lean VS Code') : (options['--oss-label'] ?? 'Code-OSS'),
+		version,
+		commit
+	}))
 }, null, 2) + '\n');
 const rawPath = path.join(runDir, 'samples.jsonl');
 fs.writeFileSync(rawPath, '');

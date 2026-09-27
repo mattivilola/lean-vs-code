@@ -57,7 +57,9 @@ const report = manifest.scenario ? {
 	}))
 };
 
-if (manifest.scenario && Object.values(summary.metrics).some(metric => metric.count !== manifest.samplesPerApp || metric.failed !== 0)) {
+if (manifest.scenario && (samples.length !== 2 * manifest.samplesPerApp
+	|| samples.some(sample => !Number.isFinite(sample.elapsedMs) || !Number.isFinite(sample.launchToWorkflowMs))
+	|| Object.values(summary.metrics).some(metric => metric.count !== manifest.samplesPerApp || metric.failed !== 0))) {
 	throw new Error('Do not publish an incomplete workflow benchmark.');
 }
 
