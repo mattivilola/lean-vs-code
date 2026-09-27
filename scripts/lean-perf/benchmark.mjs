@@ -43,6 +43,7 @@ Options:
   --oss-label <text>            Display label for the comparison app (default: Code-OSS)
   --git-workspace               Open the fixture inside a generated Git workspace
   --startup-timeout-ms <n>      Maximum wait for an editable editor (default: 120000)
+  --reuse-startup-profile       Reuse each app's isolated profile after warm-up (diagnostic)
   --dry-run                     Validate apps and print the plan without launching them
   -h, --help                    Show this help
 
@@ -61,6 +62,7 @@ function parseArgs(argv) {
 		leanLabel: 'Lean VS Code',
 		ossLabel: 'Code-OSS',
 		gitWorkspace: false,
+		reuseStartupProfile: false,
 		startupTimeoutMs: READY_TIMEOUT_MS,
 		dryRun: false,
 		help: false
@@ -90,6 +92,10 @@ function parseArgs(argv) {
 		}
 		if (arg === '--git-workspace') {
 			result.gitWorkspace = true;
+			continue;
+		}
+		if (arg === '--reuse-startup-profile') {
+			result.reuseStartupProfile = true;
 			continue;
 		}
 		const key = valueOptions.get(arg);
@@ -447,7 +453,7 @@ async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileR
 	const sampleNumber = warmup ? 0 : sampleIndex + 1;
 	const trialName = warmup ? 'startup-warmup' : `startup-${String(sampleNumber).padStart(3, '0')}`;
 	const trialDir = path.join(runDir, 'trials', `${trialName}-${app.key}`);
-	const profile = path.join(profileRoot, trialName);
+	const profile = path.join(profileRoot, options.reuseStartupProfile ? 'reused' : trialName);
 	const controlDir = path.join(trialDir, 'control');
 	const readyFile = path.join(controlDir, 'startup-ready.json');
 	fs.mkdirSync(trialDir, { recursive: true });
@@ -683,6 +689,7 @@ function appMetadata(apps, baseRevision, options) {
 			fixtureBytes: FIXTURE_BYTES,
 			fixtureReadBeforeMeasurement: true,
 			gitWorkspace: options.gitWorkspace,
+			startupProfile: options.reuseStartupProfile ? 'reused after warm-up' : 'fresh per launch',
 			gitWorkspaceTrackedFiles: options.gitWorkspace ? GIT_WORKSPACE_FILES + 1 : 0,
 			userExtensions: 'isolated empty extensions-dir plus the same harness control extension loaded from --extensionDevelopmentPath',
 			launchFlags: ['--new-window', '--shared-data-dir', '--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry'],

@@ -60,3 +60,5 @@ Each unique result directory contains:
 - `trials/`, `fixtures/`, and `harness-extension/`: harness-owned run artifacts for inspection. Each trial's `control/app.log` captures launch errors.
 
 The default sample count follows the repository performance plan. Reduce it for a smoke run, then use at least 30 repetitions for reported warm-cache timing results. This harness does not reset the filesystem cache or claim reboot-cold startup.
+
+For a separate diagnostic of repeated launches with each app's own persistent profile, pass `--reuse-startup-profile`. The warm-up seeds the profile, and later launches reuse it while still starting a stopped app process. This can expose V8 code-cache and persisted-state effects; keep its results separate from the default fresh-profile series and compare Lean only with original Code-OSS run in the same mode.
