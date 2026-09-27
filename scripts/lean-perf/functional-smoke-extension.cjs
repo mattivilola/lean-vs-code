@@ -89,7 +89,7 @@ async function run() {
 		const panel = vscode.window.createWebviewPanel('leanSmokeWebview', 'Lean smoke webview', vscode.ViewColumn.Beside);
 		try {
 			panel.webview.html = '<!doctype html><html><body>Lean extension webview</body></html>';
-			return 'extension webview panel created and rendered';
+			return 'extension webview panel created and HTML assigned';
 		} finally {
 			panel.dispose();
 		}
