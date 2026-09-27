@@ -6,6 +6,10 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Add user-visible changes here as they land. Before each release, move them under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.4.0 benchmark addendum — 27 September 2026
+
+- Validated a minified, same-revision original Code-OSS source comparator and reran 30-pair standalone-file, 10,000-file repository, and Git-review workflow benchmarks. The matched-build median differences are 17%, 19%, and 21% less time, respectively, for signed Lean v0.4.0. Earlier unminified-comparator results remain labeled for audit; the public headline now uses the minified baseline. See the [method and raw observations](lean/docs/PERFORMANCE.md).
+
 ## 0.4.0
 
 - Built the Apple Silicon release with the production-minified workbench. In a 30-pair GUI trial on the reference Mac, the signed app reached an editable file in 1.239 s median / 1.268 s p95, versus 1.310 s / 1.353 s for signed v0.3.2 in the same run: about 5% less median time and 6% less p95 time.
