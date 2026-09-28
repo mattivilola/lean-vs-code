@@ -39,7 +39,9 @@ function usage() {
 Options:
   --samples <n>                 Startup and existing-window samples per product (default: 30)
   --memory-samples <n>          Idle process-tree memory snapshots per product (default: 3)
+  --memory-launches <n>         Independent memory launches per product (default: 1)
   --memory-idle-ms <n>          Wait after editable file readiness before memory sampling (default: 30000)
+  --memory-only                 Skip timed startup and existing-window trials
   --output-root <path>          Parent directory for a unique results directory
   --lean-label <text>           Display label for the first app (default: Lean VS Code)
   --oss-label <text>            Display label for the comparison app (default: Code-OSS)
@@ -60,7 +62,9 @@ function parseArgs(argv) {
 		baseRevision: undefined,
 		samples: 30,
 		memorySamples: MEMORY_SAMPLES,
+		memoryLaunches: 1,
 		memoryIdleMs: MEMORY_IDLE_MS,
+		memoryOnly: false,
 		outputRoot: DEFAULT_OUTPUT_ROOT,
 		leanLabel: 'Lean VS Code',
 		ossLabel: 'Code-OSS',
@@ -77,6 +81,7 @@ function parseArgs(argv) {
 		['--base-revision', 'baseRevision'],
 		['--samples', 'samples'],
 		['--memory-samples', 'memorySamples'],
+		['--memory-launches', 'memoryLaunches'],
 		['--memory-idle-ms', 'memoryIdleMs'],
 		['--output-root', 'outputRoot'],
 		['--lean-label', 'leanLabel'],
@@ -103,6 +108,10 @@ function parseArgs(argv) {
 			result.reuseStartupProfile = true;
 			continue;
 		}
+		if (arg === '--memory-only') {
+			result.memoryOnly = true;
+			continue;
+		}
 		const key = valueOptions.get(arg);
 		if (!key) {
 			throw new Error(`Unknown option: ${arg}`);
@@ -111,7 +120,7 @@ function parseArgs(argv) {
 		if (!value || value.startsWith('--')) {
 			throw new Error(`Expected a value after ${arg}`);
 		}
-		result[key] = key === 'samples' || key === 'memorySamples' || key === 'memoryIdleMs' || key === 'startupTimeoutMs'
+		result[key] = key === 'samples' || key === 'memorySamples' || key === 'memoryLaunches' || key === 'memoryIdleMs' || key === 'startupTimeoutMs'
 			? parsePositiveInteger(value, arg)
 			: value;
 	}
@@ -140,6 +149,9 @@ function validateOptions(options) {
 	}
 	if (process.platform !== 'darwin' || process.arch !== 'arm64') {
 		throw new Error('This harness supports macOS Apple Silicon only.');
+	}
+	if (options.memoryLaunches > 1 && options.memorySamples !== 1) {
+		throw new Error('Use --memory-samples 1 with independent --memory-launches so snapshots are not counted as independent launches.');
 	}
 }
 
@@ -659,8 +671,10 @@ function appMetadata(apps, baseRevision, options) {
 			nodeVersion: process.version
 		},
 		settings: {
-			samples: options.samples,
+			samples: options.memoryOnly ? 0 : options.samples,
 			memorySamples: options.memorySamples,
+			memoryLaunches: options.memoryLaunches,
+			memoryOnly: options.memoryOnly,
 			memoryIdleMs: options.memoryIdleMs,
 			memorySampleIntervalMs: options.memorySampleIntervalMs,
 			existingWindowWarmupMs: EXISTING_WINDOW_WARMUP_MS,
@@ -742,9 +756,10 @@ async function captureMemory(app, sampleIndex, child, options) {
 	};
 }
 
-async function runMemorySession(app, fixturePath, profileRoot, vsix, runDir, options) {
-	const trialDir = path.join(runDir, 'trials', `memory-${app.key}`);
-	const profile = path.join(profileRoot, `memory-${app.key}`);
+async function runMemorySession(app, fixturePath, profileRoot, vsix, runDir, options, launchIndex) {
+	const sessionName = `memory-${app.key}-${String(launchIndex + 1).padStart(3, '0')}`;
+	const trialDir = path.join(runDir, 'trials', sessionName);
+	const profile = path.join(profileRoot, sessionName);
 	const controlDir = path.join(trialDir, 'control');
 	fs.mkdirSync(trialDir, { recursive: true });
 	let session;
@@ -760,10 +775,10 @@ async function runMemorySession(app, fixturePath, profileRoot, vsix, runDir, opt
 			}
 			lastSampleStartedAt = performance.now();
 			try {
-				samples.push(await captureMemory(app, index, session.child, { ...options, readyAt: session.readyAt }));
+				samples.push({ ...await captureMemory(app, index, session.child, { ...options, readyAt: session.readyAt }), memoryLaunch: launchIndex + 1 });
 			} catch (error) {
 				samples.push({
-					type: 'wholeProcessTreeMemory', subject: app.key, sample: index + 1,
+					type: 'wholeProcessTreeMemory', subject: app.key, sample: index + 1, memoryLaunch: launchIndex + 1,
 					capturedAt: new Date().toISOString(), physicalFootprintBytes: null,
 					rssBytesDiagnostic: null, metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree',
 					processes: [], captureError: error.message
@@ -826,11 +841,12 @@ async function run(options) {
 	const plan = {
 		products: apps.map(app => ({ label: app.label, version: app.version, productCommit: app.commit, appPath: app.appPath })),
 		comparisonBaseRevision: options.baseRevision,
-		startupSamplesPerProduct: options.samples,
+		startupSamplesPerProduct: options.memoryOnly ? 0 : options.samples,
 		warmupLaunchesPerProduct: 1,
-		existingWindowSamplesPerProduct: options.samples,
+		existingWindowSamplesPerProduct: options.memoryOnly ? 0 : options.samples,
 		existingWindowWarmupMs: EXISTING_WINDOW_WARMUP_MS,
 		memorySamplesPerProduct: options.memorySamples,
+		memoryLaunchesPerProduct: options.memoryLaunches,
 		memoryIdleMs: options.memoryIdleMs,
 		launchMode: options.launchMode,
 		profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
@@ -896,57 +912,63 @@ async function run(options) {
 	for (const [appIndex, app] of [...apps].reverse().entries()) {
 		append(await runLaunchSample(app, appIndex, -1, fixturePath, path.join(profileRoot, app.key), vsix, runDir, baseOptions));
 	}
-	process.stdout.write(`Starting ${options.samples} alternating launch samples per product.\n`);
+	if (!options.memoryOnly) {
+		process.stdout.write(`Starting ${options.samples} alternating launch samples per product.\n`);
 
-	for (let index = 0; index < options.samples; index++) {
-		const order = index % 2 === 0 ? apps : [...apps].reverse();
-		for (const [appIndex, app] of order.entries()) {
-			append(await runLaunchSample(app, appIndex, index, fixturePath, path.join(profileRoot, app.key), vsix, runDir, baseOptions));
-		}
-	}
-
-	process.stdout.write('Measuring existing-window file opens in alternating product order.\n');
-	const activeProfiles = path.join(profileRoot, 'existing-window');
-	const existingSessionApps = index => index % 2 === 0 ? apps : [...apps].reverse();
-	const sessionStates = new Map();
-	try {
-		for (const app of apps) {
-			const trialDir = path.join(runDir, 'trials', `existing-window-${app.key}`);
-			const profile = path.join(activeProfiles, app.key);
-			const controlDir = path.join(trialDir, 'control');
-			fs.mkdirSync(trialDir, { recursive: true });
-			const session = await waitForReady(app, fixturePath, profile, vsix, controlDir, baseOptions);
-			sessionStates.set(app.key, { app, child: session.child, profile, controlDir });
-		}
-		await delay(EXISTING_WINDOW_WARMUP_MS);
 		for (let index = 0; index < options.samples; index++) {
-			for (const app of existingSessionApps(index)) {
-				const state = sessionStates.get(app.key);
-				const one = await runOneExistingOpen(state, index, runDir, baseOptions);
-				append(one);
+			const order = index % 2 === 0 ? apps : [...apps].reverse();
+			for (const [appIndex, app] of order.entries()) {
+				append(await runLaunchSample(app, appIndex, index, fixturePath, path.join(profileRoot, app.key), vsix, runDir, baseOptions));
 			}
 		}
-	} finally {
-		for (const state of sessionStates.values()) {
-			await terminateSession(state.child, path.join(state.controlDir, 'control.json'));
+
+		process.stdout.write('Measuring existing-window file opens in alternating product order.\n');
+		const activeProfiles = path.join(profileRoot, 'existing-window');
+		const existingSessionApps = index => index % 2 === 0 ? apps : [...apps].reverse();
+		const sessionStates = new Map();
+		try {
+			for (const app of apps) {
+				const trialDir = path.join(runDir, 'trials', `existing-window-${app.key}`);
+				const profile = path.join(activeProfiles, app.key);
+				const controlDir = path.join(trialDir, 'control');
+				fs.mkdirSync(trialDir, { recursive: true });
+				const session = await waitForReady(app, fixturePath, profile, vsix, controlDir, baseOptions);
+				sessionStates.set(app.key, { app, child: session.child, profile, controlDir });
+			}
+			await delay(EXISTING_WINDOW_WARMUP_MS);
+			for (let index = 0; index < options.samples; index++) {
+				for (const app of existingSessionApps(index)) {
+					const state = sessionStates.get(app.key);
+					const one = await runOneExistingOpen(state, index, runDir, baseOptions);
+					append(one);
+				}
+			}
+		} finally {
+			for (const state of sessionStates.values()) {
+				await terminateSession(state.child, path.join(state.controlDir, 'control.json'));
+			}
 		}
+
 	}
 
-	process.stdout.write(`Waiting ${options.memoryIdleMs} ms before idle process-tree memory samples.\n`);
-	for (const app of apps) {
-		let memorySamples;
-		try {
-			memorySamples = await runMemorySession(app, fixturePath, path.join(profileRoot, 'memory'), vsix, runDir, baseOptions);
-		} catch (error) {
-			memorySamples = [{
-				type: 'wholeProcessTreeMemory', subject: app.key, sample: 1,
-				capturedAt: new Date().toISOString(), physicalFootprintBytes: null, rssBytesDiagnostic: null,
-				metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree',
-				processes: [], captureError: error.message
-			}];
-		}
-		for (const sample of memorySamples) {
-			append(sample);
+	process.stdout.write(`Measuring ${options.memoryLaunches} independent idle process-tree memory launches per product after ${options.memoryIdleMs} ms idle.\n`);
+	for (let launchIndex = 0; launchIndex < options.memoryLaunches; launchIndex++) {
+		const order = launchIndex % 2 === 0 ? apps : [...apps].reverse();
+		for (const app of order) {
+			let memorySamples;
+			try {
+				memorySamples = await runMemorySession(app, fixturePath, path.join(profileRoot, 'memory'), vsix, runDir, baseOptions, launchIndex);
+			} catch (error) {
+				memorySamples = [{
+					type: 'wholeProcessTreeMemory', subject: app.key, sample: 1, memoryLaunch: launchIndex + 1,
+					capturedAt: new Date().toISOString(), physicalFootprintBytes: null, rssBytesDiagnostic: null,
+					metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree',
+					processes: [], captureError: error.message
+				}];
+			}
+			for (const sample of memorySamples) {
+				append(sample);
+			}
 		}
 	}
 

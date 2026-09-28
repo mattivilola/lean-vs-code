@@ -21,8 +21,8 @@ const samples = fs.readFileSync(path.join(runDir, 'samples.jsonl'), 'utf8').trim
 if (samples.some(sample => sample.error)) {
 	throw new Error('Do not publish a benchmark with failed samples. Inspect the raw run first.');
 }
-for (const metric of Object.values(summary.metrics)) {
-	if (metric.count < 1) {
+for (const [name, metric] of Object.entries(summary.metrics)) {
+	if (metric.count < 1 && !(manifest.settings?.memoryOnly && !name.endsWith('.wholeProcessTreeMemory'))) {
 		throw new Error('Do not publish a benchmark with an empty metric.');
 	}
 }
@@ -44,6 +44,20 @@ const report = manifest.scenario ? {
 	settings: { samplesPerApp: manifest.samplesPerApp, pollIntervalMs: manifest.pollIntervalMs },
 	samples: samples.map(({ type, subject, sample, order, elapsedMs, launchToWorkflowMs }) => ({
 		type, subject, sample, order, elapsedMs, launchToWorkflowMs
+	}))
+} : manifest.settings?.memoryOnly ? {
+	...common,
+	kind: manifest.settings.memoryLaunches > 1 ? 'independent-app-tree-memory' : 'app-tree-memory-snapshots',
+	settings: {
+		memoryLaunchesPerApp: manifest.settings.memoryLaunches,
+		memorySnapshotsPerLaunch: manifest.settings.memorySamples,
+		idleAfterEditableFileMs: manifest.settings.memoryIdleMs,
+		profileCondition: 'fresh isolated profile per launch',
+		metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree'
+	},
+	byRole: summary.byRole,
+	samples: samples.filter(sample => sample.type === 'wholeProcessTreeMemory').map(({ subject, sample, memoryLaunch, physicalFootprintBytes, processCount, byRole }) => ({
+		subject, sample, memoryLaunch, physicalFootprintBytes, processCount, byRole
 	}))
 } : typeof manifest.inputProbe === 'boolean' ? {
 	...common,
@@ -77,6 +91,23 @@ if (manifest.scenario && (samples.length !== 2 * manifest.samplesPerApp
 	|| samples.some(sample => !Number.isFinite(sample.elapsedMs) || !Number.isFinite(sample.launchToWorkflowMs))
 	|| Object.values(summary.metrics).some(metric => metric.count !== manifest.samplesPerApp || metric.failed !== 0))) {
 	throw new Error('Do not publish an incomplete workflow benchmark.');
+}
+if (manifest.settings?.memoryOnly) {
+	const memorySamples = samples.filter(sample => sample.type === 'wholeProcessTreeMemory');
+	const expected = 2 * manifest.settings.memoryLaunches * manifest.settings.memorySamples;
+	const captures = new Set(memorySamples.map(sample => `${sample.subject}:${sample.memoryLaunch}:${sample.sample}`));
+	const complete = manifest.apps.every(app => {
+		for (let launch = 1; launch <= manifest.settings.memoryLaunches; launch++) {
+			for (let snapshot = 1; snapshot <= manifest.settings.memorySamples; snapshot++) {
+				if (!captures.has(`${app.key}:${launch}:${snapshot}`)) { return false; }
+			}
+		}
+		return summary.metrics[`${app.key}.wholeProcessTreeMemory`]?.count === manifest.settings.memoryLaunches * manifest.settings.memorySamples;
+	});
+	if (memorySamples.length !== expected || captures.size !== expected || !complete
+		|| memorySamples.some(sample => !Number.isFinite(sample.physicalFootprintBytes) || !Number.isInteger(sample.memoryLaunch))) {
+		throw new Error('Do not publish an incomplete memory comparison; inspect the raw launch and capture failures first.');
+	}
 }
 if (typeof manifest.inputProbe === 'boolean' && (samples.length !== 2 * (manifest.samplesPerApp + 1)
 	|| samples.some(sample => !Number.isFinite(sample.elapsedMs))

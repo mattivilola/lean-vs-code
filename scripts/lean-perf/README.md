@@ -17,6 +17,18 @@ node scripts/lean-perf/benchmark.mjs \
 
 The default is 30 timed startup and 30 existing-window file-open samples per product, one startup warm-up per product, a 5-second existing-window settle period, 3 memory snapshots after 30 seconds of idle time, and an output directory under `scripts/lean-perf/results/`. Pass `--samples`, `--memory-samples`, `--memory-idle-ms`, or `--output-root` to adjust the run. Every run gets a new report directory and a short, isolated profile directory under `/private/tmp/lean-perf-*`; both are retained for inspection. No existing profile is opened or removed.
 
+To investigate a process-role memory outlier, run independent stopped-app launches with one short-idle snapshot from each fresh isolated profile:
+
+```sh
+caffeinate -dimsu node scripts/lean-perf/benchmark.mjs \
+  --lean-app "/Applications/Lean VS Code.app" \
+  --oss-app "/path/to/Code - OSS.app" \
+  --base-revision 04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1 \
+  --memory-only --memory-launches 9 --memory-samples 1 --memory-idle-ms 30000
+```
+
+The apps alternate first position by pair. The run still makes one unmeasured startup warm-up per app, but skips timed startup and existing-window trials. Inspect `summary.json` and every raw `wholeProcessTreeMemory` sample, especially the `gpu` role count and variance. A missing GPU process is not a zero-byte GPU sample. Record display and window conditions beside the report. Only complete, matched pairs support a comparison; this measures short-idle summed process footprints, not peak or long-session memory. To publish a path- and PID-free copy of a complete run, use `node scripts/lean-perf/export-public.mjs <run-directory> <output.json>`.
+
 For internal regression diagnosis, a candidate may be compared against an earlier Lean VS Code release by passing that app as `--oss-app` and setting `--oss-label 'Lean VS Code v0.2.0'`. Do not use that trial as a public speed claim: published performance comparisons use original same-revision Code-OSS. The raw sample key remains `code-oss` for compatibility with the standard comparison parser; use the manifest's app paths and labels when interpreting such a run.
 
 Pass `--git-workspace` for a separate repository-opening benchmark. It creates a task-owned Git fixture under that run's report directory and opens the fixture file with the folder; the default run is a standalone file. Keep these results separate because bundled Git activation is relevant only to the repository case.
