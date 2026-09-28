@@ -131,6 +131,8 @@ if (reuseProfile) {
 }
 const extensionPath = path.join(profile, 'trace-extension');
 const traceMarkerFile = path.join(profile, 'trace-active');
+const warmupReadyFile = path.join(profile, 'warmup-ready');
+const warmupQuitFile = path.join(profile, 'warmup-quit');
 fs.mkdirSync(extensionPath);
 fs.writeFileSync(path.join(extensionPath, 'package.json'), JSON.stringify({
 	name: 'lean-startup-trace', publisher: 'lean-perf', version: '0.0.1',
@@ -144,6 +146,13 @@ const vscode = require('vscode');
 async function activate() {
   try {
     if (!fs.existsSync(${JSON.stringify(traceMarkerFile)})) {
+      fs.writeFileSync(${JSON.stringify(warmupReadyFile)}, '');
+      const quitPoll = setInterval(() => {
+        if (fs.existsSync(${JSON.stringify(warmupQuitFile)})) {
+          clearInterval(quitPoll);
+          vscode.commands.executeCommand('workbench.action.quit');
+        }
+      }, 100);
       return;
     }
     await vscode.commands.executeCommand('perfview.show');
@@ -201,6 +210,19 @@ try {
 				}
 				if (!loaded) {
 					throw new Error('Warm-up did not finish loading extensions.');
+				}
+				for (let attempt = 0; attempt < 75 && !fs.existsSync(warmupReadyFile); attempt++) {
+					await delay(200);
+				}
+				if (!fs.existsSync(warmupReadyFile)) {
+					throw new Error('Warm-up control extension did not activate.');
+				}
+				fs.writeFileSync(warmupQuitFile, '');
+				for (let attempt = 0; attempt < 150 && warmup.isRunning(); attempt++) {
+					await delay(100);
+				}
+				if (warmup.isRunning()) {
+					throw new Error('Warm-up did not quit cleanly; established-profile cache state is unreliable.');
 				}
 			} finally {
 				client.close();
