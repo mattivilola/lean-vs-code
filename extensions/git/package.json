@@ -50,6 +50,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onCommand:workbench.view.scm",
     "onView:workbench.scm",
     "onEditSession:file",

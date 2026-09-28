@@ -277,7 +277,7 @@ if should_run_suite git; then
 echo
 echo "### Git tests"
 echo
-# Start in a real repository so activation tests can detect eager Git scans.
+# Start in a real repository so activation tests can verify startup repository discovery.
 # The Git smoke suite can safely reinitialize this otherwise empty fixture.
 GIT_TEST_WORKSPACE=$(mktemp -d 2>/dev/null)
 git -C "$GIT_TEST_WORKSPACE" init -b main >/dev/null
