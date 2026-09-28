@@ -6,6 +6,10 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Add user-visible changes here as they land. Before each release, move them under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.6.0
+
+See the [v0.6.0 release notes](lean/docs/RELEASE_NOTES_0.6.0.md) for benchmark methods, release checks, and limitations.
+
 - Bundle **Lean VS Code Light** for daytime use and rename the existing emerald theme in the picker to **Lean VS Code Dark**. Existing dark-theme selections continue to work.
 - Activate the bundled Git extension after startup (`onStartupFinished`) instead of only when Source Control opens. Gutter change markers, the branch indicator, and change counts are available for reviewing edits without an extra click; activation stays off the critical startup path. The earlier on-demand change had shown no measured file-ready gain.
 - Start resolving the login-shell environment as soon as main-process services exist, instead of after the first window opens. Finder, Dock, and direct launches no longer delay the local extension host by the full shell startup time; `code` CLI launches already skip this step. Not yet measured.

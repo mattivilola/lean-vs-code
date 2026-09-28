@@ -1,0 +1,1354 @@
+{
+  "schemaVersion": 1,
+  "kind": "extension-backed-file",
+  "releaseStatus": "unsigned minified v0.6.0 candidate; final signed release verification is recorded separately",
+  "createdAt": "2026-09-28T10:34:04.671Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v24.21.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code",
+      "version": "1.139.1",
+      "commit": "48da33a316848c7be14416f3ece87c2dad034d34"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "method": {
+    "samples": 30,
+    "memorySamples": 3,
+    "memoryIdleMs": 30000,
+    "memorySampleIntervalMs": 1000,
+    "existingWindowWarmupMs": 5000,
+    "warmupLaunchesPerProduct": 1,
+    "startupTimeoutMs": 120000,
+    "fixtureBytes": 102400,
+    "fixtureReadBeforeMeasurement": true,
+    "gitWorkspace": false,
+    "startupProfile": "reused after warm-up",
+    "launchMode": "cli",
+    "profileCondition": "established",
+    "settingsOverrides": {
+      "window.restoreWindows": "none"
+    },
+    "gitWorkspaceTrackedFiles": 0,
+    "userExtensions": "isolated extensions-dir with the same harness control extension installed as a VSIX",
+    "launchFlags": [
+      "--new-window",
+      "--shared-data-dir",
+      "--skip-welcome",
+      "--skip-release-notes",
+      "--disable-updates",
+      "--disable-telemetry"
+    ],
+    "existingWindowMethod": "launch using the selected mode with --reuse-window and the file path; readiness is measured by the control extension",
+    "processEnvironment": "inherits the invoking environment; values are not recorded in this report"
+  },
+  "conditions": {
+    "controlExtensionInstall": "vsix"
+  },
+  "metrics": {
+    "lean.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1116.514,
+      "p95": 1145.605,
+      "min": 1069.234,
+      "max": 1154.766
+    },
+    "lean.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 473.434,
+      "p95": 504.076,
+      "min": 444.065,
+      "max": 504.545
+    },
+    "lean.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 458435216,
+      "p95": 860973736,
+      "min": 454732432,
+      "max": 860973736
+    },
+    "code-oss.launchToEditableFile": {
+      "unit": "ms",
+      "count": 29,
+      "p50": 1390.391,
+      "p95": 1528.2,
+      "min": 1306.568,
+      "max": 1553.352
+    },
+    "code-oss.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 0,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    },
+    "code-oss.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 598504744,
+      "p95": 855717160,
+      "min": 598504744,
+      "max": 855717160
+    }
+  },
+  "samples": [
+    {
+      "type": "launchWarmup",
+      "subject": "code-oss",
+      "sample": 0,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1916.784
+    },
+    {
+      "type": "launchWarmup",
+      "subject": "lean",
+      "sample": 0,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1408.706
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1072.7
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1375.072
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1498.549
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1154.766
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1069.234
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1429.832
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1553.352
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1110.598
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1114.462
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1443.83
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": null,
+      "error": "Startup-to-editable-file: Error: VS Code rejected the editability probe removal."
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1136.851
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1109.986
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1528.2
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1379.636
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1111.111
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1110.698
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1405.523
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1376.993
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1119.747
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1118.991
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1403.874
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1364.52
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1101.823
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1113.394
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1407.149
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1340.763
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1092.383
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1132.804
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1416.025
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1374.506
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1136.279
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1143.279
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1410.075
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1390.432
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1084.114
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1130.555
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1379.032
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1405.021
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1112.42
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1106.275
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1409.959
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1377.218
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1116.514
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1119.475
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1411.028
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1317.175
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1133.1
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1089.379
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1382.887
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1371.517
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1140.376
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1128.936
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1343.923
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1306.568
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1117.26
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1123.194
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1390.391
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1385.864
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "launchMode": "cli",
+      "profileCondition": "established",
+      "elapsedMs": 1145.605
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 497.596
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 444.065
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 489.006
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 462.921
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 460.731
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 486.829
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 480.364
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 455.117
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 475.375
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 504.076
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 492.54
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 463.978
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 494.377
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 454.486
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 457.182
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 464.996
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 498.83
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 491.845
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 470.684
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 504.545
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 461.323
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 468.277
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 460.69
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 476.193
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 469.392
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 477.926
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 477.592
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 478.992
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 472.492
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": null,
+      "error": "connect ECONNREFUSED 127.0.0.1:53199"
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 473.434
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 1
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 2
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 3
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 1
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 2
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 3
+    }
+  ],
+  "limitations": "Both apps were locally built from the same original Code-OSS 1.139.1 source revision; Code-OSS has a packaging-only runtime-dependency repair and ad-hoc local signature. These are warm-cache GUI observations on one Apple M3 Max, not physical display-photon or keyboard latency. Preserve all failed observations; memory snapshots within one launch do not establish a repeatable memory saving.",
+  "memoryByRoleDiagnostic": {
+    "lean": {
+      "main": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 74745800,
+          "p95": 76711880,
+          "min": 74745800,
+          "max": 76711880
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 223440,
+          "p95": 224080,
+          "min": 222208,
+          "max": 224080
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "gpu": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 123520152,
+          "p95": 525206704,
+          "min": 123520152,
+          "max": 525206704
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 96080,
+          "p95": 103248,
+          "min": 96080,
+          "max": 103248
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "network": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 9094152,
+          "p95": 9094152,
+          "min": 9094152,
+          "max": 9094152
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 55184,
+          "p95": 55184,
+          "min": 55088,
+          "max": 55184
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "renderer": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 150898776,
+          "p95": 150915160,
+          "min": 148457560,
+          "max": 150915160
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 400368,
+          "p95": 401344,
+          "min": 398736,
+          "max": 401344
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "utility:node.mojom.NodeService": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 99062224,
+          "p95": 100159952,
+          "min": 98914768,
+          "max": 100159952
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 318496,
+          "p95": 319424,
+          "min": 318480,
+          "max": 319424
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 3,
+          "p95": 3,
+          "min": 3,
+          "max": 3
+        }
+      }
+    },
+    "code-oss": {
+      "main": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 95324152,
+          "p95": 95324152,
+          "min": 95324152,
+          "max": 95324152
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 251152,
+          "p95": 251152,
+          "min": 251152,
+          "max": 251152
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "gpu": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 99828888,
+          "p95": 356811928,
+          "min": 99828888,
+          "max": 356811928
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 104016,
+          "p95": 108560,
+          "min": 104016,
+          "max": 108560
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "network": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 8340512,
+          "p95": 8340512,
+          "min": 8340512,
+          "max": 8340512
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 47440,
+          "p95": 47440,
+          "min": 47440,
+          "max": 47440
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "renderer": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 226642152,
+          "p95": 226871528,
+          "min": 226642152,
+          "max": 226871528
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 557600,
+          "p95": 557600,
+          "min": 557584,
+          "max": 557600
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "utility:node.mojom.NodeService": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 159488168,
+          "p95": 159488168,
+          "min": 159488168,
+          "max": 159488168
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 467024,
+          "p95": 475264,
+          "min": 467024,
+          "max": 475264
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 4,
+          "p95": 4,
+          "min": 4,
+          "max": 4
+        }
+      },
+      "other": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 8880872,
+          "p95": 8880872,
+          "min": 8880872,
+          "max": 8880872
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 22880,
+          "p95": 22880,
+          "min": 22880,
+          "max": 22880
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      }
+    }
+  }
+}

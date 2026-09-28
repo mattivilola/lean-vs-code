@@ -1,0 +1,1321 @@
+{
+  "schemaVersion": 1,
+  "kind": "extension-backed-file",
+  "releaseStatus": "unsigned minified v0.6.0 candidate; final signed release verification is recorded separately",
+  "createdAt": "2026-09-28T10:38:39.016Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v24.21.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code",
+      "version": "1.139.1",
+      "commit": "48da33a316848c7be14416f3ece87c2dad034d34"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "method": {
+    "samples": 30,
+    "memorySamples": 3,
+    "memoryIdleMs": 30000,
+    "memorySampleIntervalMs": 1000,
+    "existingWindowWarmupMs": 5000,
+    "warmupLaunchesPerProduct": 1,
+    "startupTimeoutMs": 120000,
+    "fixtureBytes": 102400,
+    "fixtureReadBeforeMeasurement": true,
+    "gitWorkspace": false,
+    "startupProfile": "fresh per launch",
+    "launchMode": "direct",
+    "profileCondition": "fresh",
+    "settingsOverrides": {},
+    "gitWorkspaceTrackedFiles": 0,
+    "userExtensions": "isolated extensions-dir with the same harness control extension installed as a VSIX",
+    "launchFlags": [
+      "--new-window",
+      "--shared-data-dir",
+      "--skip-welcome",
+      "--skip-release-notes",
+      "--disable-updates",
+      "--disable-telemetry"
+    ],
+    "existingWindowMethod": "launch using the selected mode with --reuse-window and the file path; readiness is measured by the control extension",
+    "processEnvironment": "inherits the invoking environment; values are not recorded in this report"
+  },
+  "conditions": {
+    "controlExtensionInstall": "vsix"
+  },
+  "metrics": {
+    "lean.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1306.872,
+      "p95": 1426.763,
+      "min": 1231.301,
+      "max": 1512.357
+    },
+    "lean.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 352.259,
+      "p95": 412.234,
+      "min": 315.79,
+      "max": 453.146
+    },
+    "lean.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 512061800,
+      "p95": 521974120,
+      "min": 510980456,
+      "max": 521974120
+    },
+    "code-oss.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 1636.53,
+      "p95": 1785.166,
+      "min": 1522.546,
+      "max": 1818.551
+    },
+    "code-oss.existingWindowFileOpen": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 375.9,
+      "p95": 434.856,
+      "min": 349.759,
+      "max": 442.837
+    },
+    "code-oss.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 3,
+      "p50": 578385120,
+      "p95": 585299192,
+      "min": 578385120,
+      "max": 585299192
+    }
+  },
+  "samples": [
+    {
+      "type": "launchWarmup",
+      "subject": "code-oss",
+      "sample": 0,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1596.088
+    },
+    {
+      "type": "launchWarmup",
+      "subject": "lean",
+      "sample": 0,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1254.862
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1367.359
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1617.679
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1635.769
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1285.852
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1273.17
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1609.794
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1563.889
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1253.146
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1261.877
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1540.453
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1687.742
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1231.301
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1267.76
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1630.353
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1604.772
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1286.422
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1280.504
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1591.211
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1522.546
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1268.796
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1267.615
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1579.852
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1553.605
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1265.778
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1337.168
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1669.645
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1567.002
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1256.453
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1268.001
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1695.239
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1636.53
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1512.357
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1394.946
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1669.361
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1692.359
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1426.763
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1355.52
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1818.551
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1639.428
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1311.42
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1307.813
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1698.485
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1767.253
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1328.56
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1306.872
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1652.546
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1685.339
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1413.171
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1376.311
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1785.166
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1678.742
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1362.77
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1284.263
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1576.333
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1719.175
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1324.147
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1329.363
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1635.597
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1682.462
+    },
+    {
+      "type": "launchToEditableFile",
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "launchMode": "direct",
+      "profileCondition": "fresh",
+      "elapsedMs": 1319.057
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 343.927
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 442.837
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 362.75
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 361.884
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 329.045
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 363.894
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 354.68
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 380.391
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 320.293
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 373.724
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 366.051
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 379.911
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 333.347
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 378.653
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 372.455
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 453.146
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 355.046
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 373.554
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 352.36
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 410.879
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 354.805
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 404.953
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 364.348
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 342.932
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 315.79
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 390.197
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 349.759
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 385.632
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 322.259
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 397.335
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 376.042
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 352.496
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 352.259
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 420.451
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 363.987
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 374.197
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 331.121
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 408.925
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 402.414
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 378.17
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 337.233
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 375.9
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 360.523
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 400.44
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 339.536
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 434.856
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 368.918
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 412.234
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 347.035
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 399.211
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 417.602
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 352.252
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 351.236
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 385.935
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 385.689
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 370.544
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 339.461
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 402.682
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 359.476
+    },
+    {
+      "type": "existingWindowFileOpen",
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 378.669
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 1
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 2
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "lean",
+      "sample": 3
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 1
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 2
+    },
+    {
+      "type": "wholeProcessTreeMemory",
+      "subject": "code-oss",
+      "sample": 3
+    }
+  ],
+  "limitations": "Both apps were locally built from the same original Code-OSS 1.139.1 source revision; Code-OSS has a packaging-only runtime-dependency repair and ad-hoc local signature. These are warm-cache GUI observations on one Apple M3 Max, not physical display-photon or keyboard latency. Preserve all failed observations; memory snapshots within one launch do not establish a repeatable memory saving.",
+  "memoryByRoleDiagnostic": {
+    "lean": {
+      "main": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 76236768,
+          "p95": 76236768,
+          "min": 76236768,
+          "max": 76236768
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 227056,
+          "p95": 227056,
+          "min": 227056,
+          "max": 227056
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "gpu": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 131155168,
+          "p95": 131155168,
+          "min": 131155168,
+          "max": 131155168
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 115680,
+          "p95": 115680,
+          "min": 115680,
+          "max": 115680
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "network": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 9126944,
+          "p95": 9126944,
+          "min": 9126944,
+          "max": 9126944
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 55200,
+          "p95": 55200,
+          "min": 55104,
+          "max": 55200
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "renderer": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 171657400,
+          "p95": 172689592,
+          "min": 171657400,
+          "max": 172689592
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 432416,
+          "p95": 433424,
+          "min": 432416,
+          "max": 433424
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "utility:node.mojom.NodeService": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 123885520,
+          "p95": 132765648,
+          "min": 122804176,
+          "max": 132765648
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 410880,
+          "p95": 425392,
+          "min": 406176,
+          "max": 425392
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 4,
+          "p95": 4,
+          "min": 4,
+          "max": 4
+        }
+      }
+    },
+    "code-oss": {
+      "main": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 75761632,
+          "p95": 75761632,
+          "min": 75663328,
+          "max": 75761632
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 225040,
+          "p95": 225040,
+          "min": 224944,
+          "max": 225040
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "gpu": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 111412448,
+          "p95": 111412448,
+          "min": 111412448,
+          "max": 111412448
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 105984,
+          "p95": 105984,
+          "min": 105984,
+          "max": 105984
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "network": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 8438792,
+          "p95": 8438792,
+          "min": 8438792,
+          "max": 8438792
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 47520,
+          "p95": 47520,
+          "min": 47520,
+          "max": 47520
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "renderer": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 210602216,
+          "p95": 211634408,
+          "min": 210602216,
+          "max": 211634408
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 509488,
+          "p95": 510384,
+          "min": 509488,
+          "max": 510384
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "utility:node.mojom.NodeService": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 163305520,
+          "p95": 169285704,
+          "min": 163305520,
+          "max": 169285704
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 472336,
+          "p95": 479664,
+          "min": 472336,
+          "max": 479664
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 4,
+          "p95": 4,
+          "min": 4,
+          "max": 4
+        }
+      },
+      "other": {
+        "physFootprintBytes": {
+          "count": 3,
+          "p50": 8864512,
+          "p95": 8864512,
+          "min": 8864512,
+          "max": 8864512
+        },
+        "rssKiB": {
+          "count": 3,
+          "p50": 22848,
+          "p95": 22848,
+          "min": 22848,
+          "max": 22848
+        },
+        "processCount": {
+          "count": 3,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      }
+    }
+  }
+}

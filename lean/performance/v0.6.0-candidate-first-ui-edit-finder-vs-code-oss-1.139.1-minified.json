@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 1,
+  "kind": "first-ui-edit",
+  "releaseStatus": "unsigned minified v0.6.0 candidate; final signed release verification is recorded separately",
+  "createdAt": "2026-09-28T10:31:08.215Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "osRelease": "27.0.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "version": "1.139.1",
+      "commit": "48da33a316848c7be14416f3ece87c2dad034d34"
+    },
+    {
+      "key": "code-oss",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "method": "Stopped-process spawn until synthetic text sent through Chrome DevTools Protocol appears in the requested file's visible Monaco editor line. The input is not saved. This tests UI edit response, not extension-host API readiness, a physical keyboard, or display photons.",
+  "conditions": {
+    "samplesPerApp": 30,
+    "launchMode": "finder",
+    "profileCondition": "established",
+    "settingsOverrides": {
+      "window.restoreWindows": "none"
+    },
+    "inputProbe": true,
+    "secondWindow": false
+  },
+  "metrics": {
+    "lean": {
+      "count": 30,
+      "failed": 0,
+      "p50": 982,
+      "p95": 1054
+    },
+    "code-oss": {
+      "count": 30,
+      "failed": 0,
+      "p50": 1205,
+      "p95": 1641
+    }
+  },
+  "samples": [
+    {
+      "subject": "lean",
+      "sample": 0,
+      "order": 0,
+      "warmup": true,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1207
+    },
+    {
+      "subject": "code-oss",
+      "sample": 0,
+      "order": 0,
+      "warmup": true,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1302
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 925
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1205
+    },
+    {
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1155
+    },
+    {
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 910
+    },
+    {
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 936
+    },
+    {
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1187
+    },
+    {
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1295
+    },
+    {
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1083
+    },
+    {
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1041
+    },
+    {
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1288
+    },
+    {
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1195
+    },
+    {
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 971
+    },
+    {
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 922
+    },
+    {
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1641
+    },
+    {
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1151
+    },
+    {
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 975
+    },
+    {
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 969
+    },
+    {
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1175
+    },
+    {
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 2400
+    },
+    {
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1027
+    },
+    {
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 961
+    },
+    {
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1167
+    },
+    {
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1198
+    },
+    {
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 968
+    },
+    {
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 956
+    },
+    {
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1196
+    },
+    {
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1201
+    },
+    {
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 976
+    },
+    {
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1023
+    },
+    {
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1182
+    },
+    {
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1207
+    },
+    {
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 975
+    },
+    {
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 997
+    },
+    {
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1219
+    },
+    {
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1293
+    },
+    {
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 956
+    },
+    {
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1052
+    },
+    {
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1196
+    },
+    {
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1200
+    },
+    {
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 991
+    },
+    {
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 983
+    },
+    {
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1193
+    },
+    {
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1219
+    },
+    {
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 961
+    },
+    {
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1005
+    },
+    {
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1316
+    },
+    {
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1294
+    },
+    {
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 989
+    },
+    {
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1011
+    },
+    {
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1220
+    },
+    {
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1312
+    },
+    {
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1027
+    },
+    {
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1019
+    },
+    {
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1210
+    },
+    {
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1334
+    },
+    {
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 982
+    },
+    {
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1054
+    },
+    {
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1235
+    },
+    {
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1204
+    },
+    {
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "warmup": false,
+      "launchMode": "finder",
+      "profileCondition": "established",
+      "elapsedMs": 1011
+    }
+  ],
+  "limitations": "Both apps were locally built from the same original Code-OSS 1.139.1 source revision; Code-OSS has a packaging-only runtime-dependency repair and ad-hoc local signature. These are warm-cache GUI observations on one Apple M3 Max, not physical display-photon or keyboard latency. Preserve all failed observations; memory snapshots within one launch do not establish a repeatable memory saving."
+}

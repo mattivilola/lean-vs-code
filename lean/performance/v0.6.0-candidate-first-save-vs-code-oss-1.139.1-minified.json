@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "kind": "first-saved-edit",
+  "releaseStatus": "unsigned minified v0.6.0 candidate; final signed release verification is recorded separately",
+  "createdAt": "2026-09-28T10:50:11.450Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "osRelease": "27.0.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code",
+      "version": "1.139.1",
+      "commit": "48da33a316848c7be14416f3ece87c2dad034d34"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "method": "Two metrics: first-use action duration inside the temporary onStartupFinished extension, and process spawn to completed workflow. Each fresh app launch uses an isolated profile and one-file Git fixture.",
+  "conditions": {
+    "scenario": "editableFileAndSave",
+    "samplesPerApp": 30
+  },
+  "metrics": {
+    "lean": {
+      "count": 30,
+      "failed": 0,
+      "p50": 92.515,
+      "p95": 122.435,
+      "launchToWorkflowP50": 1445,
+      "launchToWorkflowP95": 1777
+    },
+    "code-oss": {
+      "count": 30,
+      "failed": 0,
+      "p50": 40.396,
+      "p95": 72.741,
+      "launchToWorkflowP50": 1972,
+      "launchToWorkflowP95": 2107
+    }
+  },
+  "samples": [
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 1,
+      "order": 1,
+      "elapsedMs": 95.047,
+      "launchToWorkflowMs": 1752
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 1,
+      "order": 2,
+      "elapsedMs": 30.308,
+      "launchToWorkflowMs": 2502
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 2,
+      "order": 1,
+      "elapsedMs": 32.946,
+      "launchToWorkflowMs": 2001
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 2,
+      "order": 2,
+      "elapsedMs": 94.82,
+      "launchToWorkflowMs": 1777
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 3,
+      "order": 1,
+      "elapsedMs": 92.845,
+      "launchToWorkflowMs": 1388
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 3,
+      "order": 2,
+      "elapsedMs": 72.741,
+      "launchToWorkflowMs": 2034
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 4,
+      "order": 1,
+      "elapsedMs": 24.292,
+      "launchToWorkflowMs": 2022
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 4,
+      "order": 2,
+      "elapsedMs": 77.1,
+      "launchToWorkflowMs": 1445
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 5,
+      "order": 1,
+      "elapsedMs": 43.487,
+      "launchToWorkflowMs": 1391
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 5,
+      "order": 2,
+      "elapsedMs": 46.888,
+      "launchToWorkflowMs": 1897
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 6,
+      "order": 1,
+      "elapsedMs": 26.346,
+      "launchToWorkflowMs": 1965
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 6,
+      "order": 2,
+      "elapsedMs": 52.893,
+      "launchToWorkflowMs": 1420
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 7,
+      "order": 1,
+      "elapsedMs": 104.962,
+      "launchToWorkflowMs": 1493
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 7,
+      "order": 2,
+      "elapsedMs": 39.697,
+      "launchToWorkflowMs": 1980
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 8,
+      "order": 1,
+      "elapsedMs": 26.183,
+      "launchToWorkflowMs": 1937
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 8,
+      "order": 2,
+      "elapsedMs": 93.544,
+      "launchToWorkflowMs": 1515
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 9,
+      "order": 1,
+      "elapsedMs": 101.216,
+      "launchToWorkflowMs": 1485
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 9,
+      "order": 2,
+      "elapsedMs": 54.855,
+      "launchToWorkflowMs": 1936
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 10,
+      "order": 1,
+      "elapsedMs": 40.757,
+      "launchToWorkflowMs": 1894
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 10,
+      "order": 2,
+      "elapsedMs": 49.123,
+      "launchToWorkflowMs": 1387
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 11,
+      "order": 1,
+      "elapsedMs": 115.125,
+      "launchToWorkflowMs": 1429
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 11,
+      "order": 2,
+      "elapsedMs": 38.219,
+      "launchToWorkflowMs": 1979
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 12,
+      "order": 1,
+      "elapsedMs": 57.274,
+      "launchToWorkflowMs": 1926
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 12,
+      "order": 2,
+      "elapsedMs": 95.953,
+      "launchToWorkflowMs": 1469
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 13,
+      "order": 1,
+      "elapsedMs": 68.887,
+      "launchToWorkflowMs": 1428
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 13,
+      "order": 2,
+      "elapsedMs": 33.004,
+      "launchToWorkflowMs": 1972
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 14,
+      "order": 1,
+      "elapsedMs": 55.685,
+      "launchToWorkflowMs": 1929
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 14,
+      "order": 2,
+      "elapsedMs": 96.094,
+      "launchToWorkflowMs": 1395
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 15,
+      "order": 1,
+      "elapsedMs": 41.998,
+      "launchToWorkflowMs": 1391
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 15,
+      "order": 2,
+      "elapsedMs": 41.427,
+      "launchToWorkflowMs": 1991
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 16,
+      "order": 1,
+      "elapsedMs": 47.39,
+      "launchToWorkflowMs": 1884
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 16,
+      "order": 2,
+      "elapsedMs": 120.618,
+      "launchToWorkflowMs": 1463
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 17,
+      "order": 1,
+      "elapsedMs": 122.868,
+      "launchToWorkflowMs": 1499
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 17,
+      "order": 2,
+      "elapsedMs": 62.529,
+      "launchToWorkflowMs": 1951
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 18,
+      "order": 1,
+      "elapsedMs": 40.396,
+      "launchToWorkflowMs": 1950
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 18,
+      "order": 2,
+      "elapsedMs": 75.047,
+      "launchToWorkflowMs": 1481
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 19,
+      "order": 1,
+      "elapsedMs": 91.517,
+      "launchToWorkflowMs": 1468
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 19,
+      "order": 2,
+      "elapsedMs": 52.023,
+      "launchToWorkflowMs": 2059
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 20,
+      "order": 1,
+      "elapsedMs": 35.079,
+      "launchToWorkflowMs": 1989
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 20,
+      "order": 2,
+      "elapsedMs": 57.883,
+      "launchToWorkflowMs": 1439
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 21,
+      "order": 1,
+      "elapsedMs": 47.941,
+      "launchToWorkflowMs": 1391
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 21,
+      "order": 2,
+      "elapsedMs": 66.786,
+      "launchToWorkflowMs": 2029
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 22,
+      "order": 1,
+      "elapsedMs": 25.443,
+      "launchToWorkflowMs": 2019
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 22,
+      "order": 2,
+      "elapsedMs": 75.233,
+      "launchToWorkflowMs": 1778
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 23,
+      "order": 1,
+      "elapsedMs": 122.435,
+      "launchToWorkflowMs": 1435
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 23,
+      "order": 2,
+      "elapsedMs": 75.136,
+      "launchToWorkflowMs": 1966
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 24,
+      "order": 1,
+      "elapsedMs": 65.759,
+      "launchToWorkflowMs": 1913
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 24,
+      "order": 2,
+      "elapsedMs": 75.92,
+      "launchToWorkflowMs": 1463
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 25,
+      "order": 1,
+      "elapsedMs": 48.61,
+      "launchToWorkflowMs": 1384
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 25,
+      "order": 2,
+      "elapsedMs": 33.963,
+      "launchToWorkflowMs": 2107
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 26,
+      "order": 1,
+      "elapsedMs": 32.997,
+      "launchToWorkflowMs": 1999
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 26,
+      "order": 2,
+      "elapsedMs": 93.178,
+      "launchToWorkflowMs": 1448
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 27,
+      "order": 1,
+      "elapsedMs": 96.544,
+      "launchToWorkflowMs": 1415
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 27,
+      "order": 2,
+      "elapsedMs": 36.634,
+      "launchToWorkflowMs": 1979
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 28,
+      "order": 1,
+      "elapsedMs": 41.163,
+      "launchToWorkflowMs": 1967
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 28,
+      "order": 2,
+      "elapsedMs": 44.111,
+      "launchToWorkflowMs": 1726
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 29,
+      "order": 1,
+      "elapsedMs": 109.206,
+      "launchToWorkflowMs": 1447
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 29,
+      "order": 2,
+      "elapsedMs": 42.166,
+      "launchToWorkflowMs": 1956
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "code-oss",
+      "sample": 30,
+      "order": 1,
+      "elapsedMs": 31.194,
+      "launchToWorkflowMs": 2074
+    },
+    {
+      "type": "editableFileAndSave",
+      "subject": "lean",
+      "sample": 30,
+      "order": 2,
+      "elapsedMs": 92.515,
+      "launchToWorkflowMs": 1377
+    }
+  ],
+  "limitations": "Both apps were locally built from the same original Code-OSS 1.139.1 source revision; Code-OSS has a packaging-only runtime-dependency repair and ad-hoc local signature. These are warm-cache GUI observations on one Apple M3 Max, not physical display-photon or keyboard latency. Preserve all failed observations; memory snapshots within one launch do not establish a repeatable memory saving."
+}
