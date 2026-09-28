@@ -1,6 +1,6 @@
-# Lean VS Code v0.6.0 — release candidate
+# Lean VS Code v0.6.0
 
-**Status: release candidate, not released.** The full paired GUI runs below measured the unsigned minified candidate at `48da33a316848c7be14416f3ece87c2dad034d34` against original Code-OSS from `04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1`. A light-theme commit landed after that build; the exact final release app still needs packaging and verification. No v0.6 memory-saving claim is supported by the current samples.
+The signed and notarized Apple Silicon app was built from `b9fc5a6015027ab57a33bc9476824db977cbb825`, including the light theme. Earlier candidate trials used unsigned minified commit `48da33a316848c7be14416f3ece87c2dad034d34`. Every comparison below uses original Code-OSS from the fork's base revision `04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1`, built in the same minified mode. No v0.6 runtime-memory saving is claimed.
 
 v0.6.0 focuses on the everyday way the editor is used: opening files from the terminal or Finder with a profile that has been used before, and reviewing local changes.
 
@@ -15,7 +15,7 @@ v0.6.0 focuses on the everyday way the editor is used: opening files from the te
 - **Build guard.** `npm run lean:check-ai` fails if built-in AI modules return to the renderer bundle after an upstream merge, if a bundled module injects an unregistered service, or if an extension-host protocol actor is missing.
 - **Measurement tooling.** The performance harness can launch through the CLI or Finder, reuse an established profile, install its control extension from a VSIX (an extension-development host disables the extension-host code cache and bypasses workspace trust), and report memory per process role.
 
-## Verified on the candidate
+## Verification
 
 - TypeScript type check with 0 errors; ESLint with 0 errors and 0 warnings on changed files.
 - `npm run lean:check-ai`: 0 missing service registrations and all 87 extension-host protocol actors registered.
@@ -24,6 +24,8 @@ v0.6.0 focuses on the everyday way the editor is used: opening files from the te
 - Git activated after startup and opened the repository in a trusted workspace; a normally installed Open VSX extension (EditorConfig 0.18.2, `onStartupFinished`) activated in both the candidate and v0.5.0.
 - The Node compile cache was written to `CachedData/<commit>/node` during the smoke run.
 - The Git extension integration suite passed: 58 tests, 2 pending, including activation without a user action and opening a local diff.
+- The exact signed update ZIP app passed Developer ID signature, stapled notarization ticket, and Gatekeeper checks. The DMG passed the same macOS trust checks; its packaged app content matched the ZIP app. The signed app also passed the full isolated GUI smoke: saved edit, 401-file search, 400-file text search, terminal command, local Git diff, and extension webview.
+- The signed app's [bundle-size report](../performance/v0.6.0-bundle-size-vs-code-oss-1.139.1-minified.json) records 535 MiB apparent content versus 1,463 MiB for original, same-revision minified Code-OSS (63.4% less). The DMG is 211.7 MB; no matched Code-OSS DMG was measured. This is an installed-size result, not a download or process-memory saving.
 
 ## Paired candidate benchmarks
 
@@ -39,8 +41,10 @@ The Finder first-edit median was about **19% sooner**, and the fresh-profile ext
 
 The separate [established-profile extension-backed CLI run](../performance/v0.6.0-candidate-extension-established-vs-code-oss-1.139.1-minified.json) had one Code-OSS startup failure and an unusable Code-OSS existing-window phase. The [first-UI-edit CLI run](../performance/v0.6.0-candidate-first-ui-edit-cli-vs-code-oss-1.139.1-minified.json) had one Lean visibility timeout. Their raw failures are retained; neither run is used for a public speed headline. Three memory snapshots per product came from one launch in each extension-backed run. The GPU footprint varied sharply, so these observations cannot establish a repeatable v0.6 memory gain. The earlier nine-pair v0.4.0 result stays labeled as historical.
 
+In a separate [30-pair signed-app first saved-edit trial](../performance/v0.6.0-signed-first-save-vs-code-oss-1.139.1-minified.json), Lean completed the launch-to-save workflow in **1,468 / 1,912 ms median / p95** versus **1,959 / 2,640 ms** for the matched original Code-OSS package. All 60 launches succeeded. The median difference was **491 ms / 25%**. The save action after startup was slower in Lean (**86.3 versus 43.3 ms median**), so this is a full startup-to-completed-work result. The 70,276-file-touch annual illustration would be about **9.6 hours** only if each touch caused a fresh launch and saved edit; it is not observed annual time saved.
+
 ## Remaining release gates
 
-Build from the final release commit, then verify the signed/notarized app, matching DMG and update ZIP, bundle size versus Code-OSS, signed-app GUI smoke, a normal Open VSX extension install, and the native v0.5.0 → v0.6.0 update. Confirm the final app includes the new light theme. Update the README and website with exact measured-version labels and the public GitHub release before marking this document released.
+Confirm a normal Open VSX extension installation on the signed app and the native v0.5.0 → v0.6.0 update after the GitHub release is published. The packaged light theme files are present; verify the picker in the installed app. The sub-second extension-backed p95 target remains open.
 
 See the [changelog](../../CHANGELOG.md) for the release change list.
