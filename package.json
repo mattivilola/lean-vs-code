@@ -26,6 +26,7 @@
     "compile-client": "npm run gulp compile",
     "compile-copilot": "npm --prefix extensions/copilot run compile",
     "build-fast": "node build/next/index.ts build-fast",
+    "lean:check-ai": "node build/next/index.ts bundle --target desktop --out .build/lean-artifacts/ai-check/bundle --metafile-output .build/lean-artifacts/ai-check/workbench-metafile.json && node build/lean/aiBundleAudit.ts --metafile .build/lean-artifacts/ai-check/workbench-metafile.json --check --allowlist build/lean/aiBundleAllowlist.json --di-check",
     "build-fast-extensions": "npm run gulp copy-codicons compile-extensions compile-extension-media",
     "typecheck-client": "tsc --project ./src/tsconfig.json --noEmit --skipLibCheck",
     "codex:gen-protocol": "node build/codex/generate-protocol.mjs",

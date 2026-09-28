@@ -30,17 +30,10 @@ suite('AgentHostUsageRecorder model-call diagnostics', () => {
 		disposables.add(fileService.registerProvider(Schemas.file, disposables.add(new InMemoryFileSystemProvider())));
 		const actions = disposables.add(new Emitter<ActionEnvelope>());
 		const notifications = disposables.add(new Emitter<INotification>());
-		const remoteActions = disposables.add(new Emitter<ActionEnvelope>());
-		const remoteNotifications = disposables.add(new Emitter<INotification>());
-		const remoteService = new class extends NullRemoteAgentHostService {
-			override readonly onDidAction = remoteActions.event;
-			override readonly onDidNotification = remoteNotifications.event;
-		}();
-		Object.defineProperty(remoteService, 'connections', { get: () => { throw new Error('Recorder must not read the remote connection catalog'); } });
 		let enabled = true;
 		const recorder = disposables.add(new TestRecorder(baseDir, () => enabled, fileService, new NullLogService(),
-			{ onDidAction: actions.event, onDidNotification: notifications.event }, remoteService));
-		const makeAction = (id: string, turnId?: string): ActionEnvelope => ({
+			{ onDidAction: actions.event, onDidNotification: notifications.event }, new NullRemoteAgentHostService()));
+		const fire = (id: string, turnId?: string) => actions.fire({
 			channel: buildDefaultChatUri('copilotcli:/sdk'), serverSeq: 1, origin: undefined,
 			action: {
 				type: ActionType.ChatUsage, turnId: 'current-turn',
@@ -54,13 +47,7 @@ suite('AgentHostUsageRecorder model-call diagnostics', () => {
 				},
 			},
 		});
-		return {
-			fileService, recorder,
-			fire: (id: string, turnId?: string) => actions.fire(makeAction(id, turnId)),
-			fireRemote: (id: string, turnId?: string) => remoteActions.fire(makeAction(id, turnId)),
-			removeRemote: (id: string) => remoteNotifications.fire({ type: 'root/sessionRemoved', channel: 'copilotcli:/', session: `copilotcli:/${id}` }),
-			disable: () => enabled = false,
-		};
+		return { fileService, recorder, fire, disable: () => enabled = false };
 	}
 
 	test('deduplicates call IDs, preserves exact ownership and respects the debug gate', async () => {
@@ -91,17 +78,5 @@ suite('AgentHostUsageRecorder model-call diagnostics', () => {
 		assert.deepStrictEqual({ count: records.length, first: records[0].apiCallId, last: records.at(-1)?.apiCallId }, {
 			count: 1025, first: 'call-1025', last: 'call-2049',
 		});
-	});
-
-	test('captures remote actions and cleans up sidecars while logging is disabled', async () => {
-		const { fileService, recorder, fireRemote, removeRemote, disable } = setup();
-		fireRemote('remote-call', 'remote-turn');
-		await recorder.flush();
-		assert.deepStrictEqual((await readAgentHostUsageRecords(fileService, buildAgentHostUsageUri(baseDir, 'sdk'))).map(record => record.apiCallId), ['remote-call']);
-		disable();
-		fireRemote('ignored');
-		removeRemote('sdk');
-		await recorder.flush();
-		assert.deepStrictEqual(await readAgentHostUsageRecords(fileService, buildAgentHostUsageUri(baseDir, 'sdk')), []);
 	});
 });

@@ -11,14 +11,6 @@ import './api/browser/extensionHost.contribution.js';
 import './browser/workbench.contribution.js';
 import './browser/workbench.zenMode.contribution.js';
 
-// Agent-sessions color tokens — side-effect import so they register in the
-// global color registry and appear in the color-theme JSON schema.
-import '../sessions/common/theme.js';
-
-// Agent-sessions size tokens (font ramp) — side-effect import so they register
-// in the global size registry and appear in the workbench-sizes JSON schema.
-import '../sessions/common/sizes.js';
-
 //#endregion
 
 
@@ -65,7 +57,6 @@ import './browser/parts/titlebar/menubar.contribution.js';
 
 import '../platform/actions/common/actions.contribution.js';
 import '../platform/undoRedo/common/undoRedoService.js';
-import '../platform/mcp/common/mcpResourceScannerService.js';
 import './services/workspaces/common/editSessionIdentityService.js';
 import './services/workspaces/common/canonicalUriService.js';
 import './services/extensions/browser/extensionUrlHandler.js';
@@ -79,9 +70,6 @@ import './services/configuration/common/jsonEditingService.js';
 import './services/textmodelResolver/common/textModelResolverService.js';
 import './services/editor/browser/editorService.js';
 import './services/editor/browser/editorResolverService.js';
-import './services/aiEmbeddingVector/common/aiEmbeddingVectorService.js';
-import './services/aiRelatedInformation/common/aiRelatedInformationService.js';
-import './services/aiSettingsSearch/common/aiSettingsSearchService.js';
 import './services/history/browser/historyService.js';
 import './services/activity/browser/activityService.js';
 import './services/keybinding/browser/keybindingService.js';
@@ -144,9 +132,6 @@ import './services/editor/common/customEditorLabelService.js';
 import './services/dataChannel/browser/dataChannelService.js';
 import './services/github/browser/githubService.js';
 import './services/inlineCompletions/common/inlineCompletionsUnification.js';
-import './services/chat/common/chatEntitlementService.js';
-import './services/agentHost/common/agentHostResourceService.js';
-import '../platform/agentHost/browser/agentHostConnectionsService.js';
 import './services/log/common/defaultLogLevels.js';
 
 import { InstantiationType, registerSingleton } from '../platform/instantiation/common/extensions.js';
@@ -172,9 +157,6 @@ import { ExtensionStorageService, IExtensionStorageService } from '../platform/e
 import { IUserDataSyncLogService } from '../platform/userDataSync/common/userDataSync.js';
 import { UserDataSyncLogService } from '../platform/userDataSync/common/userDataSyncLog.js';
 import { AllowedExtensionsService } from '../platform/extensionManagement/common/allowedExtensionsService.js';
-import { IAllowedMcpServersService, IMcpGalleryService } from '../platform/mcp/common/mcpManagement.js';
-import { McpGalleryService } from '../platform/mcp/common/mcpGalleryService.js';
-import { AllowedMcpServersService } from '../platform/mcp/common/allowedMcpServersService.js';
 import { IWebWorkerService } from '../platform/webWorker/browser/webWorkerService.js';
 import { WebWorkerService } from '../platform/webWorker/browser/webWorkerServiceImpl.js';
 
@@ -192,8 +174,6 @@ registerSingleton(ITextResourceConfigurationService, TextResourceConfigurationSe
 registerSingleton(IDownloadService, DownloadService, InstantiationType.Delayed);
 registerSingleton(IOpenerService, OpenerService, InstantiationType.Delayed);
 registerSingleton(IWebWorkerService, WebWorkerService, InstantiationType.Delayed);
-registerSingleton(IMcpGalleryService, McpGalleryService, InstantiationType.Delayed);
-registerSingleton(IAllowedMcpServersService, AllowedMcpServersService, InstantiationType.Delayed);
 
 //#endregion
 
@@ -223,18 +203,8 @@ import './contrib/performance/browser/performance.contribution.js';
 // Notebook
 import './contrib/notebook/browser/notebook.contribution.js';
 
-// Speech and chat services remain registered for extension API compatibility.
-import './contrib/speech/browser/speech.contribution.js';
-import './contrib/chat/browser/chat.shared.contribution.js';
-import './contrib/chat/browser/chat.contribution.js';
-import './contrib/chat/browser/agentSessions/agentHost/agentHost.contribution.js';
-import './contrib/chat/browser/chat.view.contribution.js';
-import './contrib/inlineChat/browser/inlineChat.contribution.js';
-import './contrib/agentsVoice/browser/agentsVoice.contribution.js';
-import './contrib/mcp/browser/mcp.contribution.js';
-import './contrib/mcp/browser/mcp.view.contribution.js';
-import './contrib/chat/browser/chatSessions/chatSessions.contribution.js';
-import './contrib/chat/browser/contextContrib/chatContext.contribution.js';
+// Lean VS Code: built-in AI is not bundled; see contrib/leanAi/browser/leanAi.contribution.ts.
+import './contrib/leanAi/browser/leanAi.contribution.js';
 import './contrib/imageCarousel/browser/imageCarousel.contribution.js';
 
 // Interactive
@@ -473,7 +443,6 @@ import { Extensions as ConfigurationExtensions, type IConfigurationRegistry } fr
 Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).registerDefaultConfigurations([{
 	overrides: {
 		'chat.disableAIFeatures': true,
-		'chat.titleBar.openInAgentsWindow.enabled': false,
 		'workbench.enableExperiments': false,
 		'telemetry.telemetryLevel': 'off',
 		'extensions.autoUpdate': 'off',
