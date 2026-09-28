@@ -6,6 +6,15 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Add user-visible changes here as they land. Before each release, move them under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.5.0
+
+- Begin local extension initialization at workbench Ready instead of adding an idle-callback wait. The signed release reached an extension-editable file in 1.653 s median / 2.009 s p95 versus 1.960 / 2.254 s for original, same-revision minified Code-OSS in 30 alternating GUI pairs: 16% less median time. The sub-second p95 target remains open.
+- Keep editing, verified workspace text search, integrated terminal commands, local Git diffs, extension webviews, and signed Open VSX installs working. The app and matching update ZIP/DMG passed Developer ID, notarization, stapled-ticket, and Gatekeeper checks.
+- Measure the installed bundle at 538 MiB apparent content versus 1,463 MiB for original minified Code-OSS: 63.2% less. The separate v0.4.0 independent-launch memory result remains version-labeled; v0.5.0's single-launch memory snapshots are not used as a public saving claim.
+- Record unsuccessful startup experiments and keep their optional feature implementations intact. The GitHub update feed continues to serve signed, notarized updates.
+
+See [v0.5.0 release notes](lean/docs/RELEASE_NOTES_0.5.0.md), the [v0.5.0 raw benchmark](lean/performance/v0.5.0-vs-code-oss-1.139.1-minified.json), and the [performance history](lean/docs/PERFORMANCE.md).
+
 ## 0.4.0 bundle and memory addendum — 28 September 2026
 
 - Measured the installed signed v0.4.0 bundle at 538 MiB apparent file content versus 1,463 MiB for the same-revision minified Code-OSS source package, 63% less. The signed Lean DMG is 206.8 MB; no matched Code-OSS DMG was measured. See the [bundle-size method](lean/docs/PERFORMANCE.md).
