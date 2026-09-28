@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent-launch-idle-app-tree-footprint",
+  "createdAt": "2026-09-28T02:26:41.801576+00:00",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "apps": [
+    {
+      "key": "lean",
+      "label": "signed Lean VS Code v0.4.0",
+      "productCommit": "e54bdc8388a053f7ca6921bb6c67bea28c3ead01"
+    },
+    {
+      "key": "code-oss",
+      "label": "original Code-OSS 1.139.1, minified local source build",
+      "productCommit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "method": "Nine independent fresh-profile launches per app in one uninterrupted awake window, one paired run per launch, with product measurement order alternated. Each app opened the same 100 KiB fixture and the same temporary editability control extension, waited 30 seconds after readiness, then macOS footprint phys_footprint values were summed across its observed process tree. The launch benchmark ran its startup and existing-window phases before each memory phase. Caffeinate was active; the macOS power log showed a full wake at 04:10:51 CEST and no sleep until 04:26:57 CEST, after the final sample. An earlier pilot pair was excluded because a system sleep separated it from this continuous run. Percentiles use nearest rank.",
+  "samples": [
+    {
+      "pair": 1,
+      "measurementOrder": [
+        "code-oss",
+        "lean"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 684894864,
+        "processCount": 7,
+        "idleAfterReadyMs": 30001.285,
+        "captureDurationMs": 381.456
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 822654080,
+        "processCount": 9,
+        "idleAfterReadyMs": 30000.931,
+        "captureDurationMs": 469.037
+      }
+    },
+    {
+      "pair": 2,
+      "measurementOrder": [
+        "lean",
+        "code-oss"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 687467272,
+        "processCount": 7,
+        "idleAfterReadyMs": 30001.553,
+        "captureDurationMs": 370.994
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 819770448,
+        "processCount": 9,
+        "idleAfterReadyMs": 30000.804,
+        "captureDurationMs": 460.737
+      }
+    },
+    {
+      "pair": 3,
+      "measurementOrder": [
+        "code-oss",
+        "lean"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 687172408,
+        "processCount": 7,
+        "idleAfterReadyMs": 30001.101,
+        "captureDurationMs": 381.567
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 827389056,
+        "processCount": 9,
+        "idleAfterReadyMs": 30001.142,
+        "captureDurationMs": 471.596
+      }
+    },
+    {
+      "pair": 4,
+      "measurementOrder": [
+        "lean",
+        "code-oss"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 691825296,
+        "processCount": 7,
+        "idleAfterReadyMs": 30001.857,
+        "captureDurationMs": 373.701
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 825914424,
+        "processCount": 9,
+        "idleAfterReadyMs": 30001.793,
+        "captureDurationMs": 448.384
+      }
+    },
+    {
+      "pair": 5,
+      "measurementOrder": [
+        "code-oss",
+        "lean"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 683272800,
+        "processCount": 7,
+        "idleAfterReadyMs": 30001.419,
+        "captureDurationMs": 377.145
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 826176712,
+        "processCount": 9,
+        "idleAfterReadyMs": 30002.446,
+        "captureDurationMs": 459.015
+      }
+    },
+    {
+      "pair": 6,
+      "measurementOrder": [
+        "lean",
+        "code-oss"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 692284024,
+        "processCount": 7,
+        "idleAfterReadyMs": 30003.015,
+        "captureDurationMs": 381.744
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 817558680,
+        "processCount": 9,
+        "idleAfterReadyMs": 30001.476,
+        "captureDurationMs": 464.169
+      }
+    },
+    {
+      "pair": 7,
+      "measurementOrder": [
+        "code-oss",
+        "lean"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 684485288,
+        "processCount": 7,
+        "idleAfterReadyMs": 30002.933,
+        "captureDurationMs": 393.585
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 829650096,
+        "processCount": 9,
+        "idleAfterReadyMs": 30001.172,
+        "captureDurationMs": 460.66
+      }
+    },
+    {
+      "pair": 8,
+      "measurementOrder": [
+        "lean",
+        "code-oss"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 685632024,
+        "processCount": 7,
+        "idleAfterReadyMs": 30002.727,
+        "captureDurationMs": 379.951
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 824194032,
+        "processCount": 9,
+        "idleAfterReadyMs": 30001.742,
+        "captureDurationMs": 456.695
+      }
+    },
+    {
+      "pair": 9,
+      "measurementOrder": [
+        "code-oss",
+        "lean"
+      ],
+      "lean": {
+        "physicalFootprintBytes": 690268864,
+        "processCount": 7,
+        "idleAfterReadyMs": 30001.71,
+        "captureDurationMs": 378.553
+      },
+      "code-oss": {
+        "physicalFootprintBytes": 824652880,
+        "processCount": 9,
+        "idleAfterReadyMs": 30001.568,
+        "captureDurationMs": 461.504
+      }
+    }
+  ],
+  "summary": {
+    "lean": {
+      "count": 9,
+      "p50Bytes": 687172408,
+      "p95Bytes": 692284024,
+      "minBytes": 683272800,
+      "maxBytes": 692284024
+    },
+    "code-oss": {
+      "count": 9,
+      "p50Bytes": 824652880,
+      "p95Bytes": 829650096,
+      "minBytes": 817558680,
+      "maxBytes": 829650096
+    },
+    "leanLowerPairs": 9,
+    "medianPercentLess": 16.7
+  },
+  "limitations": "The sum of per-process macOS billed physical footprints can count shared pages more than once. It is a short-idle app-tree comparison with isolated profiles and one temporary control extension, not peak memory, long-session behavior, a user extension set, or a guarantee for every Mac. The comparator is a locally repaired, ad-hoc-signed original Code-OSS source build, not Microsoft VS Code.",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v26.9.0"
+  },
+  "powerWindow": {
+    "fullWakeLocal": "2026-09-28 04:10:51 +0200",
+    "nextSleepLocal": "2026-09-28 04:26:57 +0200",
+    "firstMemorySampleUtc": "2026-09-28T02:12:49.715Z",
+    "lastMemorySampleUtc": "2026-09-28T02:26:26.409Z"
+  }
+}
