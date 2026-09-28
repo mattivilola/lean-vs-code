@@ -6,6 +6,11 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Add user-visible changes here as they land. Before each release, move them under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+- Activate the bundled Git extension after startup (`onStartupFinished`) instead of only when Source Control opens. Gutter change markers, the branch indicator, and change counts are available for reviewing edits without an extra click; activation stays off the critical startup path. The earlier on-demand change had shown no measured file-ready gain.
+- Start resolving the login-shell environment as soon as main-process services exist, instead of after the first window opens. Finder, Dock, and direct launches no longer delay the local extension host by the full shell startup time; `code` CLI launches already skip this step. Not yet measured.
+- Enable Node's compile cache for the extension host, shared process, and terminal host, stored in the existing per-commit code-cache folder. Not yet measured.
+- Pin `@vscode/vsce-sign` to an exact version.
+
 ## 0.5.0
 
 - Begin local extension initialization at workbench Ready instead of adding an idle-callback wait. The signed release reached an extension-editable file in 1.653 s median / 2.009 s p95 versus 1.960 / 2.254 s for original, same-revision minified Code-OSS in 30 alternating GUI pairs: 16% less median time. The sub-second p95 target remains open.
