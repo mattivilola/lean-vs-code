@@ -42,6 +42,7 @@ Options:
   --memory-launches <n>         Independent memory launches per product (default: 1)
   --memory-idle-ms <n>          Wait after editable file readiness before memory sampling (default: 30000)
   --memory-only                 Skip timed startup and existing-window trials
+  --startup-only                Measure editable-file startup without existing-window or memory trials
   --output-root <path>          Parent directory for a unique results directory
   --lean-label <text>           Display label for the first app (default: Lean VS Code)
   --oss-label <text>            Display label for the comparison app (default: Code-OSS)
@@ -65,6 +66,7 @@ function parseArgs(argv) {
 		memoryLaunches: 1,
 		memoryIdleMs: MEMORY_IDLE_MS,
 		memoryOnly: false,
+		startupOnly: false,
 		outputRoot: DEFAULT_OUTPUT_ROOT,
 		leanLabel: 'Lean VS Code',
 		ossLabel: 'Code-OSS',
@@ -112,6 +114,10 @@ function parseArgs(argv) {
 			result.memoryOnly = true;
 			continue;
 		}
+		if (arg === '--startup-only') {
+			result.startupOnly = true;
+			continue;
+		}
 		const key = valueOptions.get(arg);
 		if (!key) {
 			throw new Error(`Unknown option: ${arg}`);
@@ -150,7 +156,10 @@ function validateOptions(options) {
 	if (process.platform !== 'darwin' || process.arch !== 'arm64') {
 		throw new Error('This harness supports macOS Apple Silicon only.');
 	}
-	if (options.memoryLaunches > 1 && options.memorySamples !== 1) {
+	if (options.memoryOnly && options.startupOnly) {
+		throw new Error('--memory-only and --startup-only cannot be combined.');
+	}
+	if (!options.startupOnly && options.memoryLaunches > 1 && options.memorySamples !== 1) {
 		throw new Error('Use --memory-samples 1 with independent --memory-launches so snapshots are not counted as independent launches.');
 	}
 }
@@ -672,12 +681,13 @@ function appMetadata(apps, baseRevision, options) {
 		},
 		settings: {
 			samples: options.memoryOnly ? 0 : options.samples,
-			memorySamples: options.memorySamples,
-			memoryLaunches: options.memoryLaunches,
+			memorySamples: options.startupOnly ? 0 : options.memorySamples,
+			memoryLaunches: options.startupOnly ? 0 : options.memoryLaunches,
 			memoryOnly: options.memoryOnly,
-			memoryIdleMs: options.memoryIdleMs,
+			startupOnly: options.startupOnly,
+			memoryIdleMs: options.startupOnly ? 0 : options.memoryIdleMs,
 			memorySampleIntervalMs: options.memorySampleIntervalMs,
-			existingWindowWarmupMs: EXISTING_WINDOW_WARMUP_MS,
+			existingWindowWarmupMs: options.memoryOnly || options.startupOnly ? 0 : EXISTING_WINDOW_WARMUP_MS,
 			warmupLaunchesPerProduct: 1,
 			startupTimeoutMs: options.startupTimeoutMs,
 			fixtureBytes: FIXTURE_BYTES,
@@ -843,11 +853,11 @@ async function run(options) {
 		comparisonBaseRevision: options.baseRevision,
 		startupSamplesPerProduct: options.memoryOnly ? 0 : options.samples,
 		warmupLaunchesPerProduct: 1,
-		existingWindowSamplesPerProduct: options.memoryOnly ? 0 : options.samples,
-		existingWindowWarmupMs: EXISTING_WINDOW_WARMUP_MS,
-		memorySamplesPerProduct: options.memorySamples,
-		memoryLaunchesPerProduct: options.memoryLaunches,
-		memoryIdleMs: options.memoryIdleMs,
+		existingWindowSamplesPerProduct: options.memoryOnly || options.startupOnly ? 0 : options.samples,
+		existingWindowWarmupMs: options.memoryOnly || options.startupOnly ? 0 : EXISTING_WINDOW_WARMUP_MS,
+		memorySamplesPerProduct: options.startupOnly ? 0 : options.memorySamples,
+		memoryLaunchesPerProduct: options.startupOnly ? 0 : options.memoryLaunches,
+		memoryIdleMs: options.startupOnly ? 0 : options.memoryIdleMs,
 		launchMode: options.launchMode,
 		profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
 		outputRoot: path.resolve(options.outputRoot),
@@ -921,7 +931,8 @@ async function run(options) {
 				append(await runLaunchSample(app, appIndex, index, fixturePath, path.join(profileRoot, app.key), vsix, runDir, baseOptions));
 			}
 		}
-
+	}
+	if (!options.memoryOnly && !options.startupOnly) {
 		process.stdout.write('Measuring existing-window file opens in alternating product order.\n');
 		const activeProfiles = path.join(profileRoot, 'existing-window');
 		const existingSessionApps = index => index % 2 === 0 ? apps : [...apps].reverse();
@@ -948,26 +959,27 @@ async function run(options) {
 				await terminateSession(state.child, path.join(state.controlDir, 'control.json'));
 			}
 		}
-
 	}
 
-	process.stdout.write(`Measuring ${options.memoryLaunches} independent idle process-tree memory launches per product after ${options.memoryIdleMs} ms idle.\n`);
-	for (let launchIndex = 0; launchIndex < options.memoryLaunches; launchIndex++) {
-		const order = launchIndex % 2 === 0 ? apps : [...apps].reverse();
-		for (const app of order) {
-			let memorySamples;
-			try {
-				memorySamples = await runMemorySession(app, fixturePath, path.join(profileRoot, 'memory'), vsix, runDir, baseOptions, launchIndex);
-			} catch (error) {
-				memorySamples = [{
-					type: 'wholeProcessTreeMemory', subject: app.key, sample: 1, memoryLaunch: launchIndex + 1,
-					capturedAt: new Date().toISOString(), physicalFootprintBytes: null, rssBytesDiagnostic: null,
-					metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree',
-					processes: [], captureError: error.message
-				}];
-			}
-			for (const sample of memorySamples) {
-				append(sample);
+	if (!options.startupOnly) {
+		process.stdout.write(`Measuring ${options.memoryLaunches} independent idle process-tree memory launches per product after ${options.memoryIdleMs} ms idle.\n`);
+		for (let launchIndex = 0; launchIndex < options.memoryLaunches; launchIndex++) {
+			const order = launchIndex % 2 === 0 ? apps : [...apps].reverse();
+			for (const app of order) {
+				let memorySamples;
+				try {
+					memorySamples = await runMemorySession(app, fixturePath, path.join(profileRoot, 'memory'), vsix, runDir, baseOptions, launchIndex);
+				} catch (error) {
+					memorySamples = [{
+						type: 'wholeProcessTreeMemory', subject: app.key, sample: 1, memoryLaunch: launchIndex + 1,
+						capturedAt: new Date().toISOString(), physicalFootprintBytes: null, rssBytesDiagnostic: null,
+						metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree',
+						processes: [], captureError: error.message
+					}];
+				}
+				for (const sample of memorySamples) {
+					append(sample);
+				}
 			}
 		}
 	}

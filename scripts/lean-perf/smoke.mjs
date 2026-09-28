@@ -28,6 +28,8 @@ try {
 	assert.deepEqual(parseArgs(['--samples', '7', '--memory-idle-ms', '20']).samples, 7);
 	assert.equal(parseArgs(['--git-workspace']).gitWorkspace, true);
 	assert.equal(parseArgs(['--reuse-startup-profile']).reuseStartupProfile, true);
+	assert.equal(parseArgs(['--startup-only']).startupOnly, true);
+	assert.equal(parseArgs(['--memory-only']).memoryOnly, true);
 	assert.equal(parseFootprintBytes('Auxiliary data:\n    phys_footprint: 123456 bytes\n'), 123456);
 	assert.equal(percentile([9, 2, 5, 1], 0.5), 2);
 	assert.equal(percentile([9, 2, 5, 1], 0.95), 9);
@@ -111,6 +113,49 @@ try {
 	assert.equal(dryRun.status, 0, dryRun.stderr);
 	assert.equal(JSON.parse(dryRun.stdout).dryRun, true);
 	assert.equal(fs.existsSync(outputRoot), false);
+	const focusedDryRun = spawnSync(process.execPath, [
+		scriptPath, '--lean-app', appPath, '--oss-app', baselinePath,
+		'--base-revision', 'a'.repeat(40), '--startup-only', '--samples', '2', '--dry-run'
+	], { encoding: 'utf8' });
+	assert.equal(focusedDryRun.status, 0, focusedDryRun.stderr);
+	assert.equal(JSON.parse(focusedDryRun.stdout).plan.existingWindowSamplesPerProduct, 0);
+	assert.equal(JSON.parse(focusedDryRun.stdout).plan.memorySamplesPerProduct, 0);
+	const incompatibleModes = spawnSync(process.execPath, [
+		scriptPath, '--lean-app', appPath, '--oss-app', baselinePath,
+		'--base-revision', 'a'.repeat(40), '--startup-only', '--memory-only', '--dry-run'
+	], { encoding: 'utf8' });
+	assert.notEqual(incompatibleModes.status, 0);
+	assert.match(incompatibleModes.stderr, /cannot be combined/);
+
+	const reportDir = path.join(temporaryRoot, 'startup-export-fixture');
+	fs.mkdirSync(reportDir);
+	const apps = ['lean', 'code-oss'].map(key => ({ key, label: key, version: '1.2.3', commit: 'a'.repeat(40) }));
+	fs.writeFileSync(path.join(reportDir, 'manifest.json'), JSON.stringify({
+		createdAt: '2026-09-28T00:00:00Z', comparisonBaseRevision: 'a'.repeat(40), machine: { architecture: 'arm64' },
+		apps, controlExtensionInstall: 'vsix', settings: { startupOnly: true, samples: 2, launchMode: 'cli', profileCondition: 'established' }
+	}));
+	const metrics = {};
+	for (const app of apps) {
+		metrics[`${app.key}.launchToEditableFile`] = { count: 2, failed: 0, p50: 100 };
+		metrics[`${app.key}.existingWindowFileOpen`] = { count: 0, failed: 0 };
+		metrics[`${app.key}.wholeProcessTreeMemory`] = { count: 0, failed: 0 };
+	}
+	fs.writeFileSync(path.join(reportDir, 'summary.json'), JSON.stringify({ metrics }));
+	const exportSamples = apps.flatMap(app => [
+		{ type: 'launchWarmup', subject: app.key, sample: 0, elapsedMs: 100, profileRelativePath: '/private/secret' },
+		...[1, 2].map(sample => ({ type: 'launchToEditableFile', subject: app.key, sample, elapsedMs: 100 + sample, profileRelativePath: '/private/secret' }))
+	]);
+	const exportScript = path.join(path.dirname(scriptPath), 'export-public.mjs');
+	fs.writeFileSync(path.join(reportDir, 'samples.jsonl'), `${exportSamples.map(JSON.stringify).join('\n')}\n`);
+	const publicPath = path.join(reportDir, 'public.json');
+	const exportResult = spawnSync(process.execPath, [exportScript, reportDir, publicPath], { encoding: 'utf8' });
+	assert.equal(exportResult.status, 0, exportResult.stderr);
+	assert.equal(JSON.parse(fs.readFileSync(publicPath, 'utf8')).samples.length, 4);
+	assert.equal(fs.readFileSync(publicPath, 'utf8').includes('/private/secret'), false);
+	fs.writeFileSync(path.join(reportDir, 'samples.jsonl'), `${exportSamples.slice(1).map(JSON.stringify).join('\n')}\n`);
+	const incomplete = spawnSync(process.execPath, [exportScript, reportDir, path.join(reportDir, 'incomplete.json')], { encoding: 'utf8' });
+	assert.notEqual(incomplete.status, 0);
+	assert.match(incomplete.stderr, /incomplete editable-file startup comparison/);
 
 	process.stdout.write('lean-perf smoke checks passed (fake app bundles only; no app was launched).\n');
 } finally {

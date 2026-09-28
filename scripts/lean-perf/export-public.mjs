@@ -22,7 +22,9 @@ if (samples.some(sample => sample.error)) {
 	throw new Error('Do not publish a benchmark with failed samples. Inspect the raw run first.');
 }
 for (const [name, metric] of Object.entries(summary.metrics)) {
-	if (metric.count < 1 && !(manifest.settings?.memoryOnly && !name.endsWith('.wholeProcessTreeMemory'))) {
+	const skippedByFocusedRun = (manifest.settings?.memoryOnly && !name.endsWith('.wholeProcessTreeMemory'))
+		|| (manifest.settings?.startupOnly && !name.endsWith('.launchToEditableFile'));
+	if (metric.count < 1 && !skippedByFocusedRun) {
 		throw new Error('Do not publish a benchmark with an empty metric.');
 	}
 }
@@ -33,7 +35,7 @@ const common = {
 	comparisonBaseRevision: manifest.comparisonBaseRevision,
 	machine: manifest.machine,
 	apps: manifest.apps.map(({ key, label, version, commit }) => ({ key, label, version, commit })),
-	metrics: summary.metrics
+	metrics: Object.fromEntries(Object.entries(summary.metrics).filter(([, metric]) => metric.count > 0))
 };
 
 const report = manifest.scenario ? {
@@ -59,6 +61,16 @@ const report = manifest.scenario ? {
 	samples: samples.filter(sample => sample.type === 'wholeProcessTreeMemory').map(({ subject, sample, memoryLaunch, physicalFootprintBytes, processCount, byRole }) => ({
 		subject, sample, memoryLaunch, physicalFootprintBytes, processCount, byRole
 	}))
+} : manifest.settings?.startupOnly ? {
+	...common,
+	kind: 'extension-backed-file',
+	settings: {
+		samplesPerApp: manifest.settings.samples,
+		launchMode: manifest.settings.launchMode,
+		profileCondition: manifest.settings.profileCondition,
+		controlExtensionInstall: manifest.controlExtensionInstall
+	},
+	samples: samples.filter(sample => sample.type === 'launchToEditableFile').map(({ subject, sample, elapsedMs }) => ({ subject, sample, elapsedMs }))
 } : typeof manifest.inputProbe === 'boolean' ? {
 	...common,
 	kind: manifest.secondWindow ? 'second-window-first-ui-edit-diagnostic' : manifest.inputProbe ? 'first-ui-edit-diagnostic' : 'first-visible-file-diagnostic',
@@ -107,6 +119,21 @@ if (manifest.settings?.memoryOnly) {
 	if (memorySamples.length !== expected || captures.size !== expected || !complete
 		|| memorySamples.some(sample => !Number.isFinite(sample.physicalFootprintBytes) || !Number.isInteger(sample.memoryLaunch))) {
 		throw new Error('Do not publish an incomplete memory comparison; inspect the raw launch and capture failures first.');
+	}
+}
+if (manifest.settings?.startupOnly) {
+	const timed = samples.filter(sample => sample.type === 'launchToEditableFile');
+	const captures = new Set(timed.map(sample => `${sample.subject}:${sample.sample}`));
+	const complete = manifest.apps.every(app => {
+		for (let index = 1; index <= manifest.settings.samples; index++) {
+			if (!captures.has(`${app.key}:${index}`)) { return false; }
+		}
+		return samples.filter(sample => sample.type === 'launchWarmup' && sample.subject === app.key).length === 1
+			&& summary.metrics[`${app.key}.launchToEditableFile`]?.count === manifest.settings.samples;
+	});
+	if (samples.length !== 2 * (manifest.settings.samples + 1) || timed.length !== 2 * manifest.settings.samples
+		|| captures.size !== timed.length || !complete || samples.some(sample => !Number.isFinite(sample.elapsedMs))) {
+		throw new Error('Do not publish an incomplete editable-file startup comparison.');
 	}
 }
 if (typeof manifest.inputProbe === 'boolean' && (samples.length !== 2 * (manifest.samplesPerApp + 1)
