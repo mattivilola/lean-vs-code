@@ -140,12 +140,26 @@ async function verifyBundledExtensions(app) {
 	console.log(`Verified ${actual.length} bundled extensions; only Git and Git Base execute code`);
 }
 
+async function verifyNoAgentsWindowResources(app) {
+	const agentsWindowDirectory = path.join(app, 'Contents/Resources/app/out/vs/sessions');
+	try {
+		await fs.lstat(agentsWindowDirectory);
+		throw new Error(`Unexpected Agents window resources in release app: ${agentsWindowDirectory}`);
+	} catch (error) {
+		if (error.code !== 'ENOENT') {
+			throw error;
+		}
+	}
+	console.log('Verified Agents window resources are absent');
+}
+
 try {
 	console.log(`Copying ${appName} to release staging`);
 	await run('ditto', [source, app]);
 	const removedSourceMaps = await removeSourceMaps(path.join(app, 'Contents/Resources/app/out'));
 	console.log(`Removed ${removedSourceMaps} development source maps from release copy`);
 	await verifyBundledExtensions(app);
+	await verifyNoAgentsWindowResources(app);
 	await fs.access(path.join(app, 'Contents/Resources/app/node_modules.asar.unpacked/@vscode/vsce-sign/bin/vsce-sign'));
 	// Electron/Squirrel reads the packaged app version, not the upstream extension API version.
 	// Keep the source package at the Code-OSS API version while giving the app its own release version.
