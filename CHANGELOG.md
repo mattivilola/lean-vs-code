@@ -10,6 +10,9 @@ Add user-visible changes here as they land. Before each release, move them under
 - Start resolving the login-shell environment as soon as main-process services exist, instead of after the first window opens. Finder, Dock, and direct launches no longer delay the local extension host by the full shell startup time; `code` CLI launches already skip this step. Not yet measured.
 - Enable Node's compile cache for the extension host, shared process, and terminal host, stored in the existing per-commit code-cache folder. Not yet measured.
 - Pin `@vscode/vsce-sign` to an exact version.
+- Remove the built-in AI surfaces from the desktop workbench: chat, agent sessions, inline chat, MCP management UI, voice, AI customization, and agent-host UI. Upstream AI sources stay in the repository and only their imports are cut, so upstream merges stay simple. Core services that upstream code still injects are registered from one Lean module, and every extension API actor remains available: `vscode.lm` returns no models and MCP server definition providers still register. The unminified desktop workbench bundle shrinks from 40.2 MB to 34.9 MB, and the minified JavaScript from 19.4 MB to 16.9 MB. Startup and memory effects are not yet measured.
+- Add `npm run lean:check-ai`, a build guard that fails if AI modules outside the committed allowlist return to the renderer bundle, if a bundled module injects an unregistered service, or if an extension-host protocol actor is missing.
+- Extend the performance harness with CLI and Finder launch modes, established (reused) profiles, control extensions installed from a VSIX instead of an extension-development host, and per-process memory roles, so daily-use launches can be measured.
 
 ## 0.5.0
 
