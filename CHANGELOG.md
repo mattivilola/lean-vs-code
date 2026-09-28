@@ -4,7 +4,10 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 ## Unreleased
 
-Add user-visible changes here as they land. Before each release, move them under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
+- Omit the unused separate Agents window bundle from the macOS desktop package. Requests for that window open a regular editor window, and workspaces saved by older builds can still open as ordinary workspaces. The final signed-app size will be reported after release packaging.
+- Enable the writable per-user Node compile cache before the main-process workbench import. Startup impact remains under test; no speed gain is claimed yet.
+
+Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
 ## 0.6.0
 
