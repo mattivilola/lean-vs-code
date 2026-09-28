@@ -3,6 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { constants, enableCompileCache } from 'node:module';
+import { join } from 'node:path';
 import * as performance from './vs/base/common/performance.js';
 import { removeGlobalNodeJsModuleLookupPaths, devInjectNodeModuleLookupPath } from './bootstrap-node.js';
 import { bootstrapESM } from './bootstrap-esm.js';
@@ -220,6 +222,17 @@ if (!process.env['VSCODE_HANDLES_UNCAUGHT_ERRORS']) {
 // Terminate when parent terminates
 if (process.env['VSCODE_PARENT_PID']) {
 	terminateWhenParentTerminates();
+}
+
+// Keep ESM and CommonJS compile cache in the per-commit folder cleaned by CodeCacheCleaner (Node 22.1+).
+const codeCachePath = process.env['VSCODE_CODE_CACHE_PATH'];
+if (codeCachePath) {
+	performance.mark('code/fork/willEnableCompileCache');
+	const { status, message } = enableCompileCache(join(codeCachePath, 'node'));
+	if (status === constants.compileCacheStatus.FAILED) {
+		process.stderr.write(`Failed to enable Node compile cache: ${message}\n`);
+	}
+	performance.mark('code/fork/didEnableCompileCache');
 }
 
 // Bootstrap ESM
