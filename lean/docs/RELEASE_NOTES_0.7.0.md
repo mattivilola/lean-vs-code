@@ -1,0 +1,18 @@
+# Lean VS Code v0.7.0 release notes — draft
+
+This is a release candidate record, not a published release or a performance claim. Keep the release unpublished until the signed app, updater, extensions, and editing/review workflows pass the checks below. Compare any new public speed or memory percentage with original Code-OSS from the fork's base revision `04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1`, built in the same minified mode.
+
+## Candidate changes
+
+- Enable Node's writable per-user compile cache in the main process before the `electron-main` bundle import. The extension host, shared process, and terminal host already used the per-commit cache in v0.6. Measure established-profile file readiness before claiming a benefit; check the cache files and main-process marks. A first launch may have different costs from a repeat launch.
+- Omit the separate Agents-window resources from the desktop package. The installed v0.6 app contained 21,542,445 bytes in `out/vs/sessions`; the current minified candidate contains no such directory. An Agents-window request opens a regular editor window, and an older Agents workspace opens as an ordinary workspace. This is package-content evidence, not yet a final signed-app size or startup-memory result.
+- Make the startup trace warm-up quit through the editor. A signal-killed warm-up could leave Node's compile cache unwritten, so the trace now fails if the warm-up cannot quit normally. The benchmark also supports focused extension-backed startup trials and independent paired memory launches.
+
+## Evidence and release gates
+
+- Static checks: the desktop minified build at `b831827e34f6b8d1fec8143d15b7337b997575c9` completed with 22 bundles and the expected product commit; `out/vs/sessions` is absent. Typecheck, changed TypeScript lint, `lean:check-ai`, and the benchmark's fake-bundle smoke passed earlier in this branch. `node --check` and the fake-bundle smoke passed after the trace change. Repository ESLint still rejects the existing Lean `.mjs` scripts under its JavaScript-file policy; that is not a new runtime failure.
+- **Pending GUI checks:** candidate editing and save, project and text search, integrated terminal, Git diff, extension webview, normal Open VSX extension activation, Agents-window fallback, and restored legacy workspace. The candidate is locally ad-hoc signed and is not an installable public release.
+- **Pending performance evidence:** a current established-profile trace; matched startup trials for extension-backed editability; independent paired short-idle process-tree memory launches to resolve the transient GPU outlier. Preserve failures and raw observations. Do not infer a GPU or terminal saving from a single snapshot or registration mark.
+- **Pending production release:** choose only measured, regression-safe changes; update the changelog and README; build the final source commit; sign and notarize the app, staple the app and DMG, and verify the update ZIP against the same app; run GUI feature and extension checks on that exact signed app; verify a v0.6 → v0.7 update; publish the GitHub release and live feed; install and verify the app; then update the website with concise, version-labeled claims and raw-method links.
+
+The sub-second p95 extension-backed editable-file target remains open until a signed build demonstrates it. Earlier v0.6 figures remain labeled as v0.6 in the [performance history](PERFORMANCE.md); they do not automatically apply to v0.7.
