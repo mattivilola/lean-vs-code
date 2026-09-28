@@ -1,6 +1,6 @@
 {
   "$schema": "vscode://schemas/color-theme",
-  "name": "Lean Emerald",
+  "name": "Lean VS Code Dark",
   "colors": {
     "foreground": "#D5E9DC",
     "focusBorder": "#53DFA0",

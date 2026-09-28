@@ -1,5 +1,6 @@
 {
-  "displayName": "Lean Emerald",
-  "description": "A calm dark green theme for Lean VS Code.",
-  "themeLabel": "Lean Emerald"
+  "displayName": "Lean VS Code Themes",
+  "description": "Emerald dark and light color themes for Lean VS Code.",
+  "darkThemeLabel": "Lean VS Code Dark",
+  "lightThemeLabel": "Lean VS Code Light"
 }

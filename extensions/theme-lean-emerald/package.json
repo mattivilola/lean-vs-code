@@ -15,9 +15,15 @@
     "themes": [
       {
         "id": "Lean Emerald",
-        "label": "%themeLabel%",
+        "label": "%darkThemeLabel%",
         "uiTheme": "vs-dark",
         "path": "./themes/lean-emerald.json"
+      },
+      {
+        "id": "Lean VS Code Light",
+        "label": "%lightThemeLabel%",
+        "uiTheme": "vs",
+        "path": "./themes/lean-light.json"
       }
     ]
   }
