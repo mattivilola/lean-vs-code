@@ -733,6 +733,11 @@ export class CodeApplication extends Disposable {
 			}
 		});
 
+		// Start resolving the shell environment (if needed) before the first window
+		// opens: the extension host waits for it and a login shell can take hundreds
+		// of milliseconds. Errors are reported once a window exists (see afterWindowOpen).
+		this.warmupShellEnvironment();
+
 		// Resolve unique machine ID
 		mark('code/willResolveMachineId');
 		const [machineId, sqmId, devDeviceId] = await Promise.all([
@@ -1641,10 +1646,8 @@ export class CodeApplication extends Disposable {
 		protocol.handle(Schemas.vscodeRemoteResource, createRemoteResourceRequestHandler(this.logService));
 		this._register(toDisposable(() => protocol.unhandle(Schemas.vscodeRemoteResource)));
 
-		// Start to fetch shell environment (if needed) after window has opened
-		// Since this operation can take a long time, we want to warm it up while
-		// the window is opening.
-		// We also show an error to the user in case this fails.
+		// Report shell environment resolution errors now that a window can show
+		// them. Resolution itself already started in `startup()`.
 		this.resolveShellEnvironment(this.environmentMainService.args, process.env, true);
 
 		// Crash reporter
@@ -1810,6 +1813,21 @@ export class CodeApplication extends Disposable {
 			} catch (error) {
 				this.logService.error(error);
 			}
+		}
+	}
+
+	/**
+	 * Starts the (cached) shell environment resolution early. Failures are
+	 * reported by `afterWindowOpen`, which awaits the same cached result.
+	 */
+	private async warmupShellEnvironment(): Promise<void> {
+		mark('code/willResolveShellEnv');
+		try {
+			await getResolvedShellEnv(this.configurationService, this.logService, this.environmentMainService.args, process.env);
+		} catch {
+			// Reported to the user after the first window opens
+		} finally {
+			mark('code/didResolveShellEnv');
 		}
 	}
 
