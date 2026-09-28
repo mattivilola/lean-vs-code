@@ -9,6 +9,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { LAUNCH_MODES, launchApp } from './launch.mjs';
+import { createControlVSIX } from './control-extension.mjs';
 import {
 	makeFixtureContent,
 	createExtension,
@@ -50,8 +52,34 @@ try {
 	fs.writeFileSync(path.join(macOSPath, 'Smoke'), 'smoke fixture');
 	fs.chmodSync(path.join(macOSPath, 'Smoke'), 0o755);
 	assert.equal(readApp(appPath, 'smoke', 'Smoke app').commit, 'a'.repeat(40));
+	assert.deepEqual(LAUNCH_MODES, ['direct', 'cli', 'finder']);
+	await assert.rejects(launchApp(readApp(appPath, 'smoke', 'Smoke app'), [`--user-data-dir=${temporaryRoot}/profile`], {
+		mode: 'cli', profileMarker: `${temporaryRoot}/profile`, logPath: path.join(temporaryRoot, 'unused.log')
+	}), /no executable CLI script/);
+	const cliPath = path.join(resourcesPath, 'bin', 'smoke');
+	fs.mkdirSync(path.dirname(cliPath), { recursive: true });
+	fs.writeFileSync(cliPath, '#!/bin/sh\nexit 0\n');
+	fs.chmodSync(cliPath, 0o755);
+	assert.equal(readApp(appPath, 'smoke', 'Smoke app').cliScript, cliPath);
+	const bundledCliPath = path.join(resourcesPath, 'bin', 'code');
+	fs.writeFileSync(bundledCliPath, '#!/bin/sh\nexit 0\n');
+	fs.chmodSync(bundledCliPath, 0o755);
+	assert.equal(readApp(appPath, 'smoke', 'Smoke app').cliScript, bundledCliPath);
 	const extensionPath = path.join(temporaryRoot, 'harness-extension');
 	createExtension(extensionPath);
+	assert.deepEqual(JSON.parse(fs.readFileSync(path.join(extensionPath, 'package.json'), 'utf8')).capabilities, {
+		untrustedWorkspaces: { supported: true }, virtualWorkspaces: false
+	});
+	const vsix = createControlVSIX(extensionPath, path.join(temporaryRoot, 'harness-extension.vsix'));
+	const zipEntries = spawnSync('/usr/bin/unzip', ['-Z', '-1', vsix.path], { encoding: 'utf8' });
+	assert.equal(zipEntries.status, 0, zipEntries.stderr);
+	for (const entry of ['[Content_Types].xml', 'extension.vsixmanifest', 'extension/package.json', 'extension/extension.js']) {
+		assert.ok(zipEntries.stdout.split('\n').includes(entry), `Missing ${entry} in control VSIX`);
+	}
+	for (const entry of ['[Content_Types].xml', 'extension.vsixmanifest']) {
+		const xmlCheck = spawnSync('/usr/bin/xmllint', ['--noout', path.join(`${vsix.path}.contents`, entry)], { encoding: 'utf8' });
+		assert.equal(xmlCheck.status, 0, xmlCheck.stderr);
+	}
 	const extensionCheck = spawnSync(process.execPath, ['--check', path.join(extensionPath, 'extension.js')], { encoding: 'utf8' });
 	assert.equal(extensionCheck.status, 0, extensionCheck.stderr);
 
@@ -63,6 +91,10 @@ try {
 	fs.writeFileSync(path.join(baselineResourcesPath, 'product.json'), JSON.stringify({ nameShort: 'Baseline', version: '1.2.3' }));
 	fs.writeFileSync(path.join(baselineMacOSPath, 'Baseline'), 'smoke fixture');
 	fs.chmodSync(path.join(baselineMacOSPath, 'Baseline'), 0o755);
+	const baselineCliPath = path.join(baselineResourcesPath, 'bin', 'code');
+	fs.mkdirSync(path.dirname(baselineCliPath), { recursive: true });
+	fs.writeFileSync(baselineCliPath, '#!/bin/sh\nexit 0\n');
+	fs.chmodSync(baselineCliPath, 0o755);
 	const outputRoot = path.join(temporaryRoot, 'must-not-be-created');
 	const scriptPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'benchmark.mjs');
 	const dryRun = spawnSync(process.execPath, [

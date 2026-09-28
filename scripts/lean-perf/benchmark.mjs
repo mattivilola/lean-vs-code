@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import assert from 'node:assert/strict';
-import { spawn, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import net from 'node:net';
@@ -13,6 +13,8 @@ import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { LAUNCH_MODES, launchApp, readApp } from './launch.mjs';
+import { createControlVSIX, installControlExtension } from './control-extension.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_OUTPUT_ROOT = path.join(SCRIPT_DIR, 'results');
@@ -44,6 +46,7 @@ Options:
   --git-workspace               Open the fixture inside a generated Git workspace
   --startup-timeout-ms <n>      Maximum wait for an editable editor (default: 120000)
   --reuse-startup-profile       Reuse each app's isolated profile after warm-up (diagnostic)
+  --launch-mode <mode>          direct, cli, or finder (default: direct; finder is unavailable here)
   --dry-run                     Validate apps and print the plan without launching them
   -h, --help                    Show this help
 
@@ -63,6 +66,7 @@ function parseArgs(argv) {
 		ossLabel: 'Code-OSS',
 		gitWorkspace: false,
 		reuseStartupProfile: false,
+		launchMode: 'direct',
 		startupTimeoutMs: READY_TIMEOUT_MS,
 		dryRun: false,
 		help: false
@@ -77,7 +81,8 @@ function parseArgs(argv) {
 		['--output-root', 'outputRoot'],
 		['--lean-label', 'leanLabel'],
 		['--oss-label', 'ossLabel'],
-		['--startup-timeout-ms', 'startupTimeoutMs']
+		['--startup-timeout-ms', 'startupTimeoutMs'],
+		['--launch-mode', 'launchMode']
 	]);
 
 	for (let index = 0; index < argv.length; index++) {
@@ -121,6 +126,12 @@ function parsePositiveInteger(value, option) {
 }
 
 function validateOptions(options) {
+	if (!LAUNCH_MODES.includes(options.launchMode)) {
+		throw new Error(`--launch-mode must be one of: ${LAUNCH_MODES.join(', ')}.`);
+	}
+	if (options.launchMode === 'finder') {
+		throw new Error('--launch-mode finder is unsupported by the extension-backed benchmark: LaunchServices does not pass LEAN_PERF_CONTROL_DIR and LEAN_PERF_STARTUP_FILE to the app. Use direct or cli.');
+	}
 	if (!options.leanApp || !options.ossApp || !options.baseRevision) {
 		throw new Error('Provide --lean-app, --oss-app, and --base-revision.');
 	}
@@ -130,41 +141,6 @@ function validateOptions(options) {
 	if (process.platform !== 'darwin' || process.arch !== 'arm64') {
 		throw new Error('This harness supports macOS Apple Silicon only.');
 	}
-}
-
-function readApp(appPath, key, label) {
-	const absolutePath = path.resolve(appPath);
-	const appStat = fs.statSync(absolutePath, { throwIfNoEntry: false });
-	if (!appStat?.isDirectory()) {
-		throw new Error(`${label} app path is not a directory: ${absolutePath}`);
-	}
-	const productPath = path.join(absolutePath, 'Contents', 'Resources', 'app', 'product.json');
-	const product = JSON.parse(fs.readFileSync(productPath, 'utf8'));
-	const executableCandidates = [product.nameShort, 'Electron']
-		.filter((value, index, values) => typeof value === 'string' && value.length > 0 && values.indexOf(value) === index)
-		.map(name => path.join(absolutePath, 'Contents', 'MacOS', name));
-	const executable = executableCandidates.find(candidate => {
-		try {
-			fs.accessSync(candidate, fs.constants.X_OK);
-			return fs.statSync(candidate).isFile();
-		} catch {
-			return false;
-		}
-	});
-	if (!executable) {
-		throw new Error(`${label} app has no executable listed in product.json or named Electron.`);
-	}
-	return {
-		key,
-		label,
-		appPath: absolutePath,
-		executable,
-		nameShort: product.nameShort ?? null,
-		applicationName: product.applicationName ?? null,
-		version: product.version ?? null,
-		commit: product.commit ?? null,
-		quality: product.quality ?? null
-	};
 }
 
 function makeFixtureContent() {
@@ -221,11 +197,13 @@ function parsePsRows(output) {
 		if (!fields) {
 			continue;
 		}
+		const command = fields[4].trim();
 		rows.push({
 			pid: Number(fields[1]),
 			ppid: Number(fields[2]),
 			rssKiB: Number(fields[3]),
-			name: path.basename(fields[4].trim())
+			name: path.basename(command.split(/\s+--/)[0]),
+			command
 		});
 	}
 	return rows;
@@ -270,7 +248,7 @@ function runCapture(command, args, options = {}) {
 }
 
 function getProcessTree(rootPid) {
-	const result = runCapture('/bin/ps', ['-axo', 'pid=,ppid=,rss=,comm=']);
+	const result = runCapture('/bin/ps', ['-axo', 'pid=,ppid=,rss=,command=']);
 	if (result.status !== 0) {
 		throw new Error(`ps failed: ${(result.stderr || result.stdout).trim()}`);
 	}
@@ -294,13 +272,43 @@ function sampleFootprint(pid) {
 	}
 }
 
-function appArguments(app, profile, extensionPath, controlDir, startupFile, workspaceFolder) {
+function processRole(row, rootPid) {
+	if (row.pid === rootPid) {
+		return 'main';
+	}
+	const command = row.command ?? '';
+	if (command.includes('--type=renderer')) {
+		return 'renderer';
+	}
+	if (command.includes('--type=gpu-process')) {
+		return 'gpu';
+	}
+	if (command.includes('network.mojom.NetworkService')) {
+		return 'network';
+	}
+	for (const [pattern, role] of [
+		[/extensionHost|extension-host/i, 'extensionHost'],
+		[/sharedProcess|shared-process/i, 'sharedProcess'],
+		[/ptyHost|pty-host/i, 'ptyHost'],
+		[/fileWatcher|file-watcher/i, 'fileWatcher']
+	]) {
+		if (pattern.test(command)) {
+			return role;
+		}
+	}
+	if (command.includes('--type=utility')) {
+		const subtype = command.match(/--utility-sub-type=([^\s]+)/)?.[1] ?? 'unknown';
+		return `utility:${subtype}`;
+	}
+	return 'other';
+}
+
+function appArguments(app, profile, controlDir, startupFile, workspaceFolder) {
 	const args = [
 		'--new-window',
 		`--user-data-dir=${path.join(profile, 'user-data')}`,
 		`--shared-data-dir=${path.join(profile, 'shared-data')}`,
 		`--extensions-dir=${path.join(profile, 'extensions')}`,
-		`--extensionDevelopmentPath=${extensionPath}`,
 		'--skip-welcome',
 		'--skip-release-notes',
 		'--disable-updates',
@@ -318,21 +326,12 @@ function appArguments(app, profile, extensionPath, controlDir, startupFile, work
 	};
 }
 
-function startApp(app, profile, extensionPath, controlDir, startupFile, workspaceFolder) {
+async function startApp(app, profile, controlDir, startupFile, workspaceFolder, options) {
 	fs.mkdirSync(path.join(profile, 'user-data'), { recursive: true });
 	fs.mkdirSync(path.join(profile, 'extensions'), { recursive: true });
 	fs.mkdirSync(controlDir, { recursive: true });
-	return launchApp(app, profile, extensionPath, controlDir, startupFile, workspaceFolder);
-}
-
-function launchApp(app, profile, extensionPath, controlDir, startupFile, workspaceFolder) {
-	const launch = appArguments(app, profile, extensionPath, controlDir, startupFile, workspaceFolder);
-	const logFd = fs.openSync(path.join(controlDir, 'app.log'), 'a');
-	try {
-		return spawn(app.executable, launch.args, { stdio: ['ignore', logFd, logFd], env: launch.env });
-	} finally {
-		fs.closeSync(logFd);
-	}
+	const launch = appArguments(app, profile, controlDir, startupFile, workspaceFolder);
+	return launchApp(app, launch.args, { mode: options.launchMode, env: launch.env, logPath: path.join(controlDir, 'app.log'), profileMarker: path.join(profile, 'user-data') });
 }
 
 async function waitForPath(filePath, child, timeoutMs, description) {
@@ -354,32 +353,12 @@ async function waitForPath(filePath, child, timeoutMs, description) {
 				throw new Error(`${description}: ${detail.error}`);
 			}
 		}
-		if (child?.exitCode !== null && child?.exitCode !== undefined) {
-			throw new Error(`${description}: app process exited with code ${child.exitCode}.`);
-		}
-		if (child?.signalCode) {
-			throw new Error(`${description}: app process exited with signal ${child.signalCode}.`);
+		if (child && !child.isRunning()) {
+			throw new Error(`${description}: app process exited.`);
 		}
 		await delay(10);
 	}
 	throw new Error(`${description}: timed out after ${timeoutMs} ms.`);
-}
-
-function spawnError(child) {
-	return new Promise((resolve, reject) => {
-		child.once('error', reject);
-		child.once('spawn', resolve);
-	});
-}
-
-function childExit(child) {
-	return new Promise(resolve => {
-		if (child.exitCode !== null || child.signalCode !== null) {
-			resolve({ code: child.exitCode, signal: child.signalCode });
-			return;
-		}
-		child.once('exit', (code, signal) => resolve({ code, signal }));
-	});
 }
 
 async function requestControl(controlFile, request, timeoutMs = 10_000) {
@@ -414,10 +393,10 @@ async function requestControl(controlFile, request, timeoutMs = 10_000) {
 }
 
 async function terminateSession(child, controlFile) {
-	if (!child.pid) {
+	if (!child) {
 		return;
 	}
-	if (child.exitCode !== null || child.signalCode !== null) {
+	if (!child.isRunning()) {
 		return;
 	}
 	try {
@@ -425,30 +404,14 @@ async function terminateSession(child, controlFile) {
 	} catch {
 		// Startup may have failed before the extension control socket was ready.
 	}
-	const gracefulExit = await Promise.race([
-		childExit(child),
-		delay(15_000).then(() => null)
-	]);
-	if (gracefulExit) {
-		return;
+	const deadline = Date.now() + 15_000;
+	while (child.isRunning() && Date.now() < deadline) {
+		await delay(100);
 	}
-	let tree = [];
-	try {
-		tree = getProcessTree(child.pid);
-	} catch {
-		tree = [{ pid: child.pid }];
-	}
-	for (const row of [...tree].sort((left, right) => right.pid - left.pid)) {
-		try {
-			process.kill(row.pid, 'SIGTERM');
-		} catch {
-			// The process may have exited between the process snapshot and signal.
-		}
-	}
-	await Promise.race([childExit(child), delay(3000)]);
+	await child.terminate();
 }
 
-async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileRoot, extensionPath, runDir, options) {
+async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileRoot, vsix, runDir, options) {
 	const warmup = sampleIndex < 0;
 	const sampleNumber = warmup ? 0 : sampleIndex + 1;
 	const trialName = warmup ? 'startup-warmup' : `startup-${String(sampleNumber).padStart(3, '0')}`;
@@ -460,18 +423,28 @@ async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileR
 	fs.mkdirSync(path.join(profile, 'user-data'), { recursive: true });
 	fs.mkdirSync(path.join(profile, 'extensions'), { recursive: true });
 	fs.mkdirSync(controlDir, { recursive: true });
-	const startedAt = new Date().toISOString();
-	const started = performance.now();
-	const child = launchApp(app, profile, extensionPath, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined);
+	if (options.reuseStartupProfile && warmup) {
+		fs.mkdirSync(path.join(profile, 'user-data', 'User'), { recursive: true });
+		fs.writeFileSync(path.join(profile, 'user-data', 'User', 'settings.json'), JSON.stringify({ 'window.restoreWindows': 'none' }) + '\n');
+	}
+	let startedAt;
+	let started;
+	let child;
 	let sample;
 	try {
-		await spawnError(child);
+		installControlExtension(app, vsix, profile);
+		startedAt = new Date().toISOString();
+		started = performance.now();
+		child = await startApp(app, profile, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined, options);
+		await child.rootPid();
 		const marker = await waitForPath(readyFile, child, options.startupTimeoutMs, 'Startup-to-editable-file');
 		sample = {
 			type: warmup ? 'launchWarmup' : 'launchToEditableFile',
 			subject: app.key,
 			sample: sampleNumber,
 			order: appIndex + 1,
+			launchMode: options.launchMode,
+			profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
 			startedAt,
 			elapsedMs: Number((performance.now() - started).toFixed(3)),
 			readiness: marker,
@@ -483,13 +456,19 @@ async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileR
 			subject: app.key,
 			sample: sampleNumber,
 			order: appIndex + 1,
-			startedAt,
+			launchMode: options.launchMode,
+			profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
+			startedAt: startedAt ?? new Date().toISOString(),
 			elapsedMs: null,
 			error: error.message,
 			profileRelativePath: path.relative(runDir, profile)
 		};
 	} finally {
-		await terminateSession(child, path.join(controlDir, 'control.json'));
+		try {
+			await terminateSession(child, path.join(controlDir, 'control.json'));
+		} catch (error) {
+			sample = { ...sample, elapsedMs: null, error: `${sample.error ? `${sample.error}; ` : ''}Termination failed: ${error.message}` };
+		}
 	}
 	return sample;
 }
@@ -503,6 +482,7 @@ function createExtension(extensionPath) {
 		publisher: 'lean-perf',
 		version: '0.0.1',
 		engines: { vscode: '^1.80.0' },
+		capabilities: { untrustedWorkspaces: { supported: true }, virtualWorkspaces: false },
 		main: './extension.js',
 		activationEvents: ['onStartupFinished']
 	}, null, 2) + '\n', { flag: 'wx' });
@@ -690,20 +670,25 @@ function appMetadata(apps, baseRevision, options) {
 			fixtureReadBeforeMeasurement: true,
 			gitWorkspace: options.gitWorkspace,
 			startupProfile: options.reuseStartupProfile ? 'reused after warm-up' : 'fresh per launch',
+			launchMode: options.launchMode,
+			profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
+			settingsOverrides: options.reuseStartupProfile ? { 'window.restoreWindows': 'none' } : {},
 			gitWorkspaceTrackedFiles: options.gitWorkspace ? GIT_WORKSPACE_FILES + 1 : 0,
-			userExtensions: 'isolated empty extensions-dir plus the same harness control extension loaded from --extensionDevelopmentPath',
+			userExtensions: 'isolated extensions-dir with the same harness control extension installed as a VSIX',
 			launchFlags: ['--new-window', '--shared-data-dir', '--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry'],
-			existingWindowMethod: 'launch the app executable with --reuse-window and the file path; readiness is measured by the control extension',
+			existingWindowMethod: 'launch using the selected mode with --reuse-window and the file path; readiness is measured by the control extension',
 			processEnvironment: 'inherits the invoking environment; values are not recorded in this report'
 		},
+		controlExtensionInstall: 'vsix',
 		apps
 	};
 }
 
-async function waitForReady(app, fixturePath, profile, extensionPath, controlDir, options) {
-	const child = startApp(app, profile, extensionPath, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined);
+async function waitForReady(app, fixturePath, profile, vsix, controlDir, options) {
+	installControlExtension(app, vsix, profile);
+	const child = await startApp(app, profile, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined, options);
 	try {
-		await spawnError(child);
+		await child.rootPid();
 		const marker = await waitForPath(path.join(controlDir, 'startup-ready.json'), child, options.startupTimeoutMs, 'App readiness');
 		return { child, marker, readyAt: performance.now() };
 	} catch (error) {
@@ -716,19 +701,30 @@ async function captureMemory(app, sampleIndex, child, options) {
 	const sampleStarted = performance.now();
 	const capturedAt = new Date().toISOString();
 	const idleAfterReadyMs = Number((sampleStarted - options.readyAt).toFixed(3));
-	const tree = getProcessTree(child.pid);
+	const rootPid = await child.rootPid();
+	const tree = getProcessTree(rootPid);
 	const processes = tree.map(row => {
 		const footprint = sampleFootprint(row.pid);
 		return {
 			pid: row.pid,
+			role: processRole(row, rootPid),
 			ppid: row.ppid,
 			name: row.name,
 			rssKiB: row.rssKiB,
 			physicalFootprintBytes: footprint.bytes,
+			physFootprintBytes: footprint.bytes,
 			...(footprint.error ? { footprintError: footprint.error } : {})
 		};
 	});
 	const complete = processes.length > 0 && processes.every(row => Number.isFinite(row.physicalFootprintBytes));
+	const byRole = {};
+	for (const row of processes) {
+		const totals = byRole[row.role] ?? { physFootprintBytes: 0, rssKiB: 0, processCount: 0 };
+		totals.physFootprintBytes = totals.physFootprintBytes === null || row.physFootprintBytes === null ? null : totals.physFootprintBytes + row.physFootprintBytes;
+		totals.rssKiB += row.rssKiB;
+		totals.processCount++;
+		byRole[row.role] = totals;
+	}
 	return {
 		type: 'wholeProcessTreeMemory',
 		subject: app.key,
@@ -741,18 +737,19 @@ async function captureMemory(app, sampleIndex, child, options) {
 		rssBytesDiagnostic: processes.length ? processes.reduce((sum, row) => sum + row.rssKiB * 1024, 0) : null,
 		metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree',
 		processes,
+		byRole,
 		...(!complete ? { captureError: 'One or more process physical-footprint readings were unavailable.' } : {})
 	};
 }
 
-async function runMemorySession(app, fixturePath, profileRoot, extensionPath, runDir, options) {
+async function runMemorySession(app, fixturePath, profileRoot, vsix, runDir, options) {
 	const trialDir = path.join(runDir, 'trials', `memory-${app.key}`);
 	const profile = path.join(profileRoot, `memory-${app.key}`);
 	const controlDir = path.join(trialDir, 'control');
 	fs.mkdirSync(trialDir, { recursive: true });
 	let session;
 	try {
-		session = await waitForReady(app, fixturePath, profile, extensionPath, controlDir, options);
+		session = await waitForReady(app, fixturePath, profile, vsix, controlDir, options);
 		await delay(options.memoryIdleMs);
 		const samples = [];
 		let lastSampleStartedAt = 0;
@@ -785,7 +782,8 @@ function makeSummary(samples, apps) {
 	const summary = {
 		createdAt: new Date().toISOString(),
 		percentileMethod: 'nearest rank: sorted[ceil(p * n) - 1]',
-		metrics: {}
+		metrics: {},
+		byRole: {}
 	};
 	for (const app of apps) {
 		const subjectSamples = samples.filter(sample => sample.subject === app.key);
@@ -798,6 +796,17 @@ function makeSummary(samples, apps) {
 			const key = `${app.key}.${type}`;
 			summary.metrics[key] = { unit, ...summarize(values) };
 		}
+		const memorySamples = subjectSamples.filter(sample => sample.type === 'wholeProcessTreeMemory');
+		const roles = new Set(memorySamples.flatMap(sample => Object.keys(sample.byRole ?? {})));
+		summary.byRole[app.key] = {};
+		for (const role of roles) {
+			const totals = memorySamples.map(sample => sample.byRole?.[role]).filter(Boolean);
+			summary.byRole[app.key][role] = {
+				physFootprintBytes: summarize(totals.map(value => value.physFootprintBytes)),
+				rssKiB: summarize(totals.map(value => value.rssKiB)),
+				processCount: summarize(totals.map(value => value.processCount))
+			};
+		}
 	}
 	return summary;
 }
@@ -809,6 +818,11 @@ async function run(options) {
 		subject.key,
 		options[subject.key === 'lean' ? 'leanLabel' : 'ossLabel']
 	));
+	for (const app of apps) {
+		if (!app.cliScript) {
+			throw new Error(`${app.label} has no executable CLI script to install the control extension.`);
+		}
+	}
 	const plan = {
 		products: apps.map(app => ({ label: app.label, version: app.version, productCommit: app.commit, appPath: app.appPath })),
 		comparisonBaseRevision: options.baseRevision,
@@ -818,6 +832,8 @@ async function run(options) {
 		existingWindowWarmupMs: EXISTING_WINDOW_WARMUP_MS,
 		memorySamplesPerProduct: options.memorySamples,
 		memoryIdleMs: options.memoryIdleMs,
+		launchMode: options.launchMode,
+		profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
 		outputRoot: path.resolve(options.outputRoot),
 		gitWorkspace: options.gitWorkspace
 	};
@@ -838,6 +854,7 @@ async function run(options) {
 	fs.writeFileSync(rawSamplesPath, '', { flag: 'wx' });
 	const extensionPath = path.join(runDir, 'harness-extension');
 	createExtension(extensionPath);
+	const vsix = createControlVSIX(extensionPath, path.join(runDir, 'harness-extension.vsix'));
 	const workspaceFolder = options.gitWorkspace ? path.join(runDir, 'fixtures', 'git-workspace') : undefined;
 	if (workspaceFolder) {
 		fs.mkdirSync(workspaceFolder, { recursive: true });
@@ -877,14 +894,14 @@ async function run(options) {
 	process.stdout.write(`Writing benchmark output to ${runDir}\n`);
 	process.stdout.write('Running one startup warm-up per product; these are raw-only samples.\n');
 	for (const [appIndex, app] of [...apps].reverse().entries()) {
-		append(await runLaunchSample(app, appIndex, -1, fixturePath, path.join(profileRoot, app.key), extensionPath, runDir, baseOptions));
+		append(await runLaunchSample(app, appIndex, -1, fixturePath, path.join(profileRoot, app.key), vsix, runDir, baseOptions));
 	}
 	process.stdout.write(`Starting ${options.samples} alternating launch samples per product.\n`);
 
 	for (let index = 0; index < options.samples; index++) {
 		const order = index % 2 === 0 ? apps : [...apps].reverse();
 		for (const [appIndex, app] of order.entries()) {
-			append(await runLaunchSample(app, appIndex, index, fixturePath, path.join(profileRoot, app.key), extensionPath, runDir, baseOptions));
+			append(await runLaunchSample(app, appIndex, index, fixturePath, path.join(profileRoot, app.key), vsix, runDir, baseOptions));
 		}
 	}
 
@@ -898,7 +915,7 @@ async function run(options) {
 			const profile = path.join(activeProfiles, app.key);
 			const controlDir = path.join(trialDir, 'control');
 			fs.mkdirSync(trialDir, { recursive: true });
-			const session = await waitForReady(app, fixturePath, profile, extensionPath, controlDir, baseOptions);
+			const session = await waitForReady(app, fixturePath, profile, vsix, controlDir, baseOptions);
 			sessionStates.set(app.key, { app, child: session.child, profile, controlDir });
 		}
 		await delay(EXISTING_WINDOW_WARMUP_MS);
@@ -919,7 +936,7 @@ async function run(options) {
 	for (const app of apps) {
 		let memorySamples;
 		try {
-			memorySamples = await runMemorySession(app, fixturePath, path.join(profileRoot, 'memory'), extensionPath, runDir, baseOptions);
+			memorySamples = await runMemorySession(app, fixturePath, path.join(profileRoot, 'memory'), vsix, runDir, baseOptions);
 		} catch (error) {
 			memorySamples = [{
 				type: 'wholeProcessTreeMemory', subject: app.key, sample: 1,
@@ -956,14 +973,13 @@ async function runOneExistingOpen(state, sampleIndex, runDir, options) {
 		const args = ['--reuse-window', `--user-data-dir=${path.join(profile, 'user-data')}`, `--shared-data-dir=${path.join(profile, 'shared-data')}`, `--extensions-dir=${path.join(profile, 'extensions')}`, targetPath];
 		startedAt = new Date().toISOString();
 		const start = performance.now();
-		cli = spawn(app.executable, args, { stdio: 'ignore', env: process.env });
-		await spawnError(cli);
+		cli = await launchApp(app, args, { mode: options.launchMode, env: process.env, logPath: path.join(controlDir, 'app.log'), profileMarker: path.join(profile, 'user-data'), allowExistingRoot: true });
 		const marker = await waitForPath(markerPath, child, options.startupTimeoutMs, 'Existing-window file open');
 		if (marker.editable !== true) {
 			throw new Error(marker.error ?? 'The active editor did not accept the editability probe.');
 		}
 		const elapsedMs = Number((performance.now() - start).toFixed(3));
-		const cliStatus = await Promise.race([childExit(cli), delay(2000).then(() => null)]);
+		const cliStatus = await cli.launcherExit();
 		return {
 			type: 'existingWindowFileOpen', subject: app.key, sample: sampleIndex + 1,
 			elapsedMs, startedAt,
@@ -979,7 +995,7 @@ async function runOneExistingOpen(state, sampleIndex, runDir, options) {
 		return {
 			type: 'existingWindowFileOpen', subject: app.key, sample: sampleIndex + 1,
 			elapsedMs: null, startedAt: startedAt ?? new Date().toISOString(), error: error.message,
-			cliExit: cli ? { code: cli.exitCode, signal: cli.signalCode } : null,
+			cliExit: cli ? await cli.launcherExit(0) : null,
 			fixtureBytes: FIXTURE_BYTES, profileRelativePath: path.relative(runDir, profile)
 		};
 	}

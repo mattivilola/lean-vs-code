@@ -68,6 +68,7 @@ fs.appendFileSync(path.join(workspace, 'src/main.ts'), '// lean-smoke-marker\n')
 fs.writeFileSync(path.join(extension, 'package.json'), JSON.stringify({
 	name: 'lean-functional-smoke', publisher: 'lean-smoke', version: '0.0.1',
 	engines: { vscode: '^1.80.0' }, main: './extension.cjs', activationEvents: ['onStartupFinished'],
+	capabilities: { untrustedWorkspaces: { supported: true }, virtualWorkspaces: false },
 	...(usesTextSearchProposal ? { enabledApiProposals: ['findTextInFiles'] } : {})
 }, null, 2) + '\n');
 fs.copyFileSync(path.join(root, 'scripts/lean-perf/functional-smoke-extension.cjs'), path.join(extension, 'extension.cjs'));

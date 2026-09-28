@@ -10,6 +10,7 @@ import { Emitter, Event } from '../../../../base/common/event.js';
 import { Disposable, toDisposable } from '../../../../base/common/lifecycle.js';
 import * as objects from '../../../../base/common/objects.js';
 import * as platform from '../../../../base/common/platform.js';
+import { mark } from '../../../../base/common/performance.js';
 import { removeDangerousEnvVariables } from '../../../../base/common/processes.js';
 import { StopWatch } from '../../../../base/common/stopwatch.js';
 import { URI } from '../../../../base/common/uri.js';
@@ -219,10 +220,11 @@ export class NativeLocalProcessExtensionHost extends Disposable implements IExte
 	}
 
 	private async _start(): Promise<IMessagePassingProtocol> {
+		mark('code/willStartExtensionHostProcess');
 		const [extensionHostCreationResult, portNumber, processEnv] = await Promise.all([
-			this._extensionHostStarter.createExtensionHost(),
-			this._tryFindDebugPort(),
-			this._shellEnvironmentService.getShellEnv(),
+			this._extensionHostStarter.createExtensionHost().then(result => { mark('code/didCreateExtensionHostProcess'); return result; }),
+			this._tryFindDebugPort().then(port => { mark('code/didFindExtensionHostDebugPort'); return port; }),
+			this._shellEnvironmentService.getShellEnv().then(env => { mark('code/didResolveExtensionHostShellEnv'); return env; }),
 		]);
 
 		this._extensionHostProcess = new ExtensionHostProcess(extensionHostCreationResult.id, this._extensionHostStarter);

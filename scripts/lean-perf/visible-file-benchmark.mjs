@@ -5,7 +5,6 @@
 // Diagnostic: requested-file DOM visibility, synthetic UI edit, or first UI edit
 // in a second project window. Keep these endpoints separate from the
 // extension-backed editability probe and physical display paint.
-import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import net from 'node:net';
 import os from 'node:os';
@@ -13,13 +12,14 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { randomUUID } from 'node:crypto';
-import { percentile, readApp } from './benchmark.mjs';
+import { percentile } from './benchmark.mjs';
+import { LAUNCH_MODES, launchApp, readApp } from './launch.mjs';
 
-const valueOptions = new Set(['--lean-app', '--oss-app', '--base-revision', '--samples', '--output-root']);
+const valueOptions = new Set(['--lean-app', '--oss-app', '--base-revision', '--samples', '--output-root', '--launch-mode']);
 const options = {};
 for (let index = 2; index < process.argv.length; index++) {
 	const key = process.argv[index];
-	if (key === '--input-probe' || key === '--second-window') {
+	if (key === '--input-probe' || key === '--second-window' || key === '--reuse-profile') {
 		options[key] = true;
 		continue;
 	}
@@ -46,6 +46,12 @@ if (!Number.isSafeInteger(count) || count < 1) {
 }
 const inputProbe = options['--input-probe'] === true;
 const secondWindow = options['--second-window'] === true;
+const launchMode = options['--launch-mode'] ?? 'direct';
+const reuseProfile = options['--reuse-profile'] === true;
+const profileCondition = reuseProfile ? 'established' : 'fresh';
+if (!LAUNCH_MODES.includes(launchMode)) {
+	throw new Error(`--launch-mode must be one of: ${LAUNCH_MODES.join(', ')}.`);
+}
 if (secondWindow && !inputProbe) {
 	throw new Error('--second-window requires --input-probe so the second editor is verified by an edit.');
 }
@@ -54,6 +60,22 @@ const apps = [
 	readApp(options['--lean-app'], 'lean', 'Lean VS Code'),
 	readApp(options['--oss-app'], 'code-oss', 'Code-OSS')
 ];
+if (launchMode === 'cli') {
+	for (const app of apps) {
+		if (!app.cliScript) {
+			throw new Error(`${app.label} has no executable CLI script.`);
+		}
+	}
+}
+const reusableProfiles = new Map();
+if (reuseProfile) {
+	for (const app of apps) {
+		const profile = fs.mkdtempSync('/private/tmp/lean-visible-');
+		fs.mkdirSync(path.join(profile, 'user-data', 'User'), { recursive: true });
+		fs.writeFileSync(path.join(profile, 'user-data', 'User', 'settings.json'), JSON.stringify({ 'window.restoreWindows': 'none' }) + '\n');
+		reusableProfiles.set(app.key, profile);
+	}
+}
 const runDir = path.join(path.resolve(options['--output-root'] ?? '.build/lean-artifacts/visible-file-benchmarks'), `${new Date().toISOString().replaceAll(':', '').replaceAll('.', '-')}-${randomUUID().slice(0, 8)}`);
 fs.mkdirSync(runDir, { recursive: true });
 const rawPath = path.join(runDir, 'samples.jsonl');
@@ -67,6 +89,9 @@ fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify({
 		: 'Stopped-process spawn to the requested unique text being visible in a nonzero-size Monaco editor view-lines DOM element, detected through the Chrome DevTools Protocol. This is a DOM visibility proxy, not an editable-file or hardware photon timestamp.',
 	inputProbe,
 	secondWindow,
+	launchMode,
+	profileCondition,
+	settingsOverrides: reuseProfile ? { 'window.restoreWindows': 'none' } : {},
 	comparisonBaseRevision: options['--base-revision'],
 	machine: { platform: process.platform, architecture: process.arch, cpuModel: os.cpus()[0]?.model, osRelease: os.release() },
 	samplesPerApp: count,
@@ -86,8 +111,8 @@ async function availablePort() {
 
 async function findWorkbenchTarget(port, child, excludedIds = new Set()) {
 	for (let attempt = 0; attempt < 150; attempt++) {
-		if (child.exitCode !== null || child.signalCode !== null) {
-			throw new Error(`App exited before opening a workbench: ${child.exitCode ?? child.signalCode}`);
+		if (!child.isRunning()) {
+			throw new Error('App exited before opening a workbench.');
 		}
 		try {
 			const response = await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(500) });
@@ -147,7 +172,7 @@ async function connectDebugger(url) {
 async function trial(app, index, order, warmup = false) {
 	const name = `${warmup ? 'warmup' : String(index).padStart(3, '0')}-${app.key}`;
 	// VS Code's macOS IPC socket has a strict path-length limit.
-	const profile = fs.mkdtempSync('/private/tmp/lean-visible-');
+	const profile = reusableProfiles.get(app.key) ?? fs.mkdtempSync('/private/tmp/lean-visible-');
 	const firstProject = path.join(runDir, 'fixtures', `${name}-first-project`);
 	const secondProject = path.join(runDir, 'fixtures', `${name}-second-project`);
 	const fixture = secondWindow ? path.join(secondProject, 'editable.txt') : path.join(runDir, 'fixtures', `${name}.txt`);
@@ -164,9 +189,10 @@ async function trial(app, index, order, warmup = false) {
 	}
 	const port = await availablePort();
 	const logPath = path.join(runDir, `${name}.app.log`);
-	const log = fs.openSync(logPath, 'w');
+	fs.writeFileSync(logPath, '');
 	let launchedAt = Date.now();
-	const child = spawn(app.executable, [
+	let child;
+	const firstArgs = [
 		'--new-window',
 		`--user-data-dir=${path.join(profile, 'user-data')}`,
 		`--shared-data-dir=${path.join(profile, 'shared-data')}`,
@@ -175,8 +201,7 @@ async function trial(app, index, order, warmup = false) {
 		`--remote-debugging-port=${port}`,
 		...(secondWindow ? [`--folder-uri=${pathToFileURL(firstProject)}`] : []),
 		secondWindow ? firstFixture : fixture
-	], { stdio: ['ignore', log, log] });
-	fs.closeSync(log);
+	];
 	let client;
 	let firstClient;
 	let secondCli;
@@ -184,6 +209,9 @@ async function trial(app, index, order, warmup = false) {
 	let firstWindowReadyMs = null;
 	let error;
 	try {
+		child = await launchApp(app, firstArgs, { mode: launchMode, env: process.env, logPath, profileMarker: path.join(profile, 'user-data') });
+		launchedAt = child.spawnedAt;
+		await child.rootPid();
 		const firstTarget = await findWorkbenchTarget(port, child);
 		if (secondWindow) {
 			firstClient = await connectDebugger(firstTarget.webSocketDebuggerUrl);
@@ -196,9 +224,7 @@ async function trial(app, index, order, warmup = false) {
 				throw new Error('Timed out waiting for the first project window to show its requested file.');
 			}
 			firstWindowReadyMs = Date.now() - launchedAt;
-			launchedAt = Date.now();
-			const secondLog = fs.openSync(logPath, 'a');
-			secondCli = spawn(app.executable, [
+			const secondArgs = [
 				'--new-window',
 				`--user-data-dir=${path.join(profile, 'user-data')}`,
 				`--shared-data-dir=${path.join(profile, 'shared-data')}`,
@@ -206,8 +232,9 @@ async function trial(app, index, order, warmup = false) {
 				'--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry',
 				`--folder-uri=${pathToFileURL(secondProject)}`,
 				fixture
-			], { stdio: ['ignore', secondLog, secondLog] });
-			fs.closeSync(secondLog);
+			];
+			secondCli = await launchApp(app, secondArgs, { mode: launchMode, env: process.env, logPath, profileMarker: path.join(profile, 'user-data'), allowExistingRoot: true });
+			launchedAt = secondCli.spawnedAt;
 			const secondTarget = await findWorkbenchTarget(port, child, new Set([firstTarget.id]));
 			client = await connectDebugger(secondTarget.webSocketDebuggerUrl);
 		} else {
@@ -237,8 +264,8 @@ async function trial(app, index, order, warmup = false) {
 					await client.send('Input.insertText', { text: typedMarker });
 				}
 			}
-			if (child.exitCode !== null || child.signalCode !== null) {
-				throw new Error(`App exited before requested content appeared: ${child.exitCode ?? child.signalCode}`);
+			if (!child.isRunning()) {
+				throw new Error('App exited before requested content appeared.');
 			}
 			await delay(20);
 		}
@@ -251,15 +278,16 @@ async function trial(app, index, order, warmup = false) {
 	} finally {
 		client?.close();
 		firstClient?.close();
-		if (secondCli?.exitCode === null && secondCli?.signalCode === null) {
-			secondCli.kill('SIGTERM');
-		}
-		if (child.exitCode === null && child.signalCode === null) {
-			child.kill('SIGTERM');
-			await Promise.race([new Promise(resolve => child.once('close', resolve)), delay(3000)]);
+		for (const handle of [secondCli, child]) {
+			try {
+				await handle?.terminate();
+			} catch (caught) {
+				error = `${error ? `${error}\n` : ''}Termination failed: ${String(caught?.stack ?? caught)}`;
+				elapsedMs = null;
+			}
 		}
 	}
-	const sample = { subject: app.key, sample: index, order, warmup, elapsedMs, ...(secondWindow ? { firstWindowReadyMs } : {}), ...(error ? { error, appLog: logPath } : {}) };
+	const sample = { subject: app.key, sample: index, order, warmup, launchMode, profileCondition, elapsedMs, ...(secondWindow ? { firstWindowReadyMs } : {}), ...(error ? { error, appLog: logPath } : {}) };
 	fs.appendFileSync(rawPath, JSON.stringify(sample) + '\n');
 	return sample;
 }
