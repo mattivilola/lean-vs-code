@@ -6,6 +6,11 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Add user-visible changes here as they land. Before each release, move them under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.4.0 bundle and memory addendum — 28 September 2026
+
+- Measured the installed signed v0.4.0 bundle at 538 MiB apparent file content versus 1,463 MiB for the same-revision minified Code-OSS source package, 63% less. The signed Lean DMG is 206.8 MB; no matched Code-OSS DMG was measured. See the [bundle-size method](lean/docs/PERFORMANCE.md).
+- In a separate nine-pair independent-launch trial, measured 655 MiB versus 786 MiB median short-idle app-tree footprint for signed Lean and matched Code-OSS, 16.7% less. This 100 KiB isolated-profile result does not establish peak, long-session, or extension-heavy memory use. See the [raw observations and method](lean/performance/v0.4.0-independent-memory-vs-code-oss-1.139.1-minified.json).
+
 ## 0.4.0 benchmark addendum — 27 September 2026
 
 - Validated a minified, same-revision original Code-OSS source comparator and ran 30-pair standalone-file, 10,000-file repository, Git-review, first saved-edit, integrated-terminal, and verified workspace text-search benchmarks. The matched-build median differences are 17%, 19%, 21%, 25%, 13%, and 25% less full-workflow time, respectively, for signed Lean v0.4.0. Earlier unminified-comparator results remain labeled for audit; the public headline now uses the minified baseline. See the [method and raw observations](lean/docs/PERFORMANCE.md).
