@@ -43,8 +43,8 @@ The separate [established-profile extension-backed CLI run](../performance/v0.6.
 
 In a separate [30-pair signed-app first saved-edit trial](../performance/v0.6.0-signed-first-save-vs-code-oss-1.139.1-minified.json), Lean completed the launch-to-save workflow in **1,468 / 1,912 ms median / p95** versus **1,959 / 2,640 ms** for the matched original Code-OSS package. All 60 launches succeeded. The median difference was **491 ms / 25%**. The save action after startup was slower in Lean (**86.3 versus 43.3 ms median**), so this is a full startup-to-completed-work result. The 70,276-file-touch annual illustration would be about **9.6 hours** only if each touch caused a fresh launch and saved edit; it is not observed annual time saved.
 
-## Remaining release gates
+## Deferred interactive checks
 
-Confirm a normal Open VSX extension installation on the signed app and the native v0.5.0 → v0.6.0 update after the GitHub release is published. The packaged light theme files are present; verify the picker in the installed app. The sub-second extension-backed p95 target remains open.
+The user asked us to stop GUI benchmarks and app launches while using this Mac. A normal Open VSX extension installed and activated on the v0.6 candidate, and the exact signed app passed the extension-host GUI smoke, but a fresh Open VSX installation on the signed build remains to be checked in a quiet window. The native v0.5.0 → v0.6.0 updater trial and visual theme-picker check are likewise deferred; the packaged light-theme files are present. We did not promote the interrupted signed extension-backed run into a public claim. The sub-second extension-backed p95 target remains open.
 
 See the [changelog](../../CHANGELOG.md) for the release change list.
