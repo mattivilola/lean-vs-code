@@ -224,7 +224,7 @@ try {
 		const warmupPort = await availablePort();
 		const warmupArgs = args.filter(arg => !arg.startsWith('--remote-debugging-port=') && !arg.startsWith('--trace-startup'));
 		warmupArgs.push(`--remote-debugging-port=${warmupPort}`);
-		const warmup = await launchApp(app, warmupArgs, { mode: launchMode, env: process.env, logPath: `${output}.warmup.app.log`, profileMarker: path.join(profile, 'user-data') });
+		const warmup = await launchApp(app, warmupArgs, { mode: launchMode, env: { ...process.env, LEAN_STARTUP_SHELL_TRACE: '1' }, logPath: `${output}.warmup.app.log`, profileMarker: path.join(profile, 'user-data') });
 		try {
 			await warmup.rootPid();
 			const target = await findWorkbenchTarget(warmupPort, warmup);
@@ -263,7 +263,7 @@ try {
 		}
 	}
 	fs.writeFileSync(traceMarkerFile, '');
-	child = await launchApp(app, args, { mode: launchMode, env: process.env, logPath: `${output}.app.log`, profileMarker: path.join(profile, 'user-data') });
+	child = await launchApp(app, args, { mode: launchMode, env: { ...process.env, LEAN_STARTUP_SHELL_TRACE: '1' }, logPath: `${output}.app.log`, profileMarker: path.join(profile, 'user-data') });
 	await child.rootPid();
 	const targetUrl = await findWorkbenchTarget(port, child);
 	debuggerClient = await connectDebugger(targetUrl);
@@ -292,7 +292,10 @@ try {
 	const resourceTimings = await debuggerClient.evaluate(`performance.getEntriesByType('resource').map(entry => ({ name: entry.name, initiatorType: entry.initiatorType, startTime: entry.startTime, duration: entry.duration, responseEnd: entry.responseEnd, transferSize: entry.transferSize, encodedBodySize: entry.encodedBodySize }))`);
 	const navigationTimings = await debuggerClient.evaluate(`performance.getEntriesByType('navigation').map(entry => ({ startTime: entry.startTime, domInteractive: entry.domInteractive, domContentLoadedEventEnd: entry.domContentLoadedEventEnd, loadEventEnd: entry.loadEventEnd, duration: entry.duration }))`);
 	const controlExtensionActivation = JSON.parse(fs.readFileSync(traceReadyFile, 'utf8'));
-	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, hasWorkbenchModulePreload, controlExtensionInstall: 'vsix', spawnedAtEpochMs: child.spawnedAt, controlExtensionActivation, reportDelayMs, chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), rendererTimeOrigin, marks, resourceTimings, navigationTimings }, null, 2) + '\n');
+	const appLog = fs.readFileSync(`${output}.app.log`, 'utf8');
+	const mainShellStartedAtEpochMs = Number(/LEAN_SHELL_STARTED_EPOCH_MS=(\d+)/.exec(appLog)?.[1]) || null;
+	const mainShellResolvedAtEpochMs = Number(/LEAN_SHELL_RESOLVED_EPOCH_MS=(\d+)/.exec(appLog)?.[1]) || null;
+	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, hasWorkbenchModulePreload, controlExtensionInstall: 'vsix', spawnedAtEpochMs: child.spawnedAt, controlExtensionActivation, mainShellStartedAtEpochMs, mainShellResolvedAtEpochMs, reportDelayMs, chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), rendererTimeOrigin, marks, resourceTimings, navigationTimings }, null, 2) + '\n');
 	console.log(`Captured ${marks.length} startup marks in ${output}`);
 	for (let attempt = 0; attempt < 100 && !fs.existsSync(`${output}.perf.md`) && !fs.existsSync(`${output}.perf.md.error`); attempt++) {
 		await delay(200);

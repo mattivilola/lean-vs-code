@@ -1822,12 +1822,18 @@ export class CodeApplication extends Disposable {
 	 */
 	private async warmupShellEnvironment(): Promise<void> {
 		mark('code/willResolveShellEnv');
+		if (process.env['LEAN_STARTUP_SHELL_TRACE'] === '1') {
+			this.logService.info(`LEAN_SHELL_STARTED_EPOCH_MS=${Date.now()}`);
+		}
 		try {
 			await getResolvedShellEnv(this.configurationService, this.logService, this.environmentMainService.args, process.env);
 		} catch {
 			// Reported to the user after the first window opens
 		} finally {
 			mark('code/didResolveShellEnv');
+			if (process.env['LEAN_STARTUP_SHELL_TRACE'] === '1') {
+				this.logService.info(`LEAN_SHELL_RESOLVED_EPOCH_MS=${Date.now()}`);
+			}
 		}
 	}
 
