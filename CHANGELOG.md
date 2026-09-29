@@ -4,11 +4,15 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 ## Unreleased
 
-- Omit the unused separate Agents window bundle from the macOS desktop package. Requests for that window open a regular editor window, and workspaces saved by older builds can still open as ordinary workspaces. The final signed-app size will be reported after release packaging.
-- Let GUI test launches use the same compact, bottom-left window for both apps. An experimental main-process Node compile cache was removed after its paired startup trial did not show a reliable improvement.
-- On macOS zsh, bash, and sh launches, collect the login-shell environment with the system `env -0` command instead of starting another Electron process solely to serialize it. Other shells retain the original collector. App-level speed impact remains under test.
-
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
+
+## 0.7.0
+
+See the [v0.7.0 release notes](lean/docs/RELEASE_NOTES_0.7.0.md) for validation and benchmark limitations.
+
+- Omit the unused separate Agents window bundle from the macOS desktop package, removing about 20.5 MiB of resources. Requests for that window open a regular editor window, and workspaces saved by older builds can still open as ordinary workspaces.
+- On macOS zsh, bash, and sh launches, collect the login-shell environment with the system `env -0` command instead of starting another Electron process solely to serialize it. Other shells retain the original collector. A nine-pair candidate diagnostic improved extension-editable file readiness versus installed v0.6.0, but the final signed release needs its own matched Code-OSS comparison before any new public speed claim.
+- Let GUI test launches use the same compact, bottom-left window for both apps. An experimental main-process Node compile cache was removed after its paired startup trial did not show a reliable improvement.
 
 ## 0.6.0
 
