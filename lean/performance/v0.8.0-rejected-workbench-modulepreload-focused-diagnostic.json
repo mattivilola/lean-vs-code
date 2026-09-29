@@ -1,0 +1,40 @@
+{
+  "kind": "focused-candidate-diagnostic",
+  "candidate": "workbench-modulepreload",
+  "decision": "rejected-and-removed-from-source",
+  "date": "2026-09-29",
+  "comparison": "matched Lean VS Code candidate and local control cloned from the same unsigned minified app; the packaged workbench HTML preload link was the only differing bundle path",
+  "productCommit": "4f7c05ba0bb127b0c8a97def65915efdc57f2a3c",
+  "launchMode": "direct",
+  "profileCondition": "fresh isolated profile",
+  "windowBoundsMacPoints": [16, 546, 560, 360],
+  "tracePair": {
+    "control": {
+      "windowLoadToWorkbenchImportMs": 172,
+      "workbenchImportMs": 365,
+      "spawnToControlExtensionActivationMs": 2196
+    },
+    "candidate": {
+      "windowLoadToWorkbenchImportMs": 248,
+      "workbenchImportMs": 593,
+      "spawnToControlExtensionActivationMs": 2258
+    },
+    "resourceTimingEntries": 0,
+    "note": "One trace per app; the trace extension opens Startup Performance after activation. Chromium exposed no resource timing entries for the custom app protocol, so fetch timing and duplicate requests could not be established from this trace."
+  },
+  "editableFilePair": {
+    "readiness": "active TextEditor for the same 100 KiB fixture plus a reversible TextEditor.edit probe through an installed control extension",
+    "warmupsMs": {
+      "control": 1715.187,
+      "candidate": 1469.946
+    },
+    "timedMs": {
+      "control": 1257.292,
+      "candidate": 1263.111
+    },
+    "candidateMinusControlMs": 5.819,
+    "completedPairs": 1,
+    "failures": 0
+  },
+  "limitations": "This is a minimal A/B diagnostic, not a statistical benchmark or comparison with original Code-OSS. The small timed-file difference is effectively neutral and the trace was slower for the candidate; neither establishes a startup benefit. It does not support a public speed claim, a p95 estimate, or a v0.8 release. Raw files contain local paths and remain outside the repository."
+}
