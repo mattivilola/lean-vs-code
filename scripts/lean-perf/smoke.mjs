@@ -144,7 +144,7 @@ try {
 	const apps = ['lean', 'code-oss'].map(key => ({ key, label: key, version: '1.2.3', commit: 'a'.repeat(40) }));
 	fs.writeFileSync(path.join(reportDir, 'manifest.json'), JSON.stringify({
 		createdAt: '2026-09-28T00:00:00Z', comparisonBaseRevision: 'a'.repeat(40), machine: { architecture: 'arm64' },
-		apps, controlExtensionInstall: 'vsix', settings: { startupOnly: true, samples: 2, launchMode: 'cli', profileCondition: 'established' }
+		apps, controlExtensionInstall: 'vsix', settings: { startupOnly: true, samples: 2, launchMode: 'cli', profileCondition: 'established', windowBounds: compactBounds }
 	}));
 	const metrics = {};
 	for (const app of apps) {
@@ -162,7 +162,8 @@ try {
 	const publicPath = path.join(reportDir, 'public.json');
 	const exportResult = spawnSync(process.execPath, [exportScript, reportDir, publicPath], { encoding: 'utf8' });
 	assert.equal(exportResult.status, 0, exportResult.stderr);
-	assert.equal(JSON.parse(fs.readFileSync(publicPath, 'utf8')).samples.length, 4);
+		assert.equal(JSON.parse(fs.readFileSync(publicPath, 'utf8')).samples.length, 4);
+		assert.deepEqual(JSON.parse(fs.readFileSync(publicPath, 'utf8')).settings.windowBounds, compactBounds);
 	assert.equal(fs.readFileSync(publicPath, 'utf8').includes('/private/secret'), false);
 	fs.writeFileSync(path.join(reportDir, 'samples.jsonl'), `${exportSamples.slice(1).map(JSON.stringify).join('\n')}\n`);
 	const incomplete = spawnSync(process.execPath, [exportScript, reportDir, path.join(reportDir, 'incomplete.json')], { encoding: 'utf8' });

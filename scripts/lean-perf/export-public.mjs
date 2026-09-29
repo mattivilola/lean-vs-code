@@ -54,6 +54,7 @@ const report = manifest.scenario ? {
 		memoryLaunchesPerApp: manifest.settings.memoryLaunches,
 		memorySnapshotsPerLaunch: manifest.settings.memorySamples,
 		idleAfterEditableFileMs: manifest.settings.memoryIdleMs,
+		windowBounds: manifest.settings.windowBounds ?? null,
 		profileCondition: 'fresh isolated profile per launch',
 		metricMethod: 'sum of per-PID macOS footprint phys_footprint values for the app process tree'
 	},
@@ -67,6 +68,7 @@ const report = manifest.scenario ? {
 	settings: {
 		samplesPerApp: manifest.settings.samples,
 		launchMode: manifest.settings.launchMode,
+		windowBounds: manifest.settings.windowBounds ?? null,
 		profileCondition: manifest.settings.profileCondition,
 		controlExtensionInstall: manifest.controlExtensionInstall
 	},

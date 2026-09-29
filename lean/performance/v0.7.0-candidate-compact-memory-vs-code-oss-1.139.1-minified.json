@@ -1,0 +1,978 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-29T06:43:32.315Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v26.9.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code",
+      "version": "1.139.1",
+      "commit": "b831827e34f6b8d1fec8143d15b7337b997575c9"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS",
+      "version": "1.139.1",
+      "commit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1"
+    }
+  ],
+  "metrics": {
+    "lean.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 9,
+      "p50": 601074224,
+      "p95": 618425144,
+      "min": 390032088,
+      "max": 618425144
+    },
+    "code-oss.wholeProcessTreeMemory": {
+      "unit": "bytes",
+      "count": 9,
+      "p50": 740652160,
+      "p95": 775058584,
+      "min": 506180760,
+      "max": 775058584
+    }
+  },
+  "kind": "independent-app-tree-memory",
+  "settings": {
+    "memoryLaunchesPerApp": 9,
+    "memorySnapshotsPerLaunch": 1,
+    "idleAfterEditableFileMs": 30000,
+    "windowBounds": {
+      "x": 16,
+      "y": 546,
+      "width": 560,
+      "height": 360
+    },
+    "profileCondition": "fresh isolated profile per launch",
+    "metricMethod": "sum of per-PID macOS footprint phys_footprint values for the app process tree"
+  },
+  "byRole": {
+    "lean": {
+      "main": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 77924272,
+          "p95": 80906160,
+          "min": 72140696,
+          "max": 80906160
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 218352,
+          "p95": 227616,
+          "min": 194704,
+          "max": 227616
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "gpu": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 266339432,
+          "p95": 269059200,
+          "min": 44008528,
+          "max": 269059200
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 92656,
+          "p95": 100160,
+          "min": 77792,
+          "max": 100160
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "network": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 9110584,
+          "p95": 9208864,
+          "min": 9044976,
+          "max": 9208864
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 55056,
+          "p95": 55376,
+          "min": 48752,
+          "max": 55376
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "renderer": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 165398736,
+          "p95": 182831360,
+          "min": 153471016,
+          "max": 182831360
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 394896,
+          "p95": 408272,
+          "min": 219696,
+          "max": 408272
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "utility:node.mojom.NodeService": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 97980880,
+          "p95": 112284232,
+          "min": 97210880,
+          "max": 112284232
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 317360,
+          "p95": 330320,
+          "min": 244160,
+          "max": 330320
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 3,
+          "p95": 3,
+          "min": 3,
+          "max": 3
+        }
+      }
+    },
+    "code-oss": {
+      "main": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 77973448,
+          "p95": 82921392,
+          "min": 76154824,
+          "max": 82921392
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 198512,
+          "p95": 223872,
+          "min": 186912,
+          "max": 223872
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "gpu": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 279397504,
+          "p95": 283346072,
+          "min": 44172416,
+          "max": 283346072
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 89552,
+          "p95": 103824,
+          "min": 79008,
+          "max": 103824
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "network": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 8307720,
+          "p95": 8406024,
+          "min": 8242184,
+          "max": 8406024
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 40656,
+          "p95": 47360,
+          "min": 38656,
+          "max": 47360
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "renderer": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 210569400,
+          "p95": 360401104,
+          "min": 203425976,
+          "max": 360401104
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 386304,
+          "p95": 521472,
+          "min": 327600,
+          "max": 521472
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "utility:node.mojom.NodeService": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 172365896,
+          "p95": 191387720,
+          "min": 160749736,
+          "max": 191387720
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 426816,
+          "p95": 477008,
+          "min": 391120,
+          "max": 477008
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 4,
+          "p95": 4,
+          "min": 4,
+          "max": 4
+        }
+      },
+      "other": {
+        "physFootprintBytes": {
+          "count": 9,
+          "p50": 8831696,
+          "p95": 8864488,
+          "min": 8733392,
+          "max": 8864488
+        },
+        "rssKiB": {
+          "count": 9,
+          "p50": 20256,
+          "p95": 22976,
+          "min": 15600,
+          "max": 22976
+        },
+        "processCount": {
+          "count": 9,
+          "p50": 1,
+          "p95": 1,
+          "min": 1,
+          "max": 1
+        }
+      }
+    }
+  },
+  "samples": [
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 1,
+      "physicalFootprintBytes": 425519904,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 80824288,
+          "rssKiB": 203232,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 44008528,
+          "rssKiB": 80896,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9143328,
+          "rssKiB": 48944,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 182831360,
+          "rssKiB": 219696,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 108712400,
+          "rssKiB": 260240,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 1,
+      "physicalFootprintBytes": 774927512,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 77973448,
+          "rssKiB": 195360,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 283346072,
+          "rssKiB": 89552,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8274928,
+          "rssKiB": 40656,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 218138832,
+          "rssKiB": 346336,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 178395304,
+          "rssKiB": 402416,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8798928,
+          "rssKiB": 17808,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 2,
+      "physicalFootprintBytes": 763540560,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 77154248,
+          "rssKiB": 191392,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 281674880,
+          "rssKiB": 85040,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8307720,
+          "rssKiB": 39552,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 215206120,
+          "rssKiB": 327600,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 172365896,
+          "rssKiB": 426816,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8831696,
+          "rssKiB": 16864,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 2,
+      "physicalFootprintBytes": 613690072,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 76367816,
+          "rssKiB": 194704,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 268338304,
+          "rssKiB": 81568,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9110584,
+          "rssKiB": 49104,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 154372184,
+          "rssKiB": 237968,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 105501184,
+          "rssKiB": 263584,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 3,
+      "physicalFootprintBytes": 425077632,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 80906160,
+          "rssKiB": 196048,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 45352040,
+          "rssKiB": 77792,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9159736,
+          "rssKiB": 48752,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 177375464,
+          "rssKiB": 240896,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 112284232,
+          "rssKiB": 244160,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 3,
+      "physicalFootprintBytes": 689747000,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 82921392,
+          "rssKiB": 197888,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 45253712,
+          "rssKiB": 84976,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8242184,
+          "rssKiB": 40416,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 360401104,
+          "rssKiB": 386304,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 184080552,
+          "rssKiB": 400784,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8848056,
+          "rssKiB": 16320,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 4,
+      "physicalFootprintBytes": 555086880,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 81807256,
+          "rssKiB": 186912,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 44172416,
+          "rssKiB": 79008,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8373328,
+          "rssKiB": 38656,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 220596360,
+          "rssKiB": 327920,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 191387720,
+          "rssKiB": 398416,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8749800,
+          "rssKiB": 15600,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 4,
+      "physicalFootprintBytes": 614067024,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 72140696,
+          "rssKiB": 218352,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 269059200,
+          "rssKiB": 100160,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9061408,
+          "rssKiB": 55056,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 165824840,
+          "rssKiB": 404176,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 97980880,
+          "rssKiB": 317360,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 5,
+      "physicalFootprintBytes": 601074224,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 74172288,
+          "rssKiB": 223936,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 266339432,
+          "rssKiB": 96512,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9044976,
+          "rssKiB": 55152,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 153897096,
+          "rssKiB": 394896,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 97620432,
+          "rssKiB": 330000,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 5,
+      "physicalFootprintBytes": 518042800,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 77973448,
+          "rssKiB": 223872,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 53724336,
+          "rssKiB": 100320,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8340512,
+          "rssKiB": 47360,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 206899480,
+          "rssKiB": 521472,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 162371632,
+          "rssKiB": 474976,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8733392,
+          "rssKiB": 22784,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 6,
+      "physicalFootprintBytes": 740652160,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 77072280,
+          "rssKiB": 222112,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 282035280,
+          "rssKiB": 102864,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8406024,
+          "rssKiB": 46752,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 203524352,
+          "rssKiB": 519520,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 160749736,
+          "rssKiB": 476752,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8864488,
+          "rssKiB": 22976,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 6,
+      "physicalFootprintBytes": 618425144,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 77924272,
+          "rssKiB": 226880,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 267617432,
+          "rssKiB": 99856,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9143304,
+          "rssKiB": 55200,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 166529256,
+          "rssKiB": 408176,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 97210880,
+          "rssKiB": 330320,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 7,
+      "physicalFootprintBytes": 390032088,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 77285296,
+          "rssKiB": 227616,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 44762216,
+          "rssKiB": 92656,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9208864,
+          "rssKiB": 55376,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 161057072,
+          "rssKiB": 406480,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 97718640,
+          "rssKiB": 318096,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 7,
+      "physicalFootprintBytes": 775058584,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 81676232,
+          "rssKiB": 198512,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 279397504,
+          "rssKiB": 88528,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8356896,
+          "rssKiB": 40496,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 210569400,
+          "rssKiB": 349872,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 186276008,
+          "rssKiB": 391120,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8782544,
+          "rssKiB": 20256,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 8,
+      "physicalFootprintBytes": 743912528,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 77563824,
+          "rssKiB": 223664,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 279839824,
+          "rssKiB": 103824,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8291336,
+          "rssKiB": 47328,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 205113600,
+          "rssKiB": 508288,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 164255864,
+          "rssKiB": 477008,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8848080,
+          "rssKiB": 22896,
+          "processCount": 1
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 8,
+      "physicalFootprintBytes": 608037424,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 78858184,
+          "rssKiB": 201472,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 266634392,
+          "rssKiB": 93536,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9045000,
+          "rssKiB": 49392,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 153471016,
+          "rssKiB": 373136,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 100028832,
+          "rssKiB": 304352,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "lean",
+      "sample": 1,
+      "memoryLaunch": 9,
+      "physicalFootprintBytes": 397028080,
+      "processCount": 7,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 78579656,
+          "rssKiB": 226448,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 46154856,
+          "rssKiB": 92464,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 9110560,
+          "rssKiB": 55264,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 165398736,
+          "rssKiB": 408272,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 97784272,
+          "rssKiB": 329984,
+          "processCount": 3
+        }
+      }
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "memoryLaunch": 9,
+      "physicalFootprintBytes": 506180760,
+      "processCount": 9,
+      "byRole": {
+        "main": {
+          "physFootprintBytes": 76154824,
+          "rssKiB": 212848,
+          "processCount": 1
+        },
+        "gpu": {
+          "physFootprintBytes": 44336280,
+          "rssKiB": 95376,
+          "processCount": 1
+        },
+        "network": {
+          "physFootprintBytes": 8291336,
+          "rssKiB": 43392,
+          "processCount": 1
+        },
+        "renderer": {
+          "physFootprintBytes": 203425976,
+          "rssKiB": 440272,
+          "processCount": 1
+        },
+        "utility:node.mojom.NodeService": {
+          "physFootprintBytes": 165140648,
+          "rssKiB": 473904,
+          "processCount": 4
+        },
+        "other": {
+          "physFootprintBytes": 8831696,
+          "rssKiB": 22960,
+          "processCount": 1
+        }
+      }
+    }
+  ]
+}
