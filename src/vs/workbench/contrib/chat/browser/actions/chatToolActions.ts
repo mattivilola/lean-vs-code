@@ -25,6 +25,7 @@ import { IChatWidget, IChatWidgetService } from '../chat.js';
 import { ToolsScope } from '../widget/input/chatSelectedTools.js';
 import { CHAT_CATEGORY } from './chatActions.js';
 import { showToolsPicker } from './chatToolPicker.js';
+import { AcceptToolConfirmationActionId } from './chatActionIds.js';
 
 
 type SelectedToolData = {
@@ -38,7 +39,7 @@ type SelectedToolClassification = {
 	total: { classification: 'SystemMetaData'; purpose: 'FeatureInsight'; comment: 'Number of total chat tools' };
 };
 
-export const AcceptToolConfirmationActionId = 'workbench.action.chat.acceptTool';
+export { AcceptToolConfirmationActionId } from './chatActionIds.js';
 export const SkipToolConfirmationActionId = 'workbench.action.chat.skipTool';
 export const AcceptToolPostConfirmationActionId = 'workbench.action.chat.acceptToolPostExecution';
 export const SkipToolPostConfirmationActionId = 'workbench.action.chat.skipToolPostExecution';

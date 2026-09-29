@@ -26,7 +26,7 @@ import { IInstantiationService, ServicesAccessor } from '../../../../../platform
 import { KeybindingWeight } from '../../../../../platform/keybinding/common/keybindingsRegistry.js';
 import { INotificationService } from '../../../../../platform/notification/common/notification.js';
 import { IQuickInputService, IQuickPickItem, QuickPickInput } from '../../../../../platform/quickinput/common/quickInput.js';
-import { InlineChatController } from '../../../inlineChat/browser/inlineChatController.js';
+import { getInlineChatController } from '../../../inlineChat/browser/inlineChatAccess.js';
 import { CTX_INLINE_CHAT_FOCUSED } from '../../../inlineChat/common/inlineChat.js';
 import { changeCellToKind, runDeleteAction } from './cellOperations.js';
 import { CELL_TITLE_CELL_GROUP_ID, CELL_TITLE_OUTPUT_GROUP_ID, CellToolbarOrder, INotebookActionContext, INotebookCellActionContext, INotebookCommandContext, NOTEBOOK_EDITOR_WIDGET_ACTION_WEIGHT, NotebookAction, NotebookCellAction, NotebookMultiCellAction, executeNotebookCondition, findTargetCellEditor } from './coreActions.js';
@@ -87,8 +87,8 @@ registerAction2(class EditCellAction extends NotebookCellAction {
 
 		await context.notebookEditor.focusNotebookCell(context.cell, 'editor');
 		const foundEditor: ICodeEditor | undefined = context.cell ? findTargetCellEditor(context, context.cell) : undefined;
-		if (foundEditor && foundEditor.hasTextFocus() && InlineChatController.get(foundEditor)?.getWidgetPosition()?.lineNumber === foundEditor.getPosition()?.lineNumber) {
-			InlineChatController.get(foundEditor)?.focus();
+		if (foundEditor && foundEditor.hasTextFocus() && getInlineChatController(foundEditor)?.getWidgetPosition()?.lineNumber === foundEditor.getPosition()?.lineNumber) {
+			getInlineChatController(foundEditor)?.focus();
 		}
 	}
 });

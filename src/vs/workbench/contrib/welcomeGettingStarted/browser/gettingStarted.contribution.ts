@@ -32,7 +32,7 @@ import { Categories } from '../../../../platform/action/common/actionCommonCateg
 import { DisposableStore } from '../../../../base/common/lifecycle.js';
 import { AccessibleViewRegistry } from '../../../../platform/accessibility/browser/accessibleViewRegistry.js';
 import { GettingStartedAccessibleView } from './gettingStartedAccessibleView.js';
-import { AgentSessionsWelcomePage } from '../../welcomeAgentSessions/browser/agentSessionsWelcome.js';
+import { AgentSessionsWelcomeCommandId } from '../../welcomeAgentSessions/browser/agentSessionsWelcomeConstants.js';
 import { IChatEntitlementService } from '../../../services/chat/common/chatEntitlementService.js';
 
 export * as icons from './gettingStartedIcons.js';
@@ -71,7 +71,7 @@ registerAction2(class extends Action2 {
 
 		// If no specific walkthrough is requested and agent sessions welcome is preferred, open that instead
 		if (!walkthroughID && !chatEntitlementService.sentiment.hidden && configurationService.getValue<string>('workbench.startupEditor') === 'agentSessionsWelcomePage') {
-			commandService.executeCommand(AgentSessionsWelcomePage.COMMAND_ID);
+			commandService.executeCommand(AgentSessionsWelcomeCommandId);
 			return;
 		} else {
 			if (walkthroughID) {

@@ -37,7 +37,7 @@ import { IWorkingCopyEditorHandler, IWorkingCopyEditorService } from '../../../s
 import { ResourceNotebookCellEdit } from '../../bulkEdit/browser/bulkCellEdits.js';
 import { getReplView } from '../../debug/browser/repl.js';
 import { REPL_VIEW_ID } from '../../debug/common/debug.js';
-import { InlineChatController } from '../../inlineChat/browser/inlineChatController.js';
+import { getInlineChatController } from '../../inlineChat/browser/inlineChatAccess.js';
 import { IInteractiveHistoryService } from '../../interactive/browser/interactiveHistoryService.js';
 import { NOTEBOOK_EDITOR_WIDGET_ACTION_WEIGHT } from '../../notebook/browser/controller/coreActions.js';
 import { INotebookEditorOptions } from '../../notebook/browser/notebookBrowser.js';
@@ -432,7 +432,7 @@ async function executeReplInput(
 			}
 
 			// Just accept any existing inline chat hunk
-			const ctrl = InlineChatController.get(editorControl.activeCodeEditor);
+			const ctrl = getInlineChatController(editorControl.activeCodeEditor);
 			if (ctrl) {
 				ctrl.acceptSession();
 			}

@@ -18,8 +18,7 @@ import { getExplicitFileOrImageAttachmentSummary } from '../../common/attachment
 import { IChatToolInvocation } from '../../common/chatService/chatService.js';
 import { IChatResponseViewModel, isRequestVM, isResponseVM } from '../../common/model/chatViewModel.js';
 import { isToolResultInputOutputDetails, isToolResultOutputDetails, toolContentToA11yString } from '../../common/tools/languageModelToolsService.js';
-import { CancelChatActionId } from '../actions/chatExecuteActions.js';
-import { AcceptToolConfirmationActionId } from '../actions/chatToolActions.js';
+import { AcceptToolConfirmationActionId, CancelChatActionId } from '../actions/chatActionIds.js';
 import { ChatTreeItem } from '../chat.js';
 import { getChatRequestText } from '../chatRequestText.js';
 

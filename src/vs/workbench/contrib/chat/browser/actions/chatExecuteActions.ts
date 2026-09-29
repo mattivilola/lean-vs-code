@@ -40,6 +40,7 @@ import { getEditingSessionContext } from '../chatEditing/chatEditingActions.js';
 import { ctxHasEditorModification, ctxHasRequestInProgress, ctxIsGlobalEditingSession } from '../chatEditing/chatEditingEditorContextKeys.js';
 import { ACTION_ID_NEW_CHAT, CHAT_CATEGORY, clearChatSessionPreservingType, handleCurrentEditingSession, handleModeSwitch } from './chatActions.js';
 import { CreateRemoteAgentJobAction } from './chatContinueInAction.js';
+import { CancelChatActionId } from './chatActionIds.js';
 
 export interface IVoiceChatExecuteActionContext {
 	readonly disableTimeout?: boolean;
@@ -916,7 +917,7 @@ class SendToNewChatAction extends Action2 {
 	}
 }
 
-export const CancelChatActionId = 'workbench.action.chat.cancel';
+export { CancelChatActionId } from './chatActionIds.js';
 export class CancelAction extends Action2 {
 	static readonly ID = CancelChatActionId;
 	constructor() {

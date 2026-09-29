@@ -17,7 +17,7 @@ import { InputFocusedContextKey, IsWindowsContext } from '../../../../../../plat
 import { ServicesAccessor } from '../../../../../../platform/instantiation/common/instantiation.js';
 import { KeybindingWeight } from '../../../../../../platform/keybinding/common/keybindingsRegistry.js';
 import { Registry } from '../../../../../../platform/registry/common/platform.js';
-import { InlineChatController } from '../../../../inlineChat/browser/inlineChatController.js';
+import { getInlineChatController } from '../../../../inlineChat/browser/inlineChatAccess.js';
 import { INotebookActionContext, INotebookCellActionContext, NotebookAction, NotebookCellAction, NOTEBOOK_EDITOR_WIDGET_ACTION_WEIGHT, findTargetCellEditor } from '../../controller/coreActions.js';
 import { CellEditState } from '../../notebookBrowser.js';
 import { CellKind, NOTEBOOK_EDITOR_CURSOR_BOUNDARY, NOTEBOOK_EDITOR_CURSOR_LINE_BOUNDARY } from '../../../common/notebookCommon.js';
@@ -134,8 +134,8 @@ registerAction2(class FocusNextCellAction extends NotebookCellAction {
 		const targetCell = (context.cell ?? context.selectedCells?.[0]);
 		const foundEditor: ICodeEditor | undefined = targetCell ? findTargetCellEditor(context, targetCell) : undefined;
 
-		if (foundEditor && foundEditor.hasTextFocus() && InlineChatController.get(foundEditor)?.getWidgetPosition()?.lineNumber === focusEditorLine) {
-			InlineChatController.get(foundEditor)?.focus();
+		if (foundEditor && foundEditor.hasTextFocus() && getInlineChatController(foundEditor)?.getWidgetPosition()?.lineNumber === focusEditorLine) {
+			getInlineChatController(foundEditor)?.focus();
 		} else {
 			const newCell = editor.cellAt(idx + 1);
 			const newFocusMode = newCell.cellKind === CellKind.Markup && newCell.getEditState() === CellEditState.Preview ? 'container' : 'editor';
@@ -217,8 +217,8 @@ registerAction2(class FocusPreviousCellAction extends NotebookCellAction {
 
 		const foundEditor: ICodeEditor | undefined = findTargetCellEditor(context, newCell);
 
-		if (foundEditor && InlineChatController.get(foundEditor)?.getWidgetPosition()?.lineNumber === focusEditorLine) {
-			InlineChatController.get(foundEditor)?.focus();
+		if (foundEditor && getInlineChatController(foundEditor)?.getWidgetPosition()?.lineNumber === focusEditorLine) {
+			getInlineChatController(foundEditor)?.focus();
 		}
 	}
 });

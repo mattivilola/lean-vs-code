@@ -54,7 +54,7 @@ import { ChatMarkdownAnchorService, IChatMarkdownAnchorService } from '../../cha
 import { ChatLayoutService } from '../../chat/browser/widget/chatLayoutService.js';
 import { ChatPetWidgetService, IChatPetWidgetService } from '../../chat/browser/widget/chatPetWidgetService.js';
 import { ChatWidgetService } from '../../chat/browser/widget/chatWidgetService.js';
-import { QuickChatService } from '../../chat/browser/widgetHosts/chatQuick.js';
+import { LazyQuickChatService } from './lazyQuickChatService.js';
 import { IChatVariablesService } from '../../chat/common/attachments/chatVariables.js';
 import { IChatDebugService } from '../../chat/common/chatDebugService.js';
 import { ChatDebugServiceImpl } from '../../chat/common/chatDebugServiceImpl.js';
@@ -182,7 +182,7 @@ registerSingleton(IPlanReviewFeedbackService, PlanReviewFeedbackService, Instant
 registerSingleton(IPluginInstallService, PluginInstallService, InstantiationType.Delayed);
 registerSingleton(IPluginMarketplaceService, PluginMarketplaceService, InstantiationType.Delayed);
 registerSingleton(IPromptsService, PromptsService, InstantiationType.Delayed);
-registerSingleton(IQuickChatService, QuickChatService, InstantiationType.Delayed);
+registerSingleton(IQuickChatService, LazyQuickChatService, InstantiationType.Delayed);
 registerSingleton(ISessionChatPillVisibilityService, SessionChatPillVisibility, InstantiationType.Delayed);
 registerSingleton(ISessionSummaryHoverService, SessionSummaryHoverService, InstantiationType.Delayed);
 registerSingleton(ISpeechService, SpeechService, InstantiationType.Delayed);

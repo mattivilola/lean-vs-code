@@ -8,7 +8,7 @@ import * as ts from 'typescript';
 
 interface ImportRecord { path: string; kind: string; original?: string; external?: boolean }
 interface InputRecord { bytes: number; imports: ImportRecord[] }
-interface OutputRecord { bytes: number; entryPoint?: string; inputs: Record<string, { bytesInOutput: number }> }
+interface OutputRecord { bytes: number; entryPoint?: string; inputs: Record<string, { bytesInOutput: number }>; imports: ImportRecord[] }
 interface Metafile { inputs: Record<string, InputRecord>; outputs: Record<string, OutputRecord> }
 interface AuditResult {
 	entry: string;
@@ -388,7 +388,33 @@ function audit(meta: Metafile, rawCuts: string[]): AuditResult {
 	if (!output) {
 		throw new Error('Desktop workbench JavaScript output missing from metafile');
 	}
-	const bytes = (file: string) => output[1].inputs[file]?.bytesInOutput ?? 0;
+	// ESM splitting can place eagerly imported code in sibling chunks. Count the
+	// entire static output closure; dynamic imports remain optional first-use code.
+	const initialOutputs = new Map<string, OutputRecord>();
+	const pending = [output[0]];
+	while (pending.length) {
+		const name = pending.pop()!;
+		const record = meta.outputs[name];
+		if (!record) {
+			throw new Error(`Missing static desktop output: ${name}`);
+		}
+		if (initialOutputs.has(name)) {
+			continue;
+		}
+		initialOutputs.set(name, record);
+		for (const item of record.imports ?? []) {
+			if (item.kind !== 'dynamic-import' && !item.external) {
+				pending.push(item.path);
+			}
+		}
+	}
+	const inputBytes = new Map<string, number>();
+	for (const record of initialOutputs.values()) {
+		for (const [file, input] of Object.entries(record.inputs)) {
+			inputBytes.set(file, (inputBytes.get(file) ?? 0) + input.bytesInOutput);
+		}
+	}
+	const bytes = (file: string) => inputBytes.get(file) ?? 0;
 	const cuts = new Set(rawCuts.map(cut => {
 		const parts = cut.split('=>');
 		if (parts.length !== 2) {
@@ -403,7 +429,7 @@ function audit(meta: Metafile, rawCuts: string[]): AuditResult {
 	}));
 	const paths = pathsFrom(meta, [ENTRY], cuts);
 	const { files: allow, services: allowlistServices } = actorAllowlist(meta);
-	const bundled = Object.keys(output[1].inputs);
+	const bundled = [...inputBytes.keys()];
 	const ai = bundled.filter(isAi);
 	const reachableAi = ai.filter(file => paths.has(file));
 	const offending = reachableAi.filter(file => !allow.has(file));
@@ -412,11 +438,11 @@ function audit(meta: Metafile, rawCuts: string[]): AuditResult {
 		return !chain.slice(0, -1).some(node => isAi(node) && !allow.has(node));
 	});
 	const importers = bundled.flatMap(from => isAi(from) ? [] : (meta.inputs[from]?.imports ?? [])
-		.filter(item => item.kind !== 'dynamic-import' && isAi(item.path) && output[1].inputs[item.path])
+		.filter(item => item.kind !== 'dynamic-import' && isAi(item.path) && inputBytes.has(item.path))
 		.map(item => ({ from, to: item.path, chain: paths.get(from) ?? [] })));
 	return {
 		entry: ENTRY,
-		bundleBytes: output[1].bytes,
+		bundleBytes: [...initialOutputs.values()].reduce((sum, item) => sum + item.bytes, 0),
 		aiBytes: ai.reduce((sum, file) => sum + bytes(file), 0),
 		allowlistedBytes: bundled.filter(file => allow.has(file)).reduce((sum, file) => sum + bytes(file), 0),
 		allowlistedAiBytes: ai.filter(file => allow.has(file)).reduce((sum, file) => sum + bytes(file), 0),
@@ -444,7 +470,7 @@ function main(): void {
 	if (options.writeAllowlist) {
 		fs.writeFileSync(options.writeAllowlist, JSON.stringify({ version: 1, inputs: reachableAi }, null, 2) + '\n');
 	}
-	console.log(`Desktop bundle: ${result.bundleBytes} bytes; AI inputs: ${result.aiBytes} bytes; allowlist closure: ${result.allowlistedBytes} bytes (${result.allowlistedAiBytes} AI bytes, ${result.allowlist.length} inputs); reachable AI after cuts: ${result.reachableAiBytes} bytes; non-allowlisted reachable AI: ${result.reachableNonAllowlistedAiBytes} bytes.`);
+	console.log(`Desktop initial static output: ${result.bundleBytes} bytes; AI inputs: ${result.aiBytes} bytes; allowlist closure: ${result.allowlistedBytes} bytes (${result.allowlistedAiBytes} AI bytes, ${result.allowlist.length} inputs); reachable AI after cuts: ${result.reachableAiBytes} bytes; non-allowlisted reachable AI: ${result.reachableNonAllowlistedAiBytes} bytes.`);
 	console.log(`AI roots: ${result.offenders.length}; non-AI to AI static edges: ${result.importers.length}.`);
 	if (options.check && options.allowlist) {
 		const saved = JSON.parse(fs.readFileSync(options.allowlist, 'utf8')) as { version: number; inputs: string[] };

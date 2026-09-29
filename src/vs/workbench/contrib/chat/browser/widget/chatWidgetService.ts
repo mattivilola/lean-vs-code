@@ -17,7 +17,7 @@ import { IViewsService } from '../../../../services/views/common/viewsService.js
 import { IChatService } from '../../common/chatService/chatService.js';
 import { ChatAgentLocation } from '../../common/constants.js';
 import { ChatViewId, ChatViewPaneTarget, IChatWidget, IChatWidgetService, IQuickChatService, isIChatViewViewContext } from '../chat.js';
-import { ChatEditor, IChatEditorOptions } from '../widgetHosts/editor/chatEditor.js';
+import type { IChatEditorOptions } from '../widgetHosts/editor/chatEditor.js';
 import { ChatEditorInput } from '../widgetHosts/editor/chatEditorInput.js';
 import { ChatViewPane } from '../widgetHosts/viewPane/chatViewPane.js';
 
@@ -149,6 +149,7 @@ export class ChatWidgetService extends Disposable implements IChatWidgetService 
 			}
 		}, target);
 		this.logService.trace(`[ChatWidgetService] openSession done total=${Date.now() - t0}ms uri=${sessionResource.toString()} path=editor`);
+		const { ChatEditor } = await import('../widgetHosts/editor/chatEditor.js');
 		return pane instanceof ChatEditor ? pane.widget : undefined;
 	}
 
@@ -180,6 +181,7 @@ export class ChatWidgetService extends Disposable implements IChatWidgetService 
 
 			const pane = await existingEditor.group.openEditor(existingEditor.editor, options);
 			await ensureFocusTransfer;
+			const { ChatEditor } = await import('../widgetHosts/editor/chatEditor.js');
 			return pane instanceof ChatEditor ? pane.widget : undefined;
 		}
 

@@ -493,6 +493,9 @@ async function bundle(outDir: string, doMinify: boolean, doNls: boolean, doMangl
 
 		const buildOptions: esbuild.BuildOptions = {
 			...getBundleOptions(doMinify, 'neutral'),
+			...(entryPoint === 'vs/workbench/workbench.desktop.main'
+				? { splitting: true, chunkNames: 'vs/workbench/chunks/[name]-[hash]' }
+				: {}),
 			metafile: !!options.metafileOutput && entryPoint === 'vs/workbench/workbench.desktop.main',
 			entryPoints: needsCssBundling
 				? [{ in: entryPath, out: entryPoint }]

@@ -43,6 +43,7 @@ import { IAgentSessionsService } from '../../chat/browser/agentSessions/agentSes
 import { AgentSessionProviders, AgentSessionTarget } from '../../chat/browser/agentSessions/agentSessions.js';
 import { IAgentSession } from '../../chat/browser/agentSessions/agentSessionsModel.js';
 import { AgentSessionsWelcomeEditorOptions, AgentSessionsWelcomeInput, AgentSessionsWelcomeWorkspaceKind } from './agentSessionsWelcomeInput.js';
+import { AgentSessionsWelcomeCommandId } from './agentSessionsWelcomeConstants.js';
 import { IChatService } from '../../chat/common/chatService/chatService.js';
 import { IChatModel } from '../../chat/common/model/chatModel.js';
 import { ChatViewId, IChatWidgetService, ISessionTypePickerDelegate, IWorkspacePickerDelegate, IWorkspacePickerItem } from '../../chat/browser/chat.js';
@@ -129,7 +130,7 @@ type AgentSessionsWelcomeActionEvent = {
 export class AgentSessionsWelcomePage extends EditorPane {
 
 	static readonly ID = 'agentSessionsWelcomePage';
-	static readonly COMMAND_ID = 'workbench.action.openAgentSessionsWelcome';
+	static readonly COMMAND_ID = AgentSessionsWelcomeCommandId;
 
 	private container!: HTMLElement;
 	private contentContainer!: HTMLElement;
