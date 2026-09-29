@@ -12,6 +12,10 @@ import type { QuickChatService } from '../../chat/browser/widgetHosts/chatQuick.
 import { IChatService } from '../../chat/common/chatService/chatService.js';
 import { ChatAgentLocation } from '../../chat/common/constants.js';
 
+type PendingOperation =
+	| { kind: 'toggle' | 'open'; options?: IQuickChatOpenOptions }
+	| { kind: 'focus' | 'openInChatView' };
+
 /** Keep the optional Quick Chat renderer out of the initial workbench module. */
 export class LazyQuickChatService extends Disposable implements IQuickChatService {
 	readonly _serviceBrand: undefined;
@@ -20,9 +24,8 @@ export class LazyQuickChatService extends Disposable implements IQuickChatServic
 	readonly onDidClose = this._onDidClose.event;
 	private delegate: QuickChatService | undefined;
 	private loading: Promise<void> | undefined;
-	private pendingOpen: IQuickChatOpenOptions | undefined;
-	private hasPendingOpen = false;
-	private pendingFocus = false;
+	private pendingOperations: PendingOperation[] = [];
+	private generation = 0;
 
 	constructor(
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
@@ -39,10 +42,11 @@ export class LazyQuickChatService extends Disposable implements IQuickChatServic
 	toggle(options?: IQuickChatOpenOptions): void {
 		if (this.delegate) {
 			this.delegate.toggle(options);
-		} else if (this.hasPendingOpen && !options?.query) {
+		} else if (this.pendingOperations.length && !options?.query) {
 			this.close();
 		} else {
-			this.open(options);
+			this.pendingOperations.push({ kind: 'toggle', options });
+			this.load();
 		}
 	}
 
@@ -51,26 +55,24 @@ export class LazyQuickChatService extends Disposable implements IQuickChatServic
 			this.delegate.open(options);
 			return;
 		}
-		this.hasPendingOpen = true;
-		this.pendingOpen = options;
+		this.pendingOperations.push({ kind: 'open', options });
 		this.load();
 	}
 
 	focus(): void {
 		if (this.delegate) {
 			this.delegate.focus();
-		} else if (this.hasPendingOpen) {
-			this.pendingFocus = true;
+		} else if (this.pendingOperations.length) {
+			this.pendingOperations.push({ kind: 'focus' });
 		}
 	}
 
 	close(): void {
+		this.generation++;
 		if (this.delegate) {
 			this.delegate.close();
-		} else if (this.hasPendingOpen) {
-			this.hasPendingOpen = false;
-			this.pendingOpen = undefined;
-			this.pendingFocus = false;
+		} else if (this.pendingOperations.length) {
+			this.pendingOperations = [];
 			this._onDidClose.fire();
 		}
 	}
@@ -78,8 +80,8 @@ export class LazyQuickChatService extends Disposable implements IQuickChatServic
 	openInChatView(): void {
 		if (this.delegate) {
 			this.delegate.openInChatView();
-		} else if (this.hasPendingOpen) {
-			this.loading?.then(() => this.delegate?.openInChatView());
+		} else if (this.pendingOperations.length) {
+			this.pendingOperations.push({ kind: 'openInChatView' });
 		}
 	}
 
@@ -88,24 +90,35 @@ export class LazyQuickChatService extends Disposable implements IQuickChatServic
 			return;
 		}
 		this.loading = import('../../chat/browser/widgetHosts/chatQuick.js').then(({ QuickChatService }) => {
-			if (this._store.isDisposed || !this.hasPendingOpen) {
+			if (this._store.isDisposed || !this.pendingOperations.length) {
 				return;
 			}
 			this.delegate = this._register(this.instantiationService.createInstance(QuickChatService));
 			this._register(this.delegate.onDidClose(() => this._onDidClose.fire()));
-			this.delegate.open(this.pendingOpen);
-			if (this.pendingFocus) {
-				this.delegate.focus();
+			const operations = this.pendingOperations;
+			this.pendingOperations = [];
+			const generation = this.generation;
+			for (const operation of operations) {
+				if (this._store.isDisposed || generation !== this.generation) {
+					break;
+				}
+				switch (operation.kind) {
+					case 'toggle': this.delegate.toggle(operation.options); break;
+					case 'open': this.delegate.open(operation.options); break;
+					case 'focus': this.delegate.focus(); break;
+					case 'openInChatView': this.delegate.openInChatView(); break;
+				}
 			}
-			this.hasPendingOpen = false;
-			this.pendingOpen = undefined;
-			this.pendingFocus = false;
 		}).catch(error => {
 			this.logService.error('[lean] Failed to load Quick Chat', error);
-			this.hasPendingOpen = false;
-			this.pendingOpen = undefined;
-			this.pendingFocus = false;
+			this.pendingOperations = [];
 			this._onDidClose.fire();
 		}).finally(() => { this.loading = undefined; });
+	}
+
+	override dispose(): void {
+		this.generation++;
+		this.pendingOperations = [];
+		super.dispose();
 	}
 }
