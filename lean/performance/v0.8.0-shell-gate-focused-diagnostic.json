@@ -1,0 +1,27 @@
+{
+  "kind": "focused-single-launch-diagnostic",
+  "date": "2026-09-29",
+  "app": "unsigned v0.8 local no-preload control, product commit 4f7c05ba0bb127b0c8a97def65915efdc57f2a3c",
+  "launchMode": "direct",
+  "profileCondition": "fresh isolated profile",
+  "windowBounds": [16, 546, 560, 360],
+  "reportDelayMs": 2000,
+  "marksEpochMs": {
+    "mainShellResolutionRequested": 1790675571500,
+    "mainMarksSnapshotLastEntry": 1790675571645,
+    "rendererExtensionHostStartRequested": 1790675572596,
+    "rendererExtensionHostAllocated": 1790675572650,
+    "rendererShellEnvironmentPromiseResolved": 1790675572757,
+    "extensionHostForkBootstrapStart": 1790675572843,
+    "controlExtensionActivated": 1790675573048
+  },
+  "derivedMs": {
+    "rendererHostStartToShellPromiseResolution": 161,
+    "rendererHostAllocationToShellPromiseResolution": 107,
+    "rendererShellPromiseResolutionToForkBootstrapStart": 86
+  },
+  "interpretation": "The local extension-host start awaited the shell-environment promise for 161 ms in this one launch, including 107 ms after host allocation. This is only a possible overlap opportunity, not a measured speed gain or proof that bootstrap can safely proceed before the final environment is available.",
+  "reportLimitation": "The Startup Performance report copies main-process marks from the window configuration at creation. Its main section ended at code/willOpenNewWindow, before shell resolution completed. Delaying perfview.show by 2000 ms therefore did not expose code/didResolveShellEnv. The renderer's didResolveExtensionHostShellEnv mark includes the IPC promise resolution and is not the exact main-process shell-completion timestamp.",
+  "publicClaim": false,
+  "codeOssComparison": false
+}
