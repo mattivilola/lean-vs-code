@@ -11,25 +11,38 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const appArg = process.argv[2];
 if (!appArg) {
-	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app> [scenario] [--window-bounds x,y,width,height] [--no-timing]');
+	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app> [scenario] [--window-bounds x,y,width,height] [--installed-extension publisher.name] [--no-timing]');
 	process.exit(2);
 }
 const options = process.argv.slice(3);
 const scenario = options[0] && !options[0].startsWith('--') ? options.shift() : 'all';
-const noTimingIndex = options.indexOf('--no-timing');
-const noTiming = noTimingIndex !== -1;
-if (noTiming) {
-	options.splice(noTimingIndex, 1);
+let noTiming = false;
+let boundsArgument;
+let installedExtension;
+while (options.length) {
+	const option = options.shift();
+	if (option === '--no-timing' && !noTiming) {
+		noTiming = true;
+	} else if (option === '--window-bounds' && boundsArgument === undefined) {
+		boundsArgument = options.shift();
+	} else if (option === '--installed-extension' && installedExtension === undefined) {
+		installedExtension = options.shift();
+	} else {
+		throw new Error(`Unknown or repeated functional smoke option: ${option}`);
+	}
 }
-const scenarios = new Set(['all', 'editableFileAndSave', 'workspaceSearch', 'workspaceTextSearch', 'integratedTerminal', 'gitReview', 'extensionWebview']);
+const scenarios = new Set(['all', 'editableFileAndSave', 'workspaceSearch', 'workspaceTextSearch', 'integratedTerminal', 'gitReview', 'extensionWebview', 'installedExtension']);
 if (!scenarios.has(scenario)) {
 	throw new Error(`Unknown functional smoke scenario: ${scenario}`);
 }
-if (options.length && (options.length !== 2 || options[0] !== '--window-bounds')) {
-	throw new Error('Expected --window-bounds x,y,width,height after the scenario.');
+if (scenario === 'installedExtension' && !installedExtension) {
+	throw new Error('The installedExtension scenario requires --installed-extension publisher.name.');
 }
-const boundsMatch = options.length ? /^(-?\d+),(-?\d+),(\d+),(\d+)$/.exec(options[1]) : null;
-if (options.length && !boundsMatch) {
+if (installedExtension !== undefined && !/^[\w-]+\.[\w-]+$/.test(installedExtension)) {
+	throw new Error('--installed-extension must be publisher.name.');
+}
+const boundsMatch = boundsArgument !== undefined ? /^(-?\d+),(-?\d+),(\d+),(\d+)$/.exec(boundsArgument) : null;
+if (boundsArgument !== undefined && !boundsMatch) {
 	throw new Error('--window-bounds must be x,y,width,height.');
 }
 const windowBounds = boundsMatch ? Object.fromEntries(['x', 'y', 'width', 'height'].map((key, index) => [key, Number(boundsMatch[index + 1])])) : undefined;
@@ -98,6 +111,20 @@ fs.writeFileSync(path.join(extension, 'package.json'), JSON.stringify({
 }, null, 2) + '\n');
 fs.copyFileSync(path.join(root, 'scripts/lean-perf/functional-smoke-extension.cjs'), path.join(extension, 'extension.cjs'));
 
+if (installedExtension) {
+	const cli = path.join(app, 'Contents/Resources/app/bin/code');
+	fs.accessSync(cli, fs.constants.X_OK);
+	const install = spawnSync(cli, [
+		`--user-data-dir=${path.join(profile, 'user-data')}`,
+		`--extensions-dir=${path.join(profile, 'extensions')}`,
+		'--install-extension', installedExtension
+	], { encoding: 'utf8', timeout: 120000, maxBuffer: 4 * 1024 * 1024, env: { ...process.env, VSCODE_CLI: undefined } });
+	fs.writeFileSync(path.join(runDir, 'extension-install.log'), `${install.stdout ?? ''}${install.stderr ?? ''}`);
+	if (install.error || install.status !== 0) {
+		throw new Error(`Installed extension setup failed: ${install.error?.message ?? (install.stderr || install.stdout).trim()}`);
+	}
+}
+
 const args = [
 	'--new-window', `--user-data-dir=${path.join(profile, 'user-data')}`,
 	`--shared-data-dir=${path.join(profile, 'shared-data')}`,
@@ -111,7 +138,7 @@ const logFd = fs.openSync(appLog, 'w');
 const appLaunchedAtMs = noTiming ? undefined : Date.now();
 const child = spawn(executable, args, {
 	cwd: workspace,
-	env: { ...process.env, LEAN_SMOKE_WORKSPACE: workspace, LEAN_SMOKE_RESULT: resultPath, LEAN_SMOKE_SCENARIO: scenario, LEAN_SMOKE_NO_TIMING: noTiming ? '1' : '0' },
+	env: { ...process.env, LEAN_SMOKE_WORKSPACE: workspace, LEAN_SMOKE_RESULT: resultPath, LEAN_SMOKE_SCENARIO: scenario, LEAN_SMOKE_NO_TIMING: noTiming ? '1' : '0', LEAN_SMOKE_INSTALLED_EXTENSION: installedExtension ?? '' },
 	stdio: ['ignore', logFd, logFd]
 });
 fs.closeSync(logFd);

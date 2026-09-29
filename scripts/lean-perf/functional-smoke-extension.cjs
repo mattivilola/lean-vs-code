@@ -11,6 +11,7 @@ const workspaceRoot = process.env.LEAN_SMOKE_WORKSPACE;
 const resultPath = process.env.LEAN_SMOKE_RESULT;
 const scenario = process.env.LEAN_SMOKE_SCENARIO ?? 'all';
 const noTiming = process.env.LEAN_SMOKE_NO_TIMING === '1';
+const installedExtension = process.env.LEAN_SMOKE_INSTALLED_EXTENSION;
 const pollIntervalMs = scenario === 'all' ? 200 : 20;
 
 function assert(condition, message) {
@@ -126,6 +127,15 @@ async function run() {
 			panel.dispose();
 		}
 	});
+
+	if (installedExtension) {
+		await check('installedExtension', async () => {
+			const extension = await waitFor(() => vscode.extensions.getExtension(installedExtension), 'installed extension discovery');
+			await extension.activate();
+			assert(extension.isActive, `${installedExtension} did not activate`);
+			return `${extension.id} ${extension.packageJSON.version} installed and activated`;
+		});
+	}
 
 	const result = { createdAt: new Date().toISOString(), app: vscode.env.appName, scenario, checks, passed: Object.values(checks).every(check => check.ok) };
 	fs.mkdirSync(path.dirname(resultPath), { recursive: true });

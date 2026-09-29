@@ -8,7 +8,9 @@ Before a v0.8 release, build the production-minified candidate and verify editin
 
 A production-minified source build completed at `f4d57144d96369f051db288ab2e279794946cb86`; the [draft v0.8 notes](RELEASE_NOTES_0.8.0.md) record its static checks and open release gates. It is not yet a version-bumped, signed, or installed release.
 
-An isolated [functional-only smoke](../performance/v0.8.0-source-functional-smoke-no-timing.json) passed on an ad-hoc-signed copy of this source build in a 560 × 360 bottom-left window. It collected no timing data. Installed extension activation, changed optional paths, and final signed-release checks remain open.
+An isolated [functional-only smoke](../performance/v0.8.0-source-functional-smoke-no-timing.json) passed on an ad-hoc-signed copy of this source build in a 560 × 360 bottom-left window. It collected no timing data. Changed optional paths and final signed-release checks remain open.
+
+An isolated [EditorConfig activation check](../performance/v0.8.0-source-editorconfig-functional-no-timing.json) also passed without timing: Open VSX signature verification succeeded, the installed extension activated, and it processed the sample file. Changed optional paths and exact final signed-release checks remain open.
 
 ## Earlier v0.6 and v0.7 leads
 

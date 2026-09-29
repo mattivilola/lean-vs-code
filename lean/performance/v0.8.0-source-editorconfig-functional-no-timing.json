@@ -1,0 +1,12 @@
+{
+  "status": "functional-only source-candidate check, not a release benchmark",
+  "sourceCommit": "f4d57144d96369f051db288ab2e279794946cb86",
+  "build": "production-minified Apple Silicon app, copied and ad-hoc signed solely for this local check; not version-bumped, Developer ID signed, notarized, or installed",
+  "profile": "isolated temporary user-data and extension directories",
+  "windowBounds": { "x": 16, "y": 546, "width": 560, "height": 360 },
+  "timing": "--no-timing; no startup or per-check durations collected",
+  "extension": "EditorConfig.EditorConfig 0.18.2 installed from Open VSX with extension signature verification result Success, activated onStartupFinished, and processed src/main.ts",
+  "passed": true,
+  "notes": "The app log emitted a macOS trust-store certificate parsing error and a Node url.parse deprecation warning; neither stopped this check. Remote tunneling reported missing product configuration and is outside this check. The extension was observed through the app CLI, extension host, and EditorConfig output logs.",
+  "notCovered": "signed release app, universal extension compatibility, updater, optional chat and paste paths, and paired Code-OSS timing"
+}
