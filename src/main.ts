@@ -6,7 +6,6 @@
 import * as path from 'node:path';
 import * as fs from 'original-fs';
 import * as os from 'node:os';
-import { constants, enableCompileCache } from 'node:module';
 import { performance } from 'node:perf_hooks';
 import { configurePortable } from './bootstrap-node.js';
 import { bootstrapESM } from './bootstrap-esm.js';
@@ -236,14 +235,6 @@ async function onReady() {
 async function startup(codeCachePath: string | undefined, nlsConfig: INLSConfiguration): Promise<void> {
 	process.env['VSCODE_NLS_CONFIG'] = JSON.stringify(nlsConfig);
 	process.env['VSCODE_CODE_CACHE_PATH'] = codeCachePath || '';
-	if (codeCachePath) {
-		perf.mark('code/main/willEnableCompileCache');
-		const { status, message } = enableCompileCache(path.join(codeCachePath, 'node'));
-		if (status === constants.compileCacheStatus.FAILED) {
-			console.error(`Failed to enable main-process Node compile cache: ${message}`);
-		}
-		perf.mark('code/main/didEnableCompileCache');
-	}
 
 	// Bootstrap ESM
 	perf.mark('code/willBootstrapESM');
