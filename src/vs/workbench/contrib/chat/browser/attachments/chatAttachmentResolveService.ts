@@ -27,7 +27,7 @@ import { getNotebookEditorFromEditorPane } from '../../../notebook/browser/noteb
 import { SCMHistoryItemTransferData } from '../../../scm/browser/scmHistoryChatContext.js';
 import { CHAT_ATTACHABLE_IMAGE_MIME_TYPES, getAttachableImageExtension } from '../../common/model/chatModel.js';
 import { IBrowserViewVariableEntry, IChatRequestVariableEntry, OmittedState, IDiagnosticVariableEntry, IDiagnosticVariableEntryFilterData, ISymbolVariableEntry, ISCMHistoryItemVariableEntry } from '../../common/attachments/chatVariableEntries.js';
-import { imageToHash } from '../widget/input/editor/chatPasteProviders.js';
+import { imageToHash } from '../../common/attachments/chatImageHash.js';
 import { resizeImage } from '../chatImageUtils.js';
 import { BrowserViewUri } from '../../../../../platform/browserView/common/browserViewUri.js';
 import { BrowserEditorInput } from '../../../browserView/common/browserEditorInput.js';

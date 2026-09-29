@@ -1,0 +1,28 @@
+{
+  "status": "v0.8 source candidate, not a release benchmark",
+  "baselineCommit": "e15be930d220",
+  "change": "Move imageToHash unchanged from the paste-provider module into a tiny common helper. The registered attachment-resolve service imports the helper directly; the paste-provider module retains a compatibility re-export.",
+  "method": "Run the same desktop esbuild target and aiBundleAudit before and after the source edit. Sum the workbench entry and every transitively static JavaScript output. Check the emitted metafile for the paste-provider and HTML-to-Markdown inputs. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31552220,
+    "after": 31520121,
+    "difference": 32099
+  },
+  "reachableAiSourceBytesUnminified": {
+    "before": 3057438,
+    "after": 3029465,
+    "difference": 27973
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "changedFileLint": "passed",
+    "functionBodyMatch": "imageToHash implementation matches baseline commit exactly",
+    "hashVectors": "focused Node test passed for empty and hello SHA-256 vectors, an offset Uint8Array view, and input immutability",
+    "pasteProviderTests": "5 focused headless Chromium tests passed",
+    "aiGuard": "unreachable chatPasteProviders input removed from the initial-graph allowlist and new helper reviewed and allowed",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present",
+    "imageFlowUi": "not exercised yet; include pasted-image and extension attachment use in release functional checks"
+  },
+  "claimLimit": "This is an initial static JavaScript size reduction and a plausible cold-parse opportunity, not a measured startup, installed disk, or runtime memory gain."
+}

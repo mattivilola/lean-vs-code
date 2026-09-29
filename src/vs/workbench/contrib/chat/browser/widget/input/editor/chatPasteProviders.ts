@@ -35,6 +35,9 @@ import { IDynamicVariable } from '../../../../common/attachments/chatVariables.j
 import { IChatPasteTarget, IChatPasteTargetService } from '../../../chat.js';
 import { chatInputSchemes, isChatInputModel, ChatConfiguration } from '../../../../common/constants.js';
 import { cleanupOldImages, createFileForMedia, resizeImage } from '../../../chatImageUtils.js';
+import { imageToHash } from '../../../../common/attachments/chatImageHash.js';
+
+export { imageToHash } from '../../../../common/attachments/chatImageHash.js';
 
 const COPY_MIME_TYPES = 'application/vnd.code.additional-editor-data';
 export const pastedTextArtifactDefaultMinLength = 10000;
@@ -164,12 +167,6 @@ async function getImageAttachContext(data: Uint8Array, mimeType: string, token: 
 		isPasted: true,
 		references: [{ reference: resource, kind: 'reference' }]
 	};
-}
-
-export async function imageToHash(data: Uint8Array): Promise<string> {
-	const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-	const hashArray = Array.from(new Uint8Array(hashBuffer));
-	return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 export function isImage(array: Uint8Array): boolean {
