@@ -1,16 +1,16 @@
 {
   "status": "unsigned candidate, not a release benchmark",
-  "candidateCommit": "cfc1608a5de5",
+  "candidateCommit": "6e6d17dbbac6",
   "comparison": "installed signed Lean VS Code v0.7.0; internal historical comparison, not Code-OSS",
   "desktopStaticGraphBytesUnminified": {
     "v0_7_0": 34929026,
-    "v0_8_candidate": 31755406,
-    "difference": 3173620
+    "v0_8_candidate": 31755997,
+    "difference": 3173029
   },
   "packagedDesktopStaticJavaScriptBytesMinified": {
     "v0_7_0": 16968267,
-    "v0_8_candidate": 15396971,
-    "difference": 1571296
+    "v0_8_candidate": 15397330,
+    "difference": 1570937
   },
   "packagedOptionalJavaScriptBytesMinified": 1529484,
   "method": "Sum the desktop entry and every transitively static JavaScript output from the esbuild metafile. Count dynamic-import outputs separately. The packaged candidate uses production minification, NLS processing, and private-field conversion; the historical v0.7 installed app has one workbench JavaScript entry. These are JavaScript transfer/parse candidates, not measured startup latency, app-disk savings, or runtime-memory savings.",
@@ -20,8 +20,8 @@
     "changedTypeScriptLint": "passed",
     "productionMinifiedBuild": "passed",
     "compactFunctionalSmoke": "passed; edit/save, 401-file file search, 400-file text search, integrated terminal, Git diff, extension webview",
-    "focusedStartupTrace": "captured one candidate run; workbench import took 635 ms, versus 564 ms in an earlier non-paired control trace. Conditions and host load were not matched, so no causal latency conclusion follows.",
-    "threePairHistoricalDiagnostic": "incomplete and not a release benchmark: the installed v0.7 app timed out once after a successful warm-up. Of two complete established-profile pairs, the candidate took 1897 versus 1581 ms in one pair and 1450 versus 1460 ms in the other. This does not demonstrate a speed gain.",
+    "focusedStartupTrace": "at earlier cfc1608 candidate commit, workbench import took 635 ms, versus 564 ms in an earlier non-paired control trace. Conditions and host load were not matched, so no causal latency conclusion follows.",
+    "threePairHistoricalDiagnostic": "at earlier cfc1608 candidate commit, incomplete and not a release benchmark: the installed v0.7 app timed out once after a successful warm-up. Of two complete established-profile pairs, the candidate took 1897 versus 1581 ms in one pair and 1450 versus 1460 ms in the other. This does not demonstrate a speed gain.",
     "quickChatFirstUse": "not yet exercised",
     "pairedGuiBenchmark": "not run; reserved for a major release or explicit owner request"
   }

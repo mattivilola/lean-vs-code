@@ -1,0 +1,28 @@
+{
+  "status": "single established-profile diagnostic; not a startup benchmark",
+  "productCommit": "6e6d17dbbac65ba98896b885972e4e8d6cdf9cfc",
+  "machine": "Apple M3 Max",
+  "launchMode": "direct",
+  "windowBoundsMacPoints": [16, 546, 560, 360],
+  "controlExtensionInstall": "VSIX in an isolated profile",
+  "millisecondsFromProcessSpawn": {
+    "mainShellResolutionStarted": 270,
+    "workbenchImportStarted": 595,
+    "workbenchImportFinished": 698,
+    "rendererRequestedExtensionHost": 849,
+    "extensionHostWrapperAllocated": 892,
+    "mainShellResolutionFinished": 1011,
+    "rendererReceivedShellEnvironment": 1014,
+    "extensionHostForkStarted": 1076,
+    "controlExtensionActivated": 1175
+  },
+  "derivedMilliseconds": {
+    "mainShellResolutionDuration": 741,
+    "wrapperToMainShellCompletionWait": 119,
+    "mainShellToRendererPromiseResolution": 3,
+    "mainShellCompletionToHostFork": 65,
+    "hostForkToControlExtensionActivation": 99
+  },
+  "method": "An environment-gated main-process log records wall-clock shell start and completion; renderer and extension-host marks use absolute epoch milliseconds. The trace tool correlates them after an isolated warm-up and normal quit. The control extension's activation is not the extension-editable-file benchmark endpoint. One launch cannot estimate p95 or recoverable time.",
+  "limits": "The final shell environment is required at utilityProcess.fork. The 119 ms wrapper wait is an observed gate, not a safe speed saving. This trace does not compare against original Code-OSS, and no public startup gain is claimed."
+}
