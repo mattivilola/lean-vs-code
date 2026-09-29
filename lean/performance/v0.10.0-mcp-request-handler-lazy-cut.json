@@ -1,0 +1,23 @@
+{
+  "status": "v0.10 source candidate, not a release benchmark",
+  "baselineCommit": "dcad495262ff",
+  "change": "Load MCP server request handling after an MCP transport reaches Running. Recheck connection state and cancellation after loading so a server stopped during the load cannot create a handler.",
+  "method": "Build the same desktop esbuild target before and after the source edit, summing the workbench entry and every transitively static JavaScript output. Confirm the handler import changed from static to dynamic in the metafile. Later stop-race guards added 137 emitted bytes to the final combined build. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31445853,
+    "afterInitialCut": 31422758,
+    "initialDifference": 23095,
+    "finalGuardAdjustmentBytes": 137,
+    "netDifferenceIncludingGuard": 22958
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "clientCompile": "passed",
+    "changedFileLint": "passed",
+    "mcpConnectionNodeTests": "17 passed on Node 24.21.0 after adapting initialization to await the on-demand handler and guarding the stop race",
+    "aiGuard": "passed",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present"
+  },
+  "claimLimit": "This is an initial static JavaScript reduction, not a measured startup or memory gain. The first MCP server connection now loads its handler asynchronously; compact first-use MCP behavior should be checked before release."
+}

@@ -26,8 +26,7 @@ export const TUNNEL_AGENT_HOST_PORT = 31546;
 /** Label used to identify VS Code server launcher tunnels. */
 export const TUNNEL_LAUNCHER_LABEL = 'vscode-server-launcher';
 
-/** Address prefix for tunnel-backed connections (e.g. `tunnel:myTunnelId`). */
-export const TUNNEL_ADDRESS_PREFIX = 'tunnel:';
+export { TUNNEL_ADDRESS_PREFIX } from './agentHostAddressConstants.js';
 
 /** Path of the protocol-v6 registry-based endpoint-selection WebSocket route on the forwarded agent-host tunnel port. */
 export const TUNNEL_GATEWAY_SELECT_PATH = '/agent-host/select';

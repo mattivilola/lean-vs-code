@@ -155,8 +155,8 @@ suite('Workbench - MCP - ServerConnection', () => {
 		const state = await startPromise;
 		assert.strictEqual(state.state, McpConnectionState.Kind.Running);
 
-		transport.simulateInitialized();
-		assert.ok(await waitForHandler(connection));
+		// The handler module loads on first use; the transport answers its initialize request.
+		assert.ok(await raceTimeout(waitForHandler(connection), 1000));
 	});
 
 	test('should handle errors during start', async () => {
@@ -305,8 +305,7 @@ suite('Workbench - MCP - ServerConnection', () => {
 		assert.strictEqual(state1.state, McpConnectionState.Kind.Running);
 		assert.strictEqual(state2.state, McpConnectionState.Kind.Running);
 
-		transport.simulateInitialized();
-		assert.ok(await waitForHandler(connection));
+		assert.ok(await raceTimeout(waitForHandler(connection), 1000));
 
 		connection.dispose();
 	});

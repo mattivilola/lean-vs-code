@@ -12,7 +12,7 @@ import { localize } from '../../../../nls.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { ILogger, log, LogLevel } from '../../../../platform/log/common/log.js';
 import { IMcpHostDelegate, IMcpMessageTransport } from './mcpRegistryTypes.js';
-import { McpServerRequestHandler } from './mcpServerRequestHandler.js';
+import type { McpServerRequestHandler } from './mcpServerRequestHandler.js';
 import { McpTaskManager } from './mcpTaskManager.js';
 import { IMcpClientMethods, IMcpPotentialSandboxBlock, IMcpServerConnection, McpCollectionDefinition, McpConnectionState, McpServerDefinition, McpServerLaunch } from './mcpTypes.js';
 
@@ -93,15 +93,20 @@ export class McpServerConnection extends Disposable implements IMcpServerConnect
 
 			if (state.state === McpConnectionState.Kind.Running && !didStart) {
 				didStart = true;
-				McpServerRequestHandler.create(this._instantiationService, {
-					...methods,
-					launch,
-					logger: this._logger,
-					requestLogLevel: this.definition.devMode ? LogLevel.Info : LogLevel.Debug,
-					taskManager: this._taskManager,
-				}, cts.token).then(
+				import('./mcpServerRequestHandler.js').then(({ McpServerRequestHandler }) => {
+					if (cts.token.isCancellationRequested || store.isDisposed || !McpConnectionState.isRunning(this._state.read(undefined))) {
+						throw new CancellationError();
+					}
+					return McpServerRequestHandler.create(this._instantiationService, {
+						...methods,
+						launch,
+						logger: this._logger,
+						requestLogLevel: this.definition.devMode ? LogLevel.Info : LogLevel.Debug,
+						taskManager: this._taskManager,
+					}, cts.token);
+				}).then(
 					handler => {
-						if (!store.isDisposed) {
+						if (!store.isDisposed && McpConnectionState.isRunning(this._state.read(undefined))) {
 							this._requestHandler.set(handler, undefined);
 						} else {
 							handler.dispose();

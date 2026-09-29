@@ -1,0 +1,18 @@
+{
+  "status": "v0.10 source candidate, not a release benchmark",
+  "change": "Move the shared tunnel address prefix into a small constants module while preserving the original export for compatibility. The remote agent-host service no longer imports the larger optional tunnel module solely for one string.",
+  "method": "Compare before and after desktop esbuild metafiles, summing only transitively static JavaScript outputs from the workbench entry. The source-closure removal is much larger than the emitted-byte change because esbuild had already eliminated most unused tunnel code. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31422758,
+    "after": 31422614,
+    "difference": 144
+  },
+  "checks": {
+    "clientCompile": "passed",
+    "changedFileLint": "passed",
+    "aiGuard": "passed after updating the reviewed initial-graph allowlist",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present"
+  },
+  "claimLimit": "Only 144 emitted unminified bytes were saved; no meaningful startup, disk, or memory gain is inferred from this cut."
+}

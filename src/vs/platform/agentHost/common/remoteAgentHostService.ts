@@ -16,7 +16,7 @@ import type { UnsupportedProtocolVersionErrorData } from './state/protocol/error
 import { AHP_UNSUPPORTED_PROTOCOL_VERSION, ProtocolError } from './state/sessionProtocol.js';
 import { AgentHostTransportFailureReason } from './state/sessionTransport.js';
 import { readUnsupportedProtocolVersionErrorMeta, type IVscodeUpgradeResult } from './state/protocolUpgrade.js';
-import { TUNNEL_ADDRESS_PREFIX } from './tunnelAgentHost.js';
+import { TUNNEL_ADDRESS_PREFIX } from './agentHostAddressConstants.js';
 import { DEFAULT_RECONNECT_POLICY, type IRemoteAgentHostReconnectPolicy } from './reconnectPolicy.js';
 import { normalizeRemoteAgentHostAddress } from './agentHostUri.js';
 import { getGlobalConfigurationValue } from './agentHostConfigurationSync.js';

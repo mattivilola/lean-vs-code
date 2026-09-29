@@ -1,0 +1,19 @@
+{
+  "status": "v0.10 source candidate, not a release benchmark",
+  "change": "Move the Copilot CLI assignment-context key into a small constant module while preserving the old export. The agent-host service no longer loads the broader optional CLI configuration module solely for this key.",
+  "method": "Compare before and after desktop esbuild metafiles, summing only transitively static JavaScript outputs from the workbench entry. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31422614,
+    "after": 31412125,
+    "difference": 10489
+  },
+  "checks": {
+    "clientCompile": "passed",
+    "changedFileLint": "passed",
+    "copilotCliConfigNodeTests": "6 passed on Node 24.21.0",
+    "aiGuard": "passed after updating the reviewed initial-graph allowlist",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present"
+  },
+  "claimLimit": "This is an initial static JavaScript size reduction, not a measured startup, installed disk, or runtime memory gain."
+}

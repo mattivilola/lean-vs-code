@@ -44,7 +44,7 @@ export const enum CopilotCliConfigKey {
 	ModelCapabilityOverrides = 'modelCapabilityOverrides',
 }
 
-export const CopilotCliVSCodeAssignmentContextKey = 'copilotCliVSCodeAssignmentContext';
+export { CopilotCliVSCodeAssignmentContextKey } from './copilotCliContext.js';
 
 // Client setting IDs forwarded into the matching provider-owned root-config keys.
 
