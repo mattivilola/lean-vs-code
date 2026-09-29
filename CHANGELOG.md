@@ -6,6 +6,8 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+The [v0.8.0 source-candidate notes](lean/docs/RELEASE_NOTES_0.8.0.md) track four retained startup-graph cuts and their focused checks. This is not a signed release or a new speed claim; final functional, packaging, update, and documentation gates remain open.
+
 ## 0.7.0
 
 See the [v0.7.0 release notes](lean/docs/RELEASE_NOTES_0.7.0.md) for validation and benchmark limitations.

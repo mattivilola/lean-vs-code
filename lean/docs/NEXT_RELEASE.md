@@ -6,6 +6,8 @@ Keep small, plausible cuts only when emitted graph output improves and focused c
 
 Before a v0.8 release, build the production-minified candidate and verify editing/save, file and text search, terminal, local Git diff, installed extension activation and webview. Exercise first-use Quick Chat, chat-pet creation and host switching, terminal attach-to-chat, pasted images, and extension image attachments because those paths changed. Then complete signing, notarization, archive identity, installed-app, and applicable updater checks. Update the changelog, README, website, and release notes with version-labeled facts; keep older speed and memory figures attributed to the releases that measured them. The sub-one-second p95 target remains unproven.
 
+A production-minified source build completed at `f4d57144d96369f051db288ab2e279794946cb86`; the [draft v0.8 notes](RELEASE_NOTES_0.8.0.md) record its static checks and open release gates. It is not yet a version-bumped, signed, or installed release.
+
 ## Earlier v0.6 and v0.7 leads
 
 At v0.6, the project kept its Code-OSS 1.139.1 base. On 28 September 2026, upstream `release/1.139` still pointed to our base commit (`04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1`). Upstream `main` was a much larger version migration, not a safe patch. A future upstream-base change needs a planned compatibility release with extension, update, and performance checks.
