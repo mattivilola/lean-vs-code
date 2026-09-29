@@ -10,6 +10,10 @@ The first v0.9 candidate [extracts Agent Merge request labels from the DOM widge
 
 The second [defers the optional session hover widget](../performance/v0.9.0-session-hover-lazy-cut.json) until a provider actually supplies data. It removes another 443 emitted bytes from the initial static graph; the 15,521-byte source-closure reduction does not translate into an equal emitted-byte reduction. The first hover, missing-data fallback, and cancellation passed focused headless checks. Its extra first-hover load must be included in release functional validation.
 
+The third [defers terminal command approval analysis modules](../performance/v0.9.0-terminal-approval-lazy-cut.json) until a nonempty command needs suggestions. It removes another 27,652 emitted bytes from the initial static graph. Empty input and parser-failure paths remain fail-closed in focused tests; load failures now also return no suggestion. The first real approval analysis must be checked during release validation.
+
+Together these three cuts reduce the v0.8.0 initial static graph from 31,520,121 to 31,461,650 unminified JavaScript bytes (58,471 bytes, about 0.19%). This is a code-loading metric, not a startup-time or memory claim. Do not project the byte delta into latency; run the combined GUI timing trial only when the owner requests it.
+
 A signed, notarized v0.8.0 package was built from `cd1c632c1de880b9251cbbe0b737946d88359fb1`. The [v0.8 notes](RELEASE_NOTES_0.8.0.md) record its static, functional, extension, and packaging checks without a new GUI speed claim.
 
 An isolated [source functional smoke](../performance/v0.8.0-source-functional-smoke-no-timing.json) and [signed-release functional check](../performance/v0.8.0-release-functional-no-timing.json) passed in a 560 × 360 bottom-left window without collecting GUI timing data. The removed built-in AI UI leaves the retained optional chat paths unavailable as user-facing actions.

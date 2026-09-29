@@ -1,0 +1,26 @@
+{
+  "status": "v0.9 source candidate, not a release benchmark",
+  "baselineCommit": "afe90e07bcda",
+  "change": "Load the terminal command parser and persistent-rule evaluator only when a nonempty command needs auto-approval suggestions. A load or construction failure returns no suggestions and keeps the confirmation prompt.",
+  "method": "Run the same desktop esbuild target and aiBundleAudit before and after the source edit. Compare the workbench entry plus every transitively static JavaScript output; inspect the emitted metafile to verify both imports became dynamic. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31489302,
+    "after": 31461650,
+    "difference": 27652
+  },
+  "reachableAiSourceBytesUnminified": {
+    "before": 2999335,
+    "after": 2970547,
+    "difference": 28788
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "clientCompile": "passed",
+    "changedFileLint": "passed",
+    "headlessChromiumTerminalChatService": "8 passed, including no-analysis on empty input and no suggestion after parser failure",
+    "aiGuard": "passed",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present"
+  },
+  "claimLimit": "This is an initial static JavaScript size reduction, not a measured startup, installed disk, or runtime memory gain. First nonempty approval analysis now loads its helpers asynchronously; existing confirmation remains required on failure."
+}

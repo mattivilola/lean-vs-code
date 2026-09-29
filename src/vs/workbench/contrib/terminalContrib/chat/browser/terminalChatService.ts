@@ -16,8 +16,8 @@ import { IStorageService, StorageScope, StorageTarget } from '../../../../../pla
 import { IChatService } from '../../../chat/common/chatService/chatService.js';
 import type { ToolConfirmationAction } from '../../../chat/common/tools/languageModelToolsService.js';
 import { generateAutoApproveActions } from '../../chatAgentTools/browser/runInTerminalHelpers.js';
-import { TreeSitterCommandParser, TreeSitterCommandParserLanguage } from '../../chatAgentTools/browser/treeSitterCommandParser.js';
-import { CommandLineAutoApprover } from '../../chatAgentTools/browser/tools/commandLineAnalyzer/autoApprove/commandLineAutoApprover.js';
+import type { TreeSitterCommandParser, TreeSitterCommandParserLanguage } from '../../chatAgentTools/browser/treeSitterCommandParser.js';
+import type { CommandLineAutoApprover } from '../../chatAgentTools/browser/tools/commandLineAnalyzer/autoApprove/commandLineAutoApprover.js';
 import { TerminalChatContextKeys } from './terminalChat.js';
 import { LocalChatSessionUri } from '../../../chat/common/model/chatUri.js';
 import { isNumber, isString } from '../../../../../base/common/types.js';
@@ -436,8 +436,14 @@ export class TerminalChatService extends Disposable implements ITerminalChatServ
 		if (trimmedCommandLine.length === 0) {
 			return undefined;
 		}
-		this._autoApproveCommandParser ??= this._register(this._instantiationService.createInstance(TreeSitterCommandParser));
-		const treeSitterLanguage = language === 'powershell' ? TreeSitterCommandParserLanguage.PowerShell : TreeSitterCommandParserLanguage.Bash;
+		try {
+			const { TreeSitterCommandParser } = await import('../../chatAgentTools/browser/treeSitterCommandParser.js');
+			this._autoApproveCommandParser ??= this._register(this._instantiationService.createInstance(TreeSitterCommandParser));
+		} catch (e) {
+			this._logService.warn('Failed to load command parser when generating auto approve actions', e);
+			return undefined;
+		}
+		const treeSitterLanguage = (language === 'powershell' ? 'powershell' : 'bash') as TreeSitterCommandParserLanguage;
 		let subCommands: string[];
 		try {
 			const parseResult = await this._autoApproveCommandParser.extractAutoApprovalSubCommands(treeSitterLanguage, trimmedCommandLine);
@@ -453,7 +459,14 @@ export class TerminalChatService extends Disposable implements ITerminalChatServ
 			return undefined;
 		}
 		const shell = language === 'powershell' ? 'pwsh' : 'bash';
-		const evaluator = this._autoApproveEvaluator ??= this._register(this._instantiationService.createInstance(CommandLineAutoApprover));
+		let evaluator: CommandLineAutoApprover;
+		try {
+			const { CommandLineAutoApprover } = await import('../../chatAgentTools/browser/tools/commandLineAnalyzer/autoApprove/commandLineAutoApprover.js');
+			evaluator = this._autoApproveEvaluator ??= this._register(this._instantiationService.createInstance(CommandLineAutoApprover));
+		} catch (e) {
+			this._logService.warn('Failed to load command approval rules when generating auto approve actions', e);
+			return undefined;
+		}
 		// Evaluate against persisted configuration rules only — deliberately no
 		// chat session resource, so workbench session rules (which the agent
 		// host does not consume) neither suppress suggestions nor get offered
