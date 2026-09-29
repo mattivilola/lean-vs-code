@@ -278,7 +278,9 @@ try {
 		throw new Error('Timed out waiting for trace extension activation.');
 	}
 	marks = await debuggerClient.evaluate('globalThis.MonacoPerformanceMarks?.getMarks() ?? []');
-	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, controlExtensionInstall: 'vsix', chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), marks }, null, 2) + '\n');
+	const resourceTimings = await debuggerClient.evaluate(`performance.getEntriesByType('resource').map(entry => ({ name: entry.name, initiatorType: entry.initiatorType, startTime: entry.startTime, duration: entry.duration, responseEnd: entry.responseEnd, transferSize: entry.transferSize, encodedBodySize: entry.encodedBodySize }))`);
+	const navigationTimings = await debuggerClient.evaluate(`performance.getEntriesByType('navigation').map(entry => ({ startTime: entry.startTime, domInteractive: entry.domInteractive, domContentLoadedEventEnd: entry.domContentLoadedEventEnd, loadEventEnd: entry.loadEventEnd, duration: entry.duration }))`);
+	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, controlExtensionInstall: 'vsix', chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), marks, resourceTimings, navigationTimings }, null, 2) + '\n');
 	console.log(`Captured ${marks.length} startup marks in ${output}`);
 	for (let attempt = 0; attempt < 100 && !fs.existsSync(`${output}.perf.md`) && !fs.existsSync(`${output}.perf.md.error`); attempt++) {
 		await delay(200);
