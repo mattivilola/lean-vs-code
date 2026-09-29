@@ -17,6 +17,7 @@
     "typescriptClient": "passed",
     "changedFileLint": "passed",
     "sourceImplementationMatch": "TerminalContext class body matches the baseline commit exactly",
+    "aiGuard": "new terminalContext input reviewed and allowed; unreachable broad chatContext input removed from allowlist so an eager reintroduction fails the guard",
     "diRegistrations": "0 missing",
     "extensionApiActors": "87 of 87 present",
     "realTerminalAttachToChatUi": "not exercised yet; include in the combined functional release check"

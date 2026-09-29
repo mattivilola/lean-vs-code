@@ -123,7 +123,6 @@
     "src/vs/workbench/contrib/chat/browser/actions/chatActionIds.ts",
     "src/vs/workbench/contrib/chat/browser/actions/chatActions.ts",
     "src/vs/workbench/contrib/chat/browser/actions/chatClear.ts",
-    "src/vs/workbench/contrib/chat/browser/actions/chatContext.ts",
     "src/vs/workbench/contrib/chat/browser/actions/chatContinueInAction.ts",
     "src/vs/workbench/contrib/chat/browser/actions/chatElicitationActions.ts",
     "src/vs/workbench/contrib/chat/browser/actions/chatExecuteActions.ts",
