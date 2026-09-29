@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-29T07:11:46.924Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v26.9.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "v0.7 candidate",
+      "version": "1.139.1",
+      "commit": "b831827e34f6b8d1fec8143d15b7337b997575c9"
+    },
+    {
+      "key": "code-oss",
+      "label": "installed v0.6.0",
+      "version": "1.139.1",
+      "commit": "b9fc5a6015027ab57a33bc9476824db977cbb825"
+    }
+  ],
+  "metrics": {
+    "lean.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 2107.768,
+      "p95": 6291.541,
+      "min": 1765.761,
+      "max": 21240.919
+    },
+    "code-oss.launchToEditableFile": {
+      "unit": "ms",
+      "count": 30,
+      "p50": 2270.732,
+      "p95": 8364.904,
+      "min": 1716.008,
+      "max": 11436.161
+    }
+  },
+  "kind": "extension-backed-file",
+  "settings": {
+    "samplesPerApp": 30,
+    "launchMode": "direct",
+    "windowBounds": {
+      "x": 16,
+      "y": 546,
+      "width": 560,
+      "height": 360
+    },
+    "profileCondition": "established",
+    "controlExtensionInstall": "vsix"
+  },
+  "samples": [
+    {
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 2186.541
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 2790.149
+    },
+    {
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 1962.859
+    },
+    {
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 2409.822
+    },
+    {
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 1781.764
+    },
+    {
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 2771.807
+    },
+    {
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 2236.89
+    },
+    {
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 3713.757
+    },
+    {
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 4010.849
+    },
+    {
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 2610.267
+    },
+    {
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 2178.813
+    },
+    {
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 1999.549
+    },
+    {
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 1830.265
+    },
+    {
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 2270.732
+    },
+    {
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 1716.008
+    },
+    {
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 2048.537
+    },
+    {
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 1851.762
+    },
+    {
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 2000.345
+    },
+    {
+      "subject": "code-oss",
+      "sample": 10,
+      "elapsedMs": 1975.571
+    },
+    {
+      "subject": "lean",
+      "sample": 10,
+      "elapsedMs": 2086.243
+    },
+    {
+      "subject": "lean",
+      "sample": 11,
+      "elapsedMs": 1923.633
+    },
+    {
+      "subject": "code-oss",
+      "sample": 11,
+      "elapsedMs": 2329.772
+    },
+    {
+      "subject": "code-oss",
+      "sample": 12,
+      "elapsedMs": 1832.168
+    },
+    {
+      "subject": "lean",
+      "sample": 12,
+      "elapsedMs": 2018.873
+    },
+    {
+      "subject": "lean",
+      "sample": 13,
+      "elapsedMs": 1943.524
+    },
+    {
+      "subject": "code-oss",
+      "sample": 13,
+      "elapsedMs": 2313.619
+    },
+    {
+      "subject": "code-oss",
+      "sample": 14,
+      "elapsedMs": 1982.574
+    },
+    {
+      "subject": "lean",
+      "sample": 14,
+      "elapsedMs": 2084.069
+    },
+    {
+      "subject": "lean",
+      "sample": 15,
+      "elapsedMs": 1999.666
+    },
+    {
+      "subject": "code-oss",
+      "sample": 15,
+      "elapsedMs": 2756.647
+    },
+    {
+      "subject": "code-oss",
+      "sample": 16,
+      "elapsedMs": 2246.6
+    },
+    {
+      "subject": "lean",
+      "sample": 16,
+      "elapsedMs": 2159.63
+    },
+    {
+      "subject": "lean",
+      "sample": 17,
+      "elapsedMs": 2011.249
+    },
+    {
+      "subject": "code-oss",
+      "sample": 17,
+      "elapsedMs": 1858.173
+    },
+    {
+      "subject": "code-oss",
+      "sample": 18,
+      "elapsedMs": 1956.538
+    },
+    {
+      "subject": "lean",
+      "sample": 18,
+      "elapsedMs": 2337.152
+    },
+    {
+      "subject": "lean",
+      "sample": 19,
+      "elapsedMs": 1765.761
+    },
+    {
+      "subject": "code-oss",
+      "sample": 19,
+      "elapsedMs": 2262.072
+    },
+    {
+      "subject": "code-oss",
+      "sample": 20,
+      "elapsedMs": 2431.136
+    },
+    {
+      "subject": "lean",
+      "sample": 20,
+      "elapsedMs": 3193.128
+    },
+    {
+      "subject": "lean",
+      "sample": 21,
+      "elapsedMs": 2329.51
+    },
+    {
+      "subject": "code-oss",
+      "sample": 21,
+      "elapsedMs": 2039.56
+    },
+    {
+      "subject": "code-oss",
+      "sample": 22,
+      "elapsedMs": 1886.164
+    },
+    {
+      "subject": "lean",
+      "sample": 22,
+      "elapsedMs": 2107.768
+    },
+    {
+      "subject": "lean",
+      "sample": 23,
+      "elapsedMs": 2061.154
+    },
+    {
+      "subject": "code-oss",
+      "sample": 23,
+      "elapsedMs": 2365.762
+    },
+    {
+      "subject": "code-oss",
+      "sample": 24,
+      "elapsedMs": 2338.116
+    },
+    {
+      "subject": "lean",
+      "sample": 24,
+      "elapsedMs": 3018.02
+    },
+    {
+      "subject": "lean",
+      "sample": 25,
+      "elapsedMs": 2681.055
+    },
+    {
+      "subject": "code-oss",
+      "sample": 25,
+      "elapsedMs": 3589.244
+    },
+    {
+      "subject": "code-oss",
+      "sample": 26,
+      "elapsedMs": 2825.316
+    },
+    {
+      "subject": "lean",
+      "sample": 26,
+      "elapsedMs": 3548.075
+    },
+    {
+      "subject": "lean",
+      "sample": 27,
+      "elapsedMs": 2702.48
+    },
+    {
+      "subject": "code-oss",
+      "sample": 27,
+      "elapsedMs": 3700.249
+    },
+    {
+      "subject": "code-oss",
+      "sample": 28,
+      "elapsedMs": 3630.344
+    },
+    {
+      "subject": "lean",
+      "sample": 28,
+      "elapsedMs": 4853.824
+    },
+    {
+      "subject": "lean",
+      "sample": 29,
+      "elapsedMs": 6291.541
+    },
+    {
+      "subject": "code-oss",
+      "sample": 29,
+      "elapsedMs": 8364.904
+    },
+    {
+      "subject": "code-oss",
+      "sample": 30,
+      "elapsedMs": 11436.161
+    },
+    {
+      "subject": "lean",
+      "sample": 30,
+      "elapsedMs": 21240.919
+    }
+  ]
+}
