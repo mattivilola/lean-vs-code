@@ -11,11 +11,16 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const appArg = process.argv[2];
 if (!appArg) {
-	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app> [scenario] [--window-bounds x,y,width,height]');
+	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app> [scenario] [--window-bounds x,y,width,height] [--no-timing]');
 	process.exit(2);
 }
 const options = process.argv.slice(3);
 const scenario = options[0] && !options[0].startsWith('--') ? options.shift() : 'all';
+const noTimingIndex = options.indexOf('--no-timing');
+const noTiming = noTimingIndex !== -1;
+if (noTiming) {
+	options.splice(noTimingIndex, 1);
+}
 const scenarios = new Set(['all', 'editableFileAndSave', 'workspaceSearch', 'workspaceTextSearch', 'integratedTerminal', 'gitReview', 'extensionWebview']);
 if (!scenarios.has(scenario)) {
 	throw new Error(`Unknown functional smoke scenario: ${scenario}`);
@@ -103,10 +108,10 @@ const args = [
 	`--folder-uri=${pathToFileURL(workspace)}`, path.join(workspace, 'src/main.ts')
 ];
 const logFd = fs.openSync(appLog, 'w');
-const appLaunchedAtMs = Date.now();
+const appLaunchedAtMs = noTiming ? undefined : Date.now();
 const child = spawn(executable, args, {
 	cwd: workspace,
-	env: { ...process.env, LEAN_SMOKE_WORKSPACE: workspace, LEAN_SMOKE_RESULT: resultPath, LEAN_SMOKE_SCENARIO: scenario },
+	env: { ...process.env, LEAN_SMOKE_WORKSPACE: workspace, LEAN_SMOKE_RESULT: resultPath, LEAN_SMOKE_SCENARIO: scenario, LEAN_SMOKE_NO_TIMING: noTiming ? '1' : '0' },
 	stdio: ['ignore', logFd, logFd]
 });
 fs.closeSync(logFd);
@@ -123,12 +128,14 @@ try {
 		throw new Error('Timed out waiting for functional checks');
 	}
 	const result = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
-	const completedAtMs = scenario === 'all'
-		? Date.parse(result.createdAt)
-		: result.checks?.[scenario]?.completedAtMs;
-	if (Number.isFinite(completedAtMs)) {
-		result.launchToChecksMs = completedAtMs - appLaunchedAtMs;
-		fs.writeFileSync(resultPath, JSON.stringify(result, null, 2) + '\n');
+	if (!noTiming) {
+		const completedAtMs = scenario === 'all'
+			? Date.parse(result.createdAt)
+			: result.checks?.[scenario]?.completedAtMs;
+		if (Number.isFinite(completedAtMs)) {
+			result.launchToChecksMs = completedAtMs - appLaunchedAtMs;
+			fs.writeFileSync(resultPath, JSON.stringify(result, null, 2) + '\n');
+		}
 	}
 	console.log(JSON.stringify(result, null, 2));
 	if (!result.passed) {

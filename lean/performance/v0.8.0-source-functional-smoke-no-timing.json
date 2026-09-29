@@ -1,0 +1,20 @@
+{
+  "status": "functional-only source-candidate check, not a release benchmark",
+  "sourceCommit": "f4d57144d96369f051db288ab2e279794946cb86",
+  "build": "production-minified Apple Silicon app, copied and ad-hoc signed solely for this local check; not version-bumped, Developer ID signed, notarized, or installed",
+  "profile": "isolated temporary user-data and extension directories",
+  "windowBounds": { "x": 16, "y": 546, "width": 560, "height": 360 },
+  "timing": "--no-timing; no startup or per-check durations collected",
+  "controlExtension": "temporary extension-development-path fixture, not an installed Open VSX extension",
+  "checks": {
+    "editableFileAndSave": "passed; inserted, saved, and verified on disk",
+    "workspaceSearch": "passed; 401 TypeScript files found and search UI opened",
+    "workspaceTextSearch": "passed; 10 expected matches returned across 400 source files",
+    "integratedTerminal": "passed; command output verified on disk",
+    "gitReview": "passed; bundled Git API discovered fixture repository and returned local diff",
+    "extensionWebview": "passed; extension webview panel created and HTML assigned"
+  },
+  "appLog": "no actor, dependency-injection, or renderer errors found; one Node url.parse deprecation warning",
+  "passed": true,
+  "notCovered": "real first-use Quick Chat, chat-pet, terminal attach-to-chat, pasted images, installed extension activation, signed app, updater, and paired Code-OSS timing"
+}

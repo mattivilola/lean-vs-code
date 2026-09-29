@@ -8,6 +8,8 @@ Before a v0.8 release, build the production-minified candidate and verify editin
 
 A production-minified source build completed at `f4d57144d96369f051db288ab2e279794946cb86`; the [draft v0.8 notes](RELEASE_NOTES_0.8.0.md) record its static checks and open release gates. It is not yet a version-bumped, signed, or installed release.
 
+An isolated [functional-only smoke](../performance/v0.8.0-source-functional-smoke-no-timing.json) passed on an ad-hoc-signed copy of this source build in a 560 × 360 bottom-left window. It collected no timing data. Installed extension activation, changed optional paths, and final signed-release checks remain open.
+
 ## Earlier v0.6 and v0.7 leads
 
 At v0.6, the project kept its Code-OSS 1.139.1 base. On 28 September 2026, upstream `release/1.139` still pointed to our base commit (`04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1`). Upstream `main` was a much larger version migration, not a safe patch. A future upstream-base change needs a planned compatibility release with extension, update, and performance checks.

@@ -10,6 +10,7 @@ const vscode = require('vscode');
 const workspaceRoot = process.env.LEAN_SMOKE_WORKSPACE;
 const resultPath = process.env.LEAN_SMOKE_RESULT;
 const scenario = process.env.LEAN_SMOKE_SCENARIO ?? 'all';
+const noTiming = process.env.LEAN_SMOKE_NO_TIMING === '1';
 const pollIntervalMs = scenario === 'all' ? 200 : 20;
 
 function assert(condition, message) {
@@ -36,11 +37,11 @@ async function run() {
 		if (scenario !== 'all' && scenario !== name) {
 			return;
 		}
-		const started = performance.now();
+		const started = noTiming ? undefined : performance.now();
 		let completedAtMs;
 		let completedDurationMs;
 		const markCompleted = () => {
-			if (completedAtMs === undefined) {
+			if (!noTiming && completedAtMs === undefined) {
 				completedAtMs = Date.now();
 				completedDurationMs = performance.now() - started;
 			}
@@ -48,9 +49,9 @@ async function run() {
 		try {
 			const detail = await action(markCompleted);
 			markCompleted();
-			checks[name] = { ok: true, detail, completedAtMs, durationMs: Number(completedDurationMs.toFixed(3)) };
+			checks[name] = noTiming ? { ok: true, detail } : { ok: true, detail, completedAtMs, durationMs: Number(completedDurationMs.toFixed(3)) };
 		} catch (error) {
-			checks[name] = { ok: false, error: String(error?.stack ?? error), durationMs: Number((performance.now() - started).toFixed(3)) };
+			checks[name] = noTiming ? { ok: false, error: String(error?.stack ?? error) } : { ok: false, error: String(error?.stack ?? error), durationMs: Number((performance.now() - started).toFixed(3)) };
 		}
 	}
 
