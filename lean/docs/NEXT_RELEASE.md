@@ -1,10 +1,10 @@
-# Next release: v0.9 startup evidence
+# Next release: v0.10 startup evidence
 
 v0.8.0 retained four cold-renderer cuts: the [optional Quick Chat split](V0.8_COLD_RENDERER_SPLIT_DESIGN.md), the [terminal chat-context helper isolation](../performance/v0.8.0-terminal-context-cut.json), the [chat-pet renderer boundary](../performance/v0.8.0-chat-pet-renderer-cut.json), and the [image-hash helper isolation](../performance/v0.8.0-image-hash-helper-cut.json). Its desktop initial static graph is 31,520,121 unminified JavaScript bytes. This is **bundle evidence**, not a measured startup-time or memory gain. The [ledger](OPTIMIZATION_LEDGER.md) also records rejected cuts, including a language-model image-helper lazy import that made the graph larger and a chat-session status extraction that broke required service registration.
 
 Keep small, plausible cuts only when emitted graph output improves and focused correctness checks pass. Record each retained or rejected experiment in the ledger. The owner has deferred further GUI timing until requesting one combined test of accumulated changes; routine minor and patch releases use compact functional checks. Do not add isolated speed percentages or sum byte cuts as latency savings. A future public speed comparison must use signed Lean against original same-revision Code-OSS in the same build mode; direct Lean-version diagnostics stay internal.
 
-For v0.9, inspect a current startup CPU trace before choosing another renderer cut, or make a narrow safe change supported by the emitted graph and focused tests. Preserve extension activation, editing, Git review, terminal, and search. An upstream-base upgrade requires its own planned compatibility release. The sub-one-second p95 target remains unproven.
+For v0.10, inspect a current startup CPU trace before choosing another renderer cut, or make a narrow safe change supported by the emitted graph and focused tests. Preserve extension activation, editing, Git review, terminal, and search. An upstream-base upgrade requires its own planned compatibility release. The sub-one-second p95 target remains unproven.
 
 The first v0.9 candidate [extracts Agent Merge request labels from the DOM widget](../performance/v0.9.0-agent-merge-request-text-cut.json). It removes 30,376 unminified bytes from the initial static JavaScript graph relative to v0.8.0, with typecheck, lint, AI/DI/actor guard, and focused headless Chromium checks passing. This is source-graph evidence only; hold it for the owner's combined GUI timing test rather than assigning an isolated speed gain.
 
@@ -13,6 +13,8 @@ The second [defers the optional session hover widget](../performance/v0.9.0-sess
 The third [defers terminal command approval analysis modules](../performance/v0.9.0-terminal-approval-lazy-cut.json) until a nonempty command needs suggestions. It removes another 27,652 emitted bytes from the initial static graph. Empty input and parser-failure paths remain fail-closed in focused tests; load failures now also return no suggestion. The first real approval analysis must be checked during release validation.
 
 Together these three cuts reduce the v0.8.0 initial static graph from 31,520,121 to 31,461,650 unminified JavaScript bytes (58,471 bytes, about 0.19%). This is a code-loading metric, not a startup-time or memory claim. Do not project the byte delta into latency; run the combined GUI timing trial only when the owner requests it.
+
+The signed and notarized v0.9.0 package was built from `9d675a0402f065ad9ed92e3dd2d9e4a7146e614a`. Its [compact signed-app check](../performance/v0.9.0-release-functional-no-timing.json) passed six core workflows and an installed Open VSX extension without collecting timings. Its [bundle-size comparison](../performance/v0.9.0-bundle-size-vs-code-oss-1.139.1-minified.json) still measures 64.9% less apparent app content than original same-revision minified Code-OSS. Keep both the historical v0.6 speed claims and these v0.9 package results precisely version-labeled.
 
 A signed, notarized v0.8.0 package was built from `cd1c632c1de880b9251cbbe0b737946d88359fb1`. The [v0.8 notes](RELEASE_NOTES_0.8.0.md) record its static, functional, extension, and packaging checks without a new GUI speed claim.
 

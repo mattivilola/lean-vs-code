@@ -6,12 +6,13 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
-## 0.9.0 candidate
+## 0.9.0
 
-See the [v0.9.0 release notes](lean/docs/RELEASE_NOTES_0.9.0.md) for the exact build, focused validation, and publication status.
+See the [v0.9.0 release notes](lean/docs/RELEASE_NOTES_0.9.0.md) and [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.9.0) for the exact build, focused validation, and limitations.
 
 - Extract Agent Merge request labels from the DOM widget, defer the optional session hover widget until first use, and defer terminal approval analysis modules until a nonempty command needs suggestions. The three cuts remove 58,471 unminified bytes from the initial desktop static JavaScript graph compared with v0.8.0; this is not a measured startup or runtime-memory saving.
-- Keep editing, local Git review, search, terminal, and extension APIs intact. Focused typecheck, lint, AI/DI/actor guard, and headless Chromium tests passed. A compact signed-app functional check and release packaging remain pending.
+- Keep editing, local Git review, search, terminal, and extension APIs intact. Focused typecheck, lint, AI/DI/actor guard, and headless Chromium tests passed. The exact signed app also passed compact, isolated no-timing checks for edit/save, search, terminal, Git diff, extension webview, and Open VSX EditorConfig installation and activation.
+- Sign and notarize the Apple Silicon app, updater ZIP, and DMG. The signed app bundle has **64.9% less apparent file content** than original same-revision minified Code-OSS: 514 versus 1,463 MiB. No v0.9 startup or runtime-memory percentage is claimed; the full paired GUI comparison waits for a major release or explicit request.
 
 ## 0.8.0
 

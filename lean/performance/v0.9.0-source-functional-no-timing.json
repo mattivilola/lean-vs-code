@@ -1,0 +1,20 @@
+{
+  "status": "production-minified source app functional check; no GUI timing benchmark",
+  "productCommit": "9d675a0402f065ad9ed92e3dd2d9e4a7146e614a",
+  "version": "0.9.0",
+  "extensionApiVersion": "1.139.1",
+  "app": "local Apple Silicon candidate before Developer ID signing",
+  "profile": "isolated temporary user-data and extension directories",
+  "windowBounds": { "x": 16, "y": 546, "width": 560, "height": 360 },
+  "timing": "--no-timing; no startup or per-check durations collected",
+  "coreChecks": {
+    "editableFileAndSave": "passed; inserted, saved, and verified on disk",
+    "workspaceSearch": "passed; 401 TypeScript files found and search UI opened",
+    "workspaceTextSearch": "passed; 10 expected matches returned across 400 source files",
+    "integratedTerminal": "passed; command output verified on disk",
+    "gitReview": "passed; bundled Git API discovered fixture repository and returned local diff",
+    "extensionWebview": "passed; temporary extension webview panel created and HTML assigned"
+  },
+  "passed": true,
+  "limitations": "This candidate check does not establish a signed-release result, an installed Open VSX extension result, or a startup-time or memory comparison. The macOS sandbox aborted an initial attempt before any check; the same candidate passed outside that sandbox."
+}
