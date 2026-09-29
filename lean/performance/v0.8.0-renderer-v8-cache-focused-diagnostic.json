@@ -12,6 +12,10 @@
     "workbenchBackgroundParseMs": 435.583,
     "workbenchModuleCacheProductionMs": 65.761,
     "workbenchCompileMode": "streamed",
+    "rendererExtensionHostStartEpochMs": 1790676206857,
+    "rendererExtensionHostAllocatedEpochMs": 1790676206909,
+    "rendererShellPromiseResolvedEpochMs": 1790676206903,
+    "shellPromiseWaitAfterHostAllocationMs": 0,
     "controlExtensionActivated": true
   },
   "establishedIsolatedProfileAfterOneWarmup": {
@@ -21,9 +25,14 @@
     "workbenchCodeCacheKind": "normal",
     "workbenchCodeCacheRejected": false,
     "workbenchConsumedCodeCacheBytes": 11685400,
+    "rendererExtensionHostStartEpochMs": 1790676401623,
+    "rendererExtensionHostAllocatedEpochMs": 1790676401666,
+    "rendererShellPromiseResolvedEpochMs": 1790676401936,
+    "shellPromiseWaitAfterHostAllocationMs": 270,
+    "extensionHostForkBootstrapStartEpochMs": 1790676402003,
     "controlExtensionActivated": true
   },
-  "interpretation": "Chromium directly attributed 435.583 ms of the fresh launch to background parsing of the workbench module. In the separate warmed launch it accepted an 11,685,400-byte code cache for that module and no corresponding background-parse event appeared. Parse, evaluation, and cache events can overlap other startup work and must not be added to the workbench-import duration. One run of each profile condition does not estimate a reliable speed difference or p95.",
+  "interpretation": "Chromium directly attributed 435.583 ms of the fresh launch to background parsing of the workbench module. In the separate warmed launch it accepted an 11,685,400-byte code cache for that module and no corresponding background-parse event appeared. Parse, evaluation, and cache events can overlap other startup work and must not be added to the workbench-import duration. With the faster warmed renderer, the shell-environment promise resolved 270 ms after local host allocation, making it a plausible extension-host gate. On the cold launch the promise resolved 6 ms before allocation, so that gate was absent. These are raw renderer CDP marks, not an exact main-process shell-completion or utilityProcess.fork timestamp. One run of each profile condition does not estimate a reliable speed difference or p95.",
   "perfviewCaveat": "The Startup Performance report labeled both launches cached data: NO. Its label is a heuristic based on the configured code-cache path and last-running commit, not direct evidence of Chromium module-cache use; the warmed Chromium compile event explicitly reports cacheRejected=false.",
   "publicClaim": false,
   "codeOssComparison": false
