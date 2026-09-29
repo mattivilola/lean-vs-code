@@ -1,0 +1,27 @@
+{
+  "status": "v0.10 source candidate, not a release benchmark",
+  "baselineCommit": "ce594a98b4bb0a3edc039c4fc840b848cf691dcb",
+  "change": "Load the optional automatic chat-instruction collector only when an extension-backed chat request supplies an instruction context and core collection is enabled. A canceled request exits after module loading; collection errors retain the existing empty-result fallback.",
+  "method": "Build the same desktop esbuild target before and after the source edit. Sum the workbench entry and every transitively static JavaScript output, and confirm the collector import changed from a static to a dynamic import in the emitted metafile. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31461650,
+    "after": 31445853,
+    "difference": 15797
+  },
+  "reachableAiSourceBytesUnminified": {
+    "before": 2970547,
+    "after": 2944023,
+    "difference": 26524
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "clientCompile": "passed",
+    "changedFileLint": "passed",
+    "chatServiceNodeTests": "117 passed on Node 24.21.0",
+    "automaticInstructionsNodeTests": "65 passed on Node 24.21.0",
+    "aiGuard": "passed",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present"
+  },
+  "claimLimit": "This is an initial static JavaScript size reduction, not a measured startup, installed disk, or runtime memory gain. The first eligible chat request loads the collector asynchronously and should receive a focused first-use check before a release."
+}

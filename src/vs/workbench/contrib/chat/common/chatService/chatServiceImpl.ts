@@ -61,7 +61,6 @@ import { ChatSessionOperationLog } from '../model/chatSessionOperationLog.js';
 import { IPromptsService } from '../promptSyntax/service/promptsService.js';
 import { AGENT_DEBUG_LOG_FILE_LOGGING_ENABLED_SETTING, TROUBLESHOOT_COMMAND_NAME, TROUBLESHOOT_SKILL_PATH, COPILOT_SKILL_URI_SCHEME } from '../promptSyntax/promptTypes.js';
 import { ChatRequestHooks, mergeHooks } from '../promptSyntax/hookSchema.js';
-import { ComputeAutomaticInstructions } from '../promptSyntax/computeAutomaticInstructions.js';
 import { CustomizationMigrationHintTarget, ICustomizationMigrationHint } from '../promptSyntax/service/customizationMigrationService.js';
 import { ICustomizationMigrationTelemetryService } from '../promptSyntax/service/customizationMigrationTelemetryService.js';
 import { findLast } from '../../../../../base/common/arraysFind.js';
@@ -1678,6 +1677,10 @@ export class ChatService extends Disposable implements IChatService {
 					// resolution can see them. We filter them back out below
 					// to return only the entries that were newly added.
 					const variableSet = new ChatRequestVariableSet(options?.attachedContext);
+					const { ComputeAutomaticInstructions } = await import('../promptSyntax/computeAutomaticInstructions.js');
+					if (token.isCancellationRequested) {
+						return [];
+					}
 					const computer = this.instantiationService.createInstance(ComputeAutomaticInstructions, ctx.modeKind, ctx.enabledTools, ctx.enabledSubAgents, getChatSessionType(sessionResource));
 					await computer.collect(variableSet, token);
 					// Return only the entries that were added by instruction collection
