@@ -16,11 +16,12 @@ let launchMode = 'direct';
 let reuseProfile = false;
 let chromiumTrace;
 let windowBounds;
+let reportDelayMs = 0;
 for (let index = 2; index < process.argv.length; index++) {
 	const arg = process.argv[index];
 	if (arg === '--reuse-profile') {
 		reuseProfile = true;
-	} else if (arg === '--launch-mode' || arg === '--chromium-trace' || arg === '--window-bounds') {
+	} else if (arg === '--launch-mode' || arg === '--chromium-trace' || arg === '--window-bounds' || arg === '--report-delay-ms') {
 		const value = process.argv[++index];
 		if (!value) {
 			throw new Error(`Expected a value after ${arg}.`);
@@ -29,6 +30,11 @@ for (let index = 2; index < process.argv.length; index++) {
 			launchMode = value;
 		} else if (arg === '--chromium-trace') {
 			chromiumTrace = path.resolve(value);
+		} else if (arg === '--report-delay-ms') {
+			reportDelayMs = Number(value);
+			if (!Number.isSafeInteger(reportDelayMs) || reportDelayMs < 0 || reportDelayMs > 10_000) {
+				throw new Error('--report-delay-ms must be an integer between 0 and 10000.');
+			}
 		} else {
 			const match = /^(-?\d+),(-?\d+),(\d+),(\d+)$/.exec(value);
 			if (!match) {
@@ -48,7 +54,7 @@ for (let index = 2; index < process.argv.length; index++) {
 }
 const [appPath, fixturePath, outputPath] = positional;
 if (!appPath || !fixturePath || !outputPath) {
-	console.error('Usage: node scripts/lean-perf/trace-startup.mjs [--launch-mode direct|cli|finder] [--reuse-profile] [--window-bounds x,y,width,height] [--chromium-trace <file>] <App.app> <file> <output.json>');
+	console.error('Usage: node scripts/lean-perf/trace-startup.mjs [--launch-mode direct|cli|finder] [--reuse-profile] [--window-bounds x,y,width,height] [--report-delay-ms 0..10000] [--chromium-trace <file>] <App.app> <file> <output.json>');
 	process.exit(2);
 }
 if (!LAUNCH_MODES.includes(launchMode)) {
@@ -178,6 +184,7 @@ async function activate() {
       return;
     }
     fs.writeFileSync(${JSON.stringify(traceReadyFile)}, JSON.stringify({ activatedAtEpochMs: Date.now() }));
+    await new Promise(resolve => setTimeout(resolve, ${reportDelayMs}));
     await vscode.commands.executeCommand('perfview.show');
     for (let attempt = 0; attempt < 100; attempt++) {
       const editor = vscode.window.activeTextEditor;
@@ -284,7 +291,7 @@ try {
 	const resourceTimings = await debuggerClient.evaluate(`performance.getEntriesByType('resource').map(entry => ({ name: entry.name, initiatorType: entry.initiatorType, startTime: entry.startTime, duration: entry.duration, responseEnd: entry.responseEnd, transferSize: entry.transferSize, encodedBodySize: entry.encodedBodySize }))`);
 	const navigationTimings = await debuggerClient.evaluate(`performance.getEntriesByType('navigation').map(entry => ({ startTime: entry.startTime, domInteractive: entry.domInteractive, domContentLoadedEventEnd: entry.domContentLoadedEventEnd, loadEventEnd: entry.loadEventEnd, duration: entry.duration }))`);
 	const controlExtensionActivation = JSON.parse(fs.readFileSync(traceReadyFile, 'utf8'));
-	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, hasWorkbenchModulePreload, controlExtensionInstall: 'vsix', spawnedAtEpochMs: child.spawnedAt, controlExtensionActivation, chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), rendererTimeOrigin, marks, resourceTimings, navigationTimings }, null, 2) + '\n');
+	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, hasWorkbenchModulePreload, controlExtensionInstall: 'vsix', spawnedAtEpochMs: child.spawnedAt, controlExtensionActivation, reportDelayMs, chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), rendererTimeOrigin, marks, resourceTimings, navigationTimings }, null, 2) + '\n');
 	console.log(`Captured ${marks.length} startup marks in ${output}`);
 	for (let attempt = 0; attempt < 100 && !fs.existsSync(`${output}.perf.md`) && !fs.existsSync(`${output}.perf.md.error`); attempt++) {
 		await delay(200);
