@@ -1,0 +1,30 @@
+{
+  "kind": "two-single-launch-diagnostics-not-a-benchmark",
+  "date": "2026-09-29",
+  "app": "unsigned v0.8 local no-preload control",
+  "productCommit": "4f7c05ba0bb127b0c8a97def65915efdc57f2a3c",
+  "launchMode": "direct",
+  "windowBounds": [16, 546, 560, 360],
+  "fixture": "README.md",
+  "chromiumTraceCategories": "v8,devtools.timeline,disabled-by-default-v8.compile,loading,startup",
+  "freshIsolatedProfile": {
+    "workbenchImportMs": 564,
+    "workbenchBackgroundParseMs": 435.583,
+    "workbenchModuleCacheProductionMs": 65.761,
+    "workbenchCompileMode": "streamed",
+    "controlExtensionActivated": true
+  },
+  "establishedIsolatedProfileAfterOneWarmup": {
+    "workbenchImportMs": 113,
+    "workbenchBackgroundParseEventPresent": false,
+    "workbenchCompileModuleMs": 20.3,
+    "workbenchCodeCacheKind": "normal",
+    "workbenchCodeCacheRejected": false,
+    "workbenchConsumedCodeCacheBytes": 11685400,
+    "controlExtensionActivated": true
+  },
+  "interpretation": "Chromium directly attributed 435.583 ms of the fresh launch to background parsing of the workbench module. In the separate warmed launch it accepted an 11,685,400-byte code cache for that module and no corresponding background-parse event appeared. Parse, evaluation, and cache events can overlap other startup work and must not be added to the workbench-import duration. One run of each profile condition does not estimate a reliable speed difference or p95.",
+  "perfviewCaveat": "The Startup Performance report labeled both launches cached data: NO. Its label is a heuristic based on the configured code-cache path and last-running commit, not direct evidence of Chromium module-cache use; the warmed Chromium compile event explicitly reports cacheRejected=false.",
+  "publicClaim": false,
+  "codeOssComparison": false
+}

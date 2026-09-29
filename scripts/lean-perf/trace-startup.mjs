@@ -12,6 +12,7 @@ import { LAUNCH_MODES, launchApp, readApp } from './launch.mjs';
 import { createControlVSIX, installControlExtension } from './control-extension.mjs';
 
 const positional = [];
+const chromiumTraceCategories = 'v8,devtools.timeline,disabled-by-default-v8.compile,loading,startup';
 let launchMode = 'direct';
 let reuseProfile = false;
 let chromiumTrace;
@@ -216,7 +217,7 @@ try {
 		`--extensions-dir=${path.join(profile, 'extensions')}`,
 		'--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-telemetry',
 		`--remote-debugging-port=${port}`,
-		...(chromiumTrace ? ['--trace-startup', `--trace-startup-file=${chromiumTrace}`, '--trace-startup-duration=10'] : []),
+		...(chromiumTrace ? [`--trace-startup=${chromiumTraceCategories}`, `--trace-startup-file=${chromiumTrace}`, '--trace-startup-format=json', '--trace-startup-duration=10'] : []),
 		fixture
 	];
 	if (reuseProfile) {

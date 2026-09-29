@@ -32,6 +32,8 @@ The detailed trial notes and links are in the [startup roadmap](STARTUP_ROADMAP.
 
 The [v0.8 startup investigation](V0.8_STARTUP_INVESTIGATION.md) corrects two tempting trace readings: the 707 ms “extensions registered” figure is cumulative startup time rather than extension-scan cost, and moving shell collection earlier after configuration and primary-instance ownership offers at most about 14 ms in the available candidate trace. Its workbench module preload was rejected after a focused A/B trace and one extension-editable-file pair found no directional benefit. A later [single-launch shell-gate diagnostic](../performance/v0.8.0-shell-gate-focused-diagnostic.json) saw 107 ms of renderer shell-promise wait after host allocation; this is a possible overlap lead only. Startup Performance snapshots main marks at window creation, so delaying its display cannot recover the missing main-process shell-completion mark. Package validity or a single trace is not a startup result.
 
+A [fresh-versus-warmed V8 diagnostic](../performance/v0.8.0-renderer-v8-cache-focused-diagnostic.json) found 435.583 ms of background parsing for the workbench module inside a 564 ms fresh-profile import. After one warm-up, Chromium consumed an 11.7 MB valid module code cache and the import took 113 ms in that separate launch. This confirms a substantial **cold** parse cost and existing code-cache use; it does not prove a reliable startup gain or predict established-profile file readiness. The Startup Performance `cached data: NO` label is a heuristic and did not reflect the cache actually consumed in the Chromium trace.
+
 ## Next experiments and the use cases they could help
 
 | Candidate | Admission test before implementation | Use cases and regression gate |
