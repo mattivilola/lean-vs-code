@@ -1,0 +1,29 @@
+{
+  "kind": "exploratory-startup-trace-admission",
+  "sourceProductCommit": "b831827e34f6b8d1fec8143d15b7337b997575c9",
+  "sourceCapturedAt": "2026-09-29T06:32:41.101Z",
+  "launchMode": "direct",
+  "profileCondition": "established",
+  "controlExtensionInstall": "vsix",
+  "sourceContainsRejectedMainCompileCache": true,
+  "durationsMs": {
+    "mainModuleImport": 120,
+    "windowLoadToRendererWorkbenchImport": 196,
+    "rendererWorkbenchImport": 120,
+    "registerExtensionsAndSpawnExtensionHost": 63,
+    "blockingWorkbenchContributions": 11,
+    "globalAndWorkspaceStorageInitialization": 6,
+    "workspaceServiceInitialization": 14
+  },
+  "mainMarksFromStartMs": {
+    "createServicesStart": 228,
+    "createServicesEnd": 239,
+    "initializeServicesStart": 239,
+    "initializeServicesEnd": 251,
+    "primaryInstanceClaimStart": 251,
+    "primaryInstanceClaimEnd": 252,
+    "shellResolutionStart": 253
+  },
+  "interpretation": "The reported 707 ms extensions-registered value is cumulative time from startup, not the 63 ms registration span. Shell completion is absent from this snapshot. Safe relocation of the existing shell call after configuration and primary-instance ownership offers at most about 14 ms in this trace. The 196 ms renderer interval includes about 190 ms before workbench bootstrap executes; the trace does not attribute that time to one resource or establish a recoverable saving.",
+  "limitations": "This is one exploratory candidate trace with a subsequently rejected main-process compile cache. It is not the final signed v0.7.0 app or a matched Code-OSS benchmark. The original raw trace includes local paths and is intentionally not published. No v0.8 speed or memory percentage follows from this admission record."
+}

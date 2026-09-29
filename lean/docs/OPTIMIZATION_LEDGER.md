@@ -30,6 +30,8 @@ The main target is a requested file that accepts an extension-backed edit from a
 
 The detailed trial notes and links are in the [startup roadmap](STARTUP_ROADMAP.md). Exact signed-release comparisons, raw reports, profile conditions, and known regressions are in [performance history](PERFORMANCE.md). Do not promote a development trial, small exploratory sample, unminified comparator, or one-launch memory snapshot into a public release claim.
 
+The [v0.8 startup investigation](V0.8_STARTUP_INVESTIGATION.md) corrects two tempting trace readings: the 707 ms “extensions registered” figure is cumulative startup time rather than extension-scan cost, and moving shell collection earlier after configuration and primary-instance ownership offers at most about 14 ms in the available candidate trace. Its workbench module preload is an unshipped experiment pending a focused trace and functional check; package validity alone is not a startup result.
+
 ## Next experiments and the use cases they could help
 
 | Candidate | Admission test before implementation | Use cases and regression gate |
