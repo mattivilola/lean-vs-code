@@ -15,19 +15,30 @@ const positional = [];
 let launchMode = 'direct';
 let reuseProfile = false;
 let chromiumTrace;
+let windowBounds;
 for (let index = 2; index < process.argv.length; index++) {
 	const arg = process.argv[index];
 	if (arg === '--reuse-profile') {
 		reuseProfile = true;
-	} else if (arg === '--launch-mode' || arg === '--chromium-trace') {
+	} else if (arg === '--launch-mode' || arg === '--chromium-trace' || arg === '--window-bounds') {
 		const value = process.argv[++index];
 		if (!value) {
 			throw new Error(`Expected a value after ${arg}.`);
 		}
 		if (arg === '--launch-mode') {
 			launchMode = value;
-		} else {
+		} else if (arg === '--chromium-trace') {
 			chromiumTrace = path.resolve(value);
+		} else {
+			const match = /^(-?\d+),(-?\d+),(\d+),(\d+)$/.exec(value);
+			if (!match) {
+				throw new Error('--window-bounds must be x,y,width,height in macOS points.');
+			}
+			const [x, y, width, height] = match.slice(1).map(Number);
+			if (![x, y, width, height].every(Number.isSafeInteger) || width < 400 || height < 270) {
+				throw new Error('--window-bounds needs safe integer coordinates, width >= 400, and height >= 270.');
+			}
+			windowBounds = { x, y, width, height };
 		}
 	} else if (arg.startsWith('--')) {
 		throw new Error(`Unknown option: ${arg}`);
@@ -37,7 +48,7 @@ for (let index = 2; index < process.argv.length; index++) {
 }
 const [appPath, fixturePath, outputPath] = positional;
 if (!appPath || !fixturePath || !outputPath) {
-	console.error('Usage: node scripts/lean-perf/trace-startup.mjs [--launch-mode direct|cli|finder] [--reuse-profile] [--chromium-trace <file>] <App.app> <file> <output.json>');
+	console.error('Usage: node scripts/lean-perf/trace-startup.mjs [--launch-mode direct|cli|finder] [--reuse-profile] [--window-bounds x,y,width,height] [--chromium-trace <file>] <App.app> <file> <output.json>');
 	process.exit(2);
 }
 if (!LAUNCH_MODES.includes(launchMode)) {
@@ -125,12 +136,21 @@ async function connectDebugger(url) {
 
 const port = await availablePort();
 const profile = fs.mkdtempSync('/private/tmp/lean-startup-trace-');
+if (windowBounds) {
+	const storagePath = path.join(profile, 'user-data', 'User', 'globalStorage', 'storage.json');
+	fs.mkdirSync(path.dirname(storagePath), { recursive: true });
+	fs.writeFileSync(storagePath, JSON.stringify({ windowsState: {
+		lastActiveWindow: { uiState: { mode: 1, ...windowBounds } },
+		openedWindows: []
+	} }) + '\n');
+}
 if (reuseProfile) {
 	fs.mkdirSync(path.join(profile, 'user-data', 'User'), { recursive: true });
 	fs.writeFileSync(path.join(profile, 'user-data', 'User', 'settings.json'), JSON.stringify({ 'window.restoreWindows': 'none' }) + '\n');
 }
 const extensionPath = path.join(profile, 'trace-extension');
 const traceMarkerFile = path.join(profile, 'trace-active');
+const traceReadyFile = path.join(profile, 'trace-ready');
 const warmupReadyFile = path.join(profile, 'warmup-ready');
 const warmupQuitFile = path.join(profile, 'warmup-quit');
 fs.mkdirSync(extensionPath);
@@ -155,6 +175,7 @@ async function activate() {
       }, 100);
       return;
     }
+    fs.writeFileSync(${JSON.stringify(traceReadyFile)}, '');
     await vscode.commands.executeCommand('perfview.show');
     for (let attempt = 0; attempt < 100; attempt++) {
       const editor = vscode.window.activeTextEditor;
@@ -247,7 +268,17 @@ try {
 	if (!marks.some(value => value.name === 'code/didLoadExtensions')) {
 		throw new Error('Timed out waiting for extension-load completion mark.');
 	}
-	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', controlExtensionInstall: 'vsix', chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), marks }, null, 2) + '\n');
+	for (let attempt = 0; attempt < 150 && !fs.existsSync(traceReadyFile); attempt++) {
+		if (!child.isRunning()) {
+			throw new Error('App exited before the trace extension activated.');
+		}
+		await delay(200);
+	}
+	if (!fs.existsSync(traceReadyFile)) {
+		throw new Error('Timed out waiting for trace extension activation.');
+	}
+	marks = await debuggerClient.evaluate('globalThis.MonacoPerformanceMarks?.getMarks() ?? []');
+	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, controlExtensionInstall: 'vsix', chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), marks }, null, 2) + '\n');
 	console.log(`Captured ${marks.length} startup marks in ${output}`);
 	for (let attempt = 0; attempt < 100 && !fs.existsSync(`${output}.perf.md`) && !fs.existsSync(`${output}.perf.md.error`); attempt++) {
 		await delay(200);
