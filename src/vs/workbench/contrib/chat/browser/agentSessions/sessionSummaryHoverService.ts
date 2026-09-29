@@ -7,7 +7,7 @@ import { CancellationToken } from '../../../../../base/common/cancellation.js';
 import { IDisposable, toDisposable } from '../../../../../base/common/lifecycle.js';
 import { URI } from '../../../../../base/common/uri.js';
 import { createDecorator } from '../../../../../platform/instantiation/common/instantiation.js';
-import { ISessionSummaryHoverData, SessionSummaryHoverWidget } from './sessionSummaryHover.js';
+import type { ISessionSummaryHoverData } from './sessionSummaryHover.js';
 
 export const ISessionSummaryHoverService = createDecorator<ISessionSummaryHoverService>('sessionSummaryHoverService');
 
@@ -67,6 +67,10 @@ export class SessionSummaryHoverService implements ISessionSummaryHoverService {
 				return undefined;
 			}
 			if (data) {
+				const { SessionSummaryHoverWidget } = await import('./sessionSummaryHover.js');
+				if (token.isCancellationRequested) {
+					return undefined;
+				}
 				return new SessionSummaryHoverWidget(data).domNode;
 			}
 		}

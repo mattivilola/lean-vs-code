@@ -8,6 +8,8 @@ For v0.9, inspect a current startup CPU trace before choosing another renderer c
 
 The first v0.9 candidate [extracts Agent Merge request labels from the DOM widget](../performance/v0.9.0-agent-merge-request-text-cut.json). It removes 30,376 unminified bytes from the initial static JavaScript graph relative to v0.8.0, with typecheck, lint, AI/DI/actor guard, and focused headless Chromium checks passing. This is source-graph evidence only; hold it for the owner's combined GUI timing test rather than assigning an isolated speed gain.
 
+The second [defers the optional session hover widget](../performance/v0.9.0-session-hover-lazy-cut.json) until a provider actually supplies data. It removes another 443 emitted bytes from the initial static graph; the 15,521-byte source-closure reduction does not translate into an equal emitted-byte reduction. The first hover, missing-data fallback, and cancellation passed focused headless checks. Its extra first-hover load must be included in release functional validation.
+
 A signed, notarized v0.8.0 package was built from `cd1c632c1de880b9251cbbe0b737946d88359fb1`. The [v0.8 notes](RELEASE_NOTES_0.8.0.md) record its static, functional, extension, and packaging checks without a new GUI speed claim.
 
 An isolated [source functional smoke](../performance/v0.8.0-source-functional-smoke-no-timing.json) and [signed-release functional check](../performance/v0.8.0-release-functional-no-timing.json) passed in a 560 × 360 bottom-left window without collecting GUI timing data. The removed built-in AI UI leaves the retained optional chat paths unavailable as user-facing actions.

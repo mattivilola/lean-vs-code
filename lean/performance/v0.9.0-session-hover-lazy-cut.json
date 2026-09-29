@@ -1,0 +1,26 @@
+{
+  "status": "v0.9 source candidate, not a release benchmark",
+  "baselineCommit": "0351e12f30d0",
+  "change": "Load the optional session summary hover widget after a provider returns data; keep its data interface type-only and check cancellation again after the dynamic import.",
+  "method": "Run the same desktop esbuild target and aiBundleAudit before and after the source edit. Compare the workbench entry plus every transitively static JavaScript output. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31489745,
+    "after": 31489302,
+    "difference": 443
+  },
+  "reachableAiSourceBytesUnminified": {
+    "before": 3014856,
+    "after": 2999335,
+    "difference": 15521
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "clientCompile": "passed",
+    "changedFileLint": "passed",
+    "headlessChromiumHoverService": "3 passed: first-use render, no-data fallback, cancellation",
+    "aiGuard": "passed",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present"
+  },
+  "claimLimit": "The initial emitted JavaScript shrank by only 443 bytes despite the larger source-closure change. This is not a measured startup, installed disk, or runtime memory gain; first hover now loads its widget asynchronously."
+}
