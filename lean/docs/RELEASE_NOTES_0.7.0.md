@@ -5,6 +5,7 @@ This is a release candidate record, not a published release or a performance cla
 ## Candidate changes
 
 - Retain the v0.6 Node compile cache for extension host, shared process, and terminal host. A main-process cache experiment was removed from v0.7 after exploratory paired trials showed no reliable tail-latency improvement.
+- For macOS zsh, bash, and sh, use the system `env -0` command to read the login-shell environment without launching another Electron process to serialize it. The same login and interactive shell flags, cancellation, timeout, and environment cleanup remain; other shells keep the original collector. Focused parser and real-shell tests pass. A non-GUI subprocess probe suggests about 59 ms collector overhead can be removed, but application-level startup impact has not been measured.
 - Omit the separate Agents-window resources from the desktop package. The installed v0.6 app contained 21,542,445 bytes in `out/vs/sessions`; the current minified candidate contains no such directory. An Agents-window request opens a regular editor window, and an older Agents workspace opens as an ordinary workspace. This is package-content evidence, not yet a final signed-app size or startup-memory result.
 - Make the startup trace warm-up quit through the editor. A signal-killed warm-up could leave Node's compile cache unwritten, so the trace now fails if the warm-up cannot quit normally. The benchmark also supports focused extension-backed startup trials and independent paired memory launches.
 

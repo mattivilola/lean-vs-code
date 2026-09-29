@@ -9,7 +9,7 @@ import { localize } from '../../../nls.js';
 import { CancellationToken, CancellationTokenSource } from '../../../base/common/cancellation.js';
 import { toErrorMessage } from '../../../base/common/errorMessage.js';
 import { CancellationError, isCancellationError } from '../../../base/common/errors.js';
-import { IProcessEnvironment, isWindows, OS } from '../../../base/common/platform.js';
+import { IProcessEnvironment, isMacintosh, isWindows, OS } from '../../../base/common/platform.js';
 import { generateUuid } from '../../../base/common/uuid.js';
 import { getSystemShell } from '../../../base/node/shell.js';
 import { NativeParsedArgs } from '../../environment/common/argv.js';
@@ -20,6 +20,34 @@ import { IConfigurationService } from '../../configuration/common/configuration.
 import { clamp } from '../../../base/common/numbers.js';
 
 let unixShellEnvPromise: Promise<typeof process.env> | undefined = undefined;
+
+/** Read the framed NUL-separated output of macOS `env -0`, leaving shell startup output outside the frame. */
+export function parseNullSeparatedShellEnvironment(raw: Buffer, mark: string): NodeJS.ProcessEnv {
+	const frame = Buffer.from(`\0${mark}\0`);
+	const start = raw.indexOf(frame);
+	const end = start < 0 ? -1 : raw.indexOf(frame, start + frame.length);
+	if (end < 0) {
+		throw new Error('Missing shell environment frame');
+	}
+
+	const entries: [string, string][] = [];
+	for (const record of raw.subarray(start + frame.length, end).toString('utf8').split('\0')) {
+		if (!record) {
+			continue;
+		}
+		const equals = record.indexOf('=');
+		if (equals < 1) {
+			throw new Error('Invalid shell environment entry');
+		}
+		entries.push([record.slice(0, equals), record.slice(equals + 1)]);
+	}
+	return Object.fromEntries(entries);
+}
+
+/** Run the system collector while preserving the login shell's startup output outside the frame. */
+export function createNativeEnvCommand(mark: string): string {
+	return `command printf '\\000%s\\000' '${mark}' && /usr/bin/env -0 && command printf '\\000%s\\000' '${mark}'`;
+}
 
 /**
  * Resolves the shell environment by spawning a shell. This call will cache
@@ -128,8 +156,14 @@ async function doResolveUnixShellEnv(logService: ILogService, token: Cancellatio
 		// handle popular non-POSIX shells
 		const name = basename(systemShellUnix);
 		let command: string, shellArgs: Array<string>;
+		const useNativeEnvCollector = isMacintosh && (name === 'zsh' || name === 'bash' || name === 'sh');
 		const extraArgs = '';
-		if (/^(?:pwsh|powershell)(?:-preview)?$/.test(name)) {
+		if (useNativeEnvCollector) {
+			// Avoid launching a second Electron process just to serialize the login shell's environment.
+			// `env -0` preserves newlines and '=' in values; random frames exclude startup chatter.
+			command = createNativeEnvCommand(mark);
+			shellArgs = ['-i', '-l', '-c'];
+		} else if (/^(?:pwsh|powershell)(?:-preview)?$/.test(name)) {
 			// Older versions of PowerShell removes double quotes sometimes so we use "double single quotes" which is how
 			// you escape single quotes inside of a single quoted string.
 			command = `& '${process.execPath}' ${extraArgs} -p '''${mark}'' + JSON.stringify(process.env) + ''${mark}'''`;
@@ -176,8 +210,8 @@ async function doResolveUnixShellEnv(logService: ILogService, token: Cancellatio
 		child.stderr.on('data', b => stderr.push(b));
 
 		child.on('close', (code, signal) => {
-			const raw = Buffer.concat(buffers).toString('utf8');
-			logService.trace('getUnixShellEnvironment#raw', raw);
+			const raw = Buffer.concat(buffers);
+			logService.trace('getUnixShellEnvironment#raw', raw.toString('utf8'));
 
 			const stderrStr = Buffer.concat(stderr).toString('utf8');
 			if (stderrStr.trim()) {
@@ -188,11 +222,11 @@ async function doResolveUnixShellEnv(logService: ILogService, token: Cancellatio
 				return reject(new Error(localize('resolveShellEnvExitError', "Unexpected exit code from spawned shell (code {0}, signal {1})", code, signal)));
 			}
 
-			const match = regex.exec(raw);
+			const match = useNativeEnvCollector ? null : regex.exec(raw.toString('utf8'));
 			const rawStripped = match ? match[1] : '{}';
 
 			try {
-				const env = JSON.parse(rawStripped);
+				const env: NodeJS.ProcessEnv = useNativeEnvCollector ? parseNullSeparatedShellEnvironment(raw, mark) : JSON.parse(rawStripped);
 
 				if (runAsNode) {
 					env['ELECTRON_RUN_AS_NODE'] = runAsNode;

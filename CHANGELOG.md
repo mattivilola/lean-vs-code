@@ -6,6 +6,7 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 - Omit the unused separate Agents window bundle from the macOS desktop package. Requests for that window open a regular editor window, and workspaces saved by older builds can still open as ordinary workspaces. The final signed-app size will be reported after release packaging.
 - Let GUI test launches use the same compact, bottom-left window for both apps. An experimental main-process Node compile cache was removed after its paired startup trial did not show a reliable improvement.
+- On macOS zsh, bash, and sh launches, collect the login-shell environment with the system `env -0` command instead of starting another Electron process solely to serialize it. Other shells retain the original collector. App-level speed impact remains under test.
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
