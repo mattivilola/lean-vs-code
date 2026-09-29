@@ -43,6 +43,7 @@ Options:
   --memory-idle-ms <n>          Wait after editable file readiness before memory sampling (default: 30000)
   --memory-only                 Skip timed startup and existing-window trials
   --startup-only                Measure editable-file startup without existing-window or memory trials
+  --window-bounds <x,y,w,h>      Seed each isolated test window at these macOS point coordinates
   --output-root <path>          Parent directory for a unique results directory
   --lean-label <text>           Display label for the first app (default: Lean VS Code)
   --oss-label <text>            Display label for the comparison app (default: Code-OSS)
@@ -67,6 +68,7 @@ function parseArgs(argv) {
 		memoryIdleMs: MEMORY_IDLE_MS,
 		memoryOnly: false,
 		startupOnly: false,
+		windowBounds: undefined,
 		outputRoot: DEFAULT_OUTPUT_ROOT,
 		leanLabel: 'Lean VS Code',
 		ossLabel: 'Code-OSS',
@@ -89,7 +91,8 @@ function parseArgs(argv) {
 		['--lean-label', 'leanLabel'],
 		['--oss-label', 'ossLabel'],
 		['--startup-timeout-ms', 'startupTimeoutMs'],
-		['--launch-mode', 'launchMode']
+		['--launch-mode', 'launchMode'],
+		['--window-bounds', 'windowBounds']
 	]);
 
 	for (let index = 0; index < argv.length; index++) {
@@ -126,9 +129,10 @@ function parseArgs(argv) {
 		if (!value || value.startsWith('--')) {
 			throw new Error(`Expected a value after ${arg}`);
 		}
-		result[key] = key === 'samples' || key === 'memorySamples' || key === 'memoryLaunches' || key === 'memoryIdleMs' || key === 'startupTimeoutMs'
-			? parsePositiveInteger(value, arg)
-			: value;
+		result[key] = key === 'windowBounds' ? parseWindowBounds(value)
+			: key === 'samples' || key === 'memorySamples' || key === 'memoryLaunches' || key === 'memoryIdleMs' || key === 'startupTimeoutMs'
+				? parsePositiveInteger(value, arg)
+				: value;
 	}
 	return result;
 }
@@ -138,6 +142,33 @@ function parsePositiveInteger(value, option) {
 		throw new Error(`${option} must be a positive integer.`);
 	}
 	return Number(value);
+}
+
+function parseWindowBounds(value) {
+	const match = /^(-?\d+),(-?\d+),(\d+),(\d+)$/.exec(value);
+	if (!match) {
+		throw new Error('--window-bounds must be x,y,width,height in macOS points.');
+	}
+	const [x, y, width, height] = match.slice(1).map(Number);
+	if (![x, y, width, height].every(Number.isSafeInteger) || width < 400 || height < 270) {
+		throw new Error('--window-bounds needs safe integer coordinates, width >= 400, and height >= 270.');
+	}
+	return { x, y, width, height };
+}
+
+function seedWindowBounds(profile, bounds) {
+	if (!bounds) {
+		return;
+	}
+	const storagePath = path.join(profile, 'user-data', 'User', 'globalStorage', 'storage.json');
+	fs.mkdirSync(path.dirname(storagePath), { recursive: true });
+	const storage = fs.existsSync(storagePath) ? JSON.parse(fs.readFileSync(storagePath, 'utf8')) : {};
+	storage.windowsState = {
+		...(storage.windowsState ?? {}),
+		lastActiveWindow: { uiState: { mode: 1, ...bounds } },
+		openedWindows: []
+	};
+	fs.writeFileSync(storagePath, JSON.stringify(storage) + '\n');
 }
 
 function validateOptions(options) {
@@ -454,6 +485,7 @@ async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileR
 	let sample;
 	try {
 		installControlExtension(app, vsix, profile);
+		seedWindowBounds(profile, options.windowBounds);
 		startedAt = new Date().toISOString();
 		started = performance.now();
 		child = await startApp(app, profile, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined, options);
@@ -466,6 +498,7 @@ async function runLaunchSample(app, appIndex, sampleIndex, fixturePath, profileR
 			order: appIndex + 1,
 			launchMode: options.launchMode,
 			profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
+			windowBounds: options.windowBounds ?? null,
 			startedAt,
 			elapsedMs: Number((performance.now() - started).toFixed(3)),
 			readiness: marker,
@@ -696,6 +729,7 @@ function appMetadata(apps, baseRevision, options) {
 			startupProfile: options.reuseStartupProfile ? 'reused after warm-up' : 'fresh per launch',
 			launchMode: options.launchMode,
 			profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
+			windowBounds: options.windowBounds ?? null,
 			settingsOverrides: options.reuseStartupProfile ? { 'window.restoreWindows': 'none' } : {},
 			gitWorkspaceTrackedFiles: options.gitWorkspace ? GIT_WORKSPACE_FILES + 1 : 0,
 			userExtensions: 'isolated extensions-dir with the same harness control extension installed as a VSIX',
@@ -710,6 +744,7 @@ function appMetadata(apps, baseRevision, options) {
 
 async function waitForReady(app, fixturePath, profile, vsix, controlDir, options) {
 	installControlExtension(app, vsix, profile);
+	seedWindowBounds(profile, options.windowBounds);
 	const child = await startApp(app, profile, controlDir, fixturePath, options.gitWorkspace ? path.dirname(fixturePath) : undefined, options);
 	try {
 		await child.rootPid();
@@ -860,6 +895,7 @@ async function run(options) {
 		memoryIdleMs: options.startupOnly ? 0 : options.memoryIdleMs,
 		launchMode: options.launchMode,
 		profileCondition: options.reuseStartupProfile ? 'established' : 'fresh',
+		windowBounds: options.windowBounds ?? null,
 		outputRoot: path.resolve(options.outputRoot),
 		gitWorkspace: options.gitWorkspace
 	};
@@ -1057,6 +1093,8 @@ export {
 	makeFixtureContent,
 	createExtension,
 	parseArgs,
+	parseWindowBounds,
+	seedWindowBounds,
 	parseFootprintBytes,
 	parsePsRows,
 	percentile,

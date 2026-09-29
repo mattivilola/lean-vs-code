@@ -17,6 +17,8 @@ node scripts/lean-perf/benchmark.mjs \
 
 The default is 30 timed startup and 30 existing-window file-open samples per product, one startup warm-up per product, a 5-second existing-window settle period, 3 memory snapshots after 30 seconds of idle time, and an output directory under `scripts/lean-perf/results/`. Pass `--samples`, `--memory-samples`, `--memory-idle-ms`, or `--output-root` to adjust the run. Every run gets a new report directory and a short, isolated profile directory under `/private/tmp/lean-perf-*`; both are retained for inspection. No existing profile is opened or removed.
 
+To keep GUI tests in a compact bottom-left window on the current 1512 × 982-point Mac display, add `--window-bounds 16,546,560,360`. The harness writes the same requested bounds into each app's isolated profile *before* a launch, so placement work is outside the timed startup interval; the manifest records the coordinates. Width must be at least 400 points and height at least 270 points. Recalculate the top-left `y` coordinate if the display or Dock changes. This keeps the window small but macOS may still briefly focus it; do not run GUI tests during work that cannot tolerate a focus change. Use identical bounds for both apps in every paired comparison, and do not compare results from different window sizes as though geometry had no effect.
+
 To investigate a process-role memory outlier, run independent stopped-app launches with one short-idle snapshot from each fresh isolated profile:
 
 ```sh

@@ -15,11 +15,13 @@ import {
 	makeFixtureContent,
 	createExtension,
 	parseArgs,
+	parseWindowBounds,
 	parseFootprintBytes,
 	parsePsRows,
 	percentile,
 	readApp,
-	selectProcessTree
+	selectProcessTree,
+	seedWindowBounds
 } from './benchmark.mjs';
 
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'lean-perf-smoke-'));
@@ -30,6 +32,14 @@ try {
 	assert.equal(parseArgs(['--reuse-startup-profile']).reuseStartupProfile, true);
 	assert.equal(parseArgs(['--startup-only']).startupOnly, true);
 	assert.equal(parseArgs(['--memory-only']).memoryOnly, true);
+	const compactBounds = { x: 16, y: 546, width: 560, height: 360 };
+	assert.deepEqual(parseArgs(['--window-bounds', '16,546,560,360']).windowBounds, compactBounds);
+	assert.deepEqual(parseWindowBounds('16,546,560,360'), compactBounds);
+	assert.throws(() => parseWindowBounds('16,546,300,200'), /width >= 400/);
+	const placementProfile = path.join(temporaryRoot, 'placement-profile');
+	seedWindowBounds(placementProfile, compactBounds);
+	const placementStorage = JSON.parse(fs.readFileSync(path.join(placementProfile, 'user-data', 'User', 'globalStorage', 'storage.json'), 'utf8'));
+	assert.deepEqual(placementStorage.windowsState.lastActiveWindow.uiState, { mode: 1, ...compactBounds });
 	assert.equal(parseFootprintBytes('Auxiliary data:\n    phys_footprint: 123456 bytes\n'), 123456);
 	assert.equal(percentile([9, 2, 5, 1], 0.5), 2);
 	assert.equal(percentile([9, 2, 5, 1], 0.95), 9);
@@ -105,6 +115,7 @@ try {
 		'--oss-app', baselinePath,
 		'--base-revision', 'a'.repeat(40),
 		'--samples', '1',
+		'--window-bounds', '16,546,560,360',
 		'--memory-samples', '1',
 		'--memory-idle-ms', '1',
 		'--output-root', outputRoot,
@@ -112,6 +123,7 @@ try {
 	], { encoding: 'utf8' });
 	assert.equal(dryRun.status, 0, dryRun.stderr);
 	assert.equal(JSON.parse(dryRun.stdout).dryRun, true);
+	assert.deepEqual(JSON.parse(dryRun.stdout).plan.windowBounds, compactBounds);
 	assert.equal(fs.existsSync(outputRoot), false);
 	const focusedDryRun = spawnSync(process.execPath, [
 		scriptPath, '--lean-app', appPath, '--oss-app', baselinePath,
