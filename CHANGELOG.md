@@ -14,6 +14,7 @@ See the [v0.7.0 release notes](lean/docs/RELEASE_NOTES_0.7.0.md) for validation 
 - On macOS zsh, bash, and sh launches, collect the login-shell environment with the system `env -0` command instead of starting another Electron process solely to serialize it. Other shells retain the original collector. A nine-pair candidate diagnostic improved extension-editable file readiness versus installed v0.6.0. This release makes no new startup percentage claim; earlier speed results remain labeled with the version measured.
 - Let GUI test launches use the same compact, bottom-left window for both apps. An experimental main-process Node compile cache was removed after its paired startup trial did not show a reliable improvement.
 - Sign and notarize the Apple Silicon app, update ZIP, and DMG. The signed v0.7.0 app bundle contains 513 MiB of apparent file content versus 1,463 MiB for the original, same-revision minified Code-OSS package: **64.9% smaller**. This is disk content, not a runtime-memory or download-size claim. Full paired GUI comparisons now run only for major releases or when explicitly requested.
+- Publish the stable GitHub feed and confirm the v0.6 → v0.7 in-app update on the reference Mac. The installed v0.7.0 bundle reports the expected app identity and passes strict deep signature verification.
 
 ## 0.6.0
 
