@@ -22,7 +22,20 @@
     "compactFunctionalSmoke": "passed; edit/save, 401-file file search, 400-file text search, integrated terminal, Git diff, extension webview",
     "focusedStartupTrace": "at earlier cfc1608 candidate commit, workbench import took 635 ms, versus 564 ms in an earlier non-paired control trace. Conditions and host load were not matched, so no causal latency conclusion follows.",
     "threePairHistoricalDiagnostic": "at earlier cfc1608 candidate commit, incomplete and not a release benchmark: the installed v0.7 app timed out once after a successful warm-up. Of two complete established-profile pairs, the candidate took 1897 versus 1581 ms in one pair and 1450 versus 1460 ms in the other. This does not demonstrate a speed gain.",
-    "quickChatFirstUse": "not yet exercised",
+    "quickChatFirstUse": "six focused headless Chromium proxy tests passed at dd8fa8dab983; real first-use UI remains untested",
+    "threePairFreshProfileDiagnostic": {
+      "status": "complete internal historical diagnostic, not a release benchmark or a Code-OSS comparison",
+      "candidateBuildCommit": "6e6d17dbbac65ba98896b885972e4e8d6cdf9cfc",
+      "controlBuildCommit": "a494193286d97236cbc59d0ecfa2232a2dfa80e5",
+      "control": "installed signed Lean VS Code v0.7.0",
+      "method": "three alternating pairs, fresh isolated profile per launch, one raw-only warm-up per app, direct launch, 560 x 360 bottom-left window, 100 KiB requested file, installed control VSIX, readiness verified by a reversible extension-host TextEditor.edit; no existing-window or memory trial",
+      "candidateMillisecondsByPair": [1274.472, 1309.037, 1382.525],
+      "controlMillisecondsByPair": [1502.578, 1319.206, 1355.98],
+      "candidateMedianMilliseconds": 1309.037,
+      "controlMedianMilliseconds": 1355.98,
+      "candidateFasterPairs": 2,
+      "conclusion": "A 46.943 ms median difference across three pairs is a weak directional signal only. One pair favored v0.7. The earlier established-profile diagnostic was mixed. Do not infer a reliable startup improvement or publish a speed percentage."
+    },
     "pairedGuiBenchmark": "not run; reserved for a major release or explicit owner request"
   }
 }
