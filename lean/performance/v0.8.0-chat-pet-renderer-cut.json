@@ -1,0 +1,26 @@
+{
+  "status": "v0.8 source candidate, not a release benchmark",
+  "baselineCommit": "d5b2d703b137f99931fdb4251e6753949a556044",
+  "change": "Pass the ChatPetWidget constructor from the optional chat UI host to the synchronously registered service. The service no longer imports the renderer at runtime; it still creates one pet per window synchronously through the same instantiation service.",
+  "method": "Run the same desktop esbuild target and aiBundleAudit before and after the source edit. Sum the workbench entry and every transitively static JavaScript output. Confirm that chatPetWidget.ts remains in the emitted optional graph but is absent from the initial static graph. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31694631,
+    "after": 31552220,
+    "difference": 142411
+  },
+  "reachableAiSourceBytesUnminified": {
+    "before": 3199689,
+    "after": 3057438,
+    "difference": 142251
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "changedFileLint": "passed",
+    "headlessChromiumCoordinatorTests": "5 passed, including constructor delivery on delayed activation and existing focus, dormancy, and auxiliary-window behavior",
+    "aiGuard": "unreachable chatPetWidget input removed from the initial-graph allowlist so an eager reintroduction fails the guard",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present",
+    "realChatPetFirstUse": "not exercised yet; include in the combined functional release check"
+  },
+  "claimLimit": "This is an initial static JavaScript size reduction and a plausible cold-parse opportunity, not a measured startup, installed disk, or runtime memory gain."
+}

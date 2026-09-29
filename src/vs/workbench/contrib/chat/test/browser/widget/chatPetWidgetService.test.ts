@@ -11,7 +11,7 @@ import { constObservable, observableValue } from '../../../../../../base/common/
 import { mock } from '../../../../../../base/test/common/mock.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../../base/test/common/utils.js';
 import { IChatWidget, IChatWidgetService } from '../../../browser/chat.js';
-import { IChatPetWidgetHost } from '../../../browser/widget/chatPetWidget.js';
+import { ChatPetWidget, IChatPetWidgetHost } from '../../../browser/widget/chatPetWidget.js';
 import { ChatPetWidgetCoordinator } from '../../../browser/widget/chatPetWidgetService.js';
 
 suite('ChatPetWidgetService', () => {
@@ -29,6 +29,25 @@ suite('ChatPetWidgetService', () => {
 			onDidChangePlatform: Event.None,
 		};
 	}
+
+	test('uses the registering host constructor when a dormant pet first activates', () => {
+		const chatWidgetService = new class extends mock<IChatWidgetService>() {
+			override lastFocusedWidget: IChatWidget | undefined = undefined;
+			override readonly onDidChangeFocusedWidget = Event.None;
+		}();
+		const constructors: (typeof ChatPetWidget)[] = [];
+		const coordinator = disposables.add(new ChatPetWidgetCoordinator((_host, constructor) => {
+			constructors.push(constructor);
+			return { setHost: () => { }, dispose: () => { } };
+		}, chatWidgetService));
+		const preferred = observableValue(disposables, false);
+		const registration = disposables.add(coordinator.register({}, createHost(), ChatPetWidget, preferred));
+
+		assert.deepStrictEqual(constructors, []);
+		preferred.set(true, undefined);
+		assert.deepStrictEqual(constructors, [ChatPetWidget]);
+		assert.strictEqual(registration.active.get(), true);
+	});
 
 	test('uses one window pet and moves it between focused or preferred chat hosts', () => {
 		const focusEmitter = disposables.add(new Emitter<IChatWidget | undefined>());
@@ -70,14 +89,14 @@ suite('ChatPetWidgetService', () => {
 		const thirdHost = createHost();
 		const firstPreferred = observableValue(disposables, true);
 		const secondPreferred = observableValue(disposables, false);
-		const firstRegistration = disposables.add(coordinator.register(firstWidget, firstHost, firstPreferred));
-		const secondRegistration = disposables.add(coordinator.register(secondWidget, secondHost, secondPreferred));
+		const firstRegistration = disposables.add(coordinator.register(firstWidget, firstHost, ChatPetWidget, firstPreferred));
+		const secondRegistration = disposables.add(coordinator.register(secondWidget, secondHost, ChatPetWidget, secondPreferred));
 
 		firstPreferred.set(false, undefined);
 		secondPreferred.set(true, undefined);
 		chatWidgetService.focus(firstWidget);
 		firstRegistration.dispose();
-		const thirdRegistration = disposables.add(coordinator.register(thirdWidget, thirdHost));
+		const thirdRegistration = disposables.add(coordinator.register(thirdWidget, thirdHost, ChatPetWidget));
 		chatWidgetService.focus(thirdWidget);
 
 		assert.deepStrictEqual({
@@ -114,7 +133,7 @@ suite('ChatPetWidgetService', () => {
 			pet = instance;
 			return instance;
 		}, chatWidgetService));
-		const registration = coordinator.register(widget, createHost());
+		const registration = coordinator.register(widget, createHost(), ChatPetWidget);
 
 		registration.dispose();
 		const disposedAfterHost = disposed;
@@ -137,7 +156,7 @@ suite('ChatPetWidgetService', () => {
 			dispose: () => disposed = true,
 		}), chatWidgetService, windowCloseEmitter.event));
 		const host = createHost();
-		const registration = disposables.add(coordinator.register(widget, host));
+		const registration = disposables.add(coordinator.register(widget, host, ChatPetWidget));
 
 		windowCloseEmitter.fire(dom.getWindowId(dom.getWindow(host.parent)));
 
@@ -172,7 +191,7 @@ suite('ChatPetWidgetService', () => {
 			};
 		}, chatWidgetService));
 		const host = createHost(parent);
-		const registration = coordinator.register(widget, host);
+		const registration = coordinator.register(widget, host, ChatPetWidget);
 
 		registration.dispose();
 		const dormantParent = hostHistory[1]?.parent;

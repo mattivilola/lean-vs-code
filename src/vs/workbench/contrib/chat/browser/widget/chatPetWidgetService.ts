@@ -9,7 +9,9 @@ import { Disposable, DisposableStore, IDisposable } from '../../../../../base/co
 import { autorun, constObservable, IObservable, ISettableObservable, observableValue, transaction } from '../../../../../base/common/observable.js';
 import { createDecorator, IInstantiationService } from '../../../../../platform/instantiation/common/instantiation.js';
 import { IChatWidgetService } from '../chat.js';
-import { ChatPetWidget, IChatPetWidgetHost } from './chatPetWidget.js';
+import type { ChatPetWidget, IChatPetWidgetHost } from './chatPetWidget.js';
+
+type ChatPetWidgetConstructor = typeof ChatPetWidget;
 
 export const IChatPetWidgetService = createDecorator<IChatPetWidgetService>('chatPetWidgetService');
 
@@ -19,7 +21,8 @@ export interface IChatPetWidgetHostRegistration extends IDisposable {
 
 export interface IChatPetWidgetService {
 	readonly _serviceBrand: undefined;
-	register(owner: object, host: IChatPetWidgetHost, preferred?: IObservable<boolean>, onDidFocus?: Event<void>): IChatPetWidgetHostRegistration;
+	/** The optional host supplies its renderer, keeping this registered service independent of chat UI code. */
+	register(owner: object, host: IChatPetWidgetHost, petConstructor: ChatPetWidgetConstructor, preferred?: IObservable<boolean>, onDidFocus?: Event<void>): IChatPetWidgetHostRegistration;
 }
 
 interface IChatPetWidgetInstance extends IDisposable {
@@ -29,6 +32,7 @@ interface IChatPetWidgetInstance extends IDisposable {
 interface IChatPetHostEntry {
 	readonly owner: object;
 	readonly host: IChatPetWidgetHost;
+	readonly petConstructor: ChatPetWidgetConstructor;
 	readonly windowId: number;
 	readonly preferred: IObservable<boolean> | undefined;
 	readonly active: ISettableObservable<boolean>;
@@ -47,7 +51,7 @@ export class ChatPetWidgetCoordinator extends Disposable {
 	private readonly windows = new Map<number, IChatPetWindowEntry>();
 
 	constructor(
-		private readonly createPet: (host: IChatPetWidgetHost) => IChatPetWidgetInstance,
+		private readonly createPet: (host: IChatPetWidgetHost, petConstructor: ChatPetWidgetConstructor) => IChatPetWidgetInstance,
 		private readonly chatWidgetService: IChatWidgetService,
 		onWillUnregisterWindow: Event<number> = Event.None,
 	) {
@@ -61,7 +65,7 @@ export class ChatPetWidgetCoordinator extends Disposable {
 		this._register(onWillUnregisterWindow(windowId => this.disposeWindow(windowId)));
 	}
 
-	register(owner: object, host: IChatPetWidgetHost, preferred?: IObservable<boolean>, onDidFocus?: Event<void>): IChatPetWidgetHostRegistration {
+	register(owner: object, host: IChatPetWidgetHost, petConstructor: ChatPetWidgetConstructor, preferred?: IObservable<boolean>, onDidFocus?: Event<void>): IChatPetWidgetHostRegistration {
 		if (this.hosts.has(owner)) {
 			throw new Error('Cannot register the same chat pet host multiple times');
 		}
@@ -70,6 +74,7 @@ export class ChatPetWidgetCoordinator extends Disposable {
 		const entry: IChatPetHostEntry = {
 			owner,
 			host,
+			petConstructor,
 			windowId,
 			preferred,
 			active: observableValue(this, false),
@@ -120,7 +125,7 @@ export class ChatPetWidgetCoordinator extends Disposable {
 			return;
 		}
 
-		const pet = this.createPet(entry.host);
+		const pet = this.createPet(entry.host, entry.petConstructor);
 		entry.active.set(true, undefined);
 		this.windows.set(entry.windowId, {
 			pet,
@@ -220,13 +225,13 @@ export class ChatPetWidgetService extends Disposable implements IChatPetWidgetSe
 	) {
 		super();
 		this.coordinator = this._register(new ChatPetWidgetCoordinator(
-			host => instantiationService.createInstance(ChatPetWidget, host, undefined),
+			(host, petConstructor) => instantiationService.createInstance(petConstructor, host, undefined),
 			chatWidgetService,
 			Event.map(dom.onWillUnregisterWindow, window => dom.getWindowId(window)),
 		));
 	}
 
-	register(owner: object, host: IChatPetWidgetHost, preferred?: IObservable<boolean>, onDidFocus?: Event<void>): IChatPetWidgetHostRegistration {
-		return this.coordinator.register(owner, host, preferred, onDidFocus);
+	register(owner: object, host: IChatPetWidgetHost, petConstructor: ChatPetWidgetConstructor, preferred?: IObservable<boolean>, onDidFocus?: Event<void>): IChatPetWidgetHostRegistration {
+		return this.coordinator.register(owner, host, petConstructor, preferred, onDidFocus);
 	}
 }

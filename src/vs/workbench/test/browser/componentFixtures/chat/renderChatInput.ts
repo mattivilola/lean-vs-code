@@ -31,6 +31,7 @@ import { ComponentFixtureContext, createEditorServices } from '../fixtureUtils.j
 import { FixtureMenuService, registerChatFixtureServices } from './chatFixtureUtils.js';
 import { IChatPetService } from '../../../../contrib/chat/browser/chatPetService.js';
 import { IChatPetWidgetService } from '../../../../contrib/chat/browser/widget/chatPetWidgetService.js';
+import { ChatPetWidget } from '../../../../contrib/chat/browser/widget/chatPetWidget.js';
 import { configureChatPetFixtureFileRoot, FixtureChatPetService, assertChatPetInScreenshot } from './chatPetFixtureUtils.js';
 
 /** Room above the input for the pet, which stands outside it. */
@@ -269,7 +270,7 @@ export async function renderChatInput(context: ComponentFixtureContext, fixtureO
 			inputChanged: inputPart.inputEditor.onDidChangeModelContent,
 			getPlatformTop: petCenterX => inputPart.getChatPetPlatformTop(petCenterX),
 			onDidChangePlatform: inputPart.onDidChangeChatPetHorizontalPlatforms,
-		})));
+		}, ChatPetWidget)));
 	}
 
 	inputPart.layout(width);

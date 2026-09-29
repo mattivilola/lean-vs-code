@@ -450,7 +450,6 @@
     "src/vs/workbench/contrib/chat/browser/widget/chatPendingDragAndDrop.ts",
     "src/vs/workbench/contrib/chat/browser/widget/chatPetAccessoryRenderer.ts",
     "src/vs/workbench/contrib/chat/browser/widget/chatPetAccessoryRig.ts",
-    "src/vs/workbench/contrib/chat/browser/widget/chatPetWidget.ts",
     "src/vs/workbench/contrib/chat/browser/widget/chatPetWidgetService.ts",
     "src/vs/workbench/contrib/chat/browser/widget/chatReadOnlyBanner.ts",
     "src/vs/workbench/contrib/chat/browser/widget/chatReferenceDrop.ts",
