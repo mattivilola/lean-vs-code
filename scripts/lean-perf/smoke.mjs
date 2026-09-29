@@ -18,6 +18,7 @@ import {
 	parseWindowBounds,
 	parseFootprintBytes,
 	parsePsRows,
+	assessRunCompleteness,
 	percentile,
 	readApp,
 	selectProcessTree,
@@ -44,6 +45,21 @@ try {
 	assert.equal(percentile([9, 2, 5, 1], 0.5), 2);
 	assert.equal(percentile([9, 2, 5, 1], 0.95), 9);
 	assert.throws(() => parseFootprintBytes('No footprint data'), /phys_footprint/);
+	const sampleApps = [{ key: 'lean' }, { key: 'code-oss' }];
+	const sampleOptions = { samples: 2, startupOnly: true, memoryOnly: false, memoryLaunches: 1, memorySamples: 1 };
+	const completeSamples = sampleApps.flatMap(app => [
+		{ subject: app.key, type: 'launchWarmup', sample: 0, elapsedMs: 100 },
+		{ subject: app.key, type: 'launchToEditableFile', sample: 1, elapsedMs: 110 },
+		{ subject: app.key, type: 'launchToEditableFile', sample: 2, elapsedMs: 120 }
+	]);
+	assert.equal(assessRunCompleteness(completeSamples, sampleApps, sampleOptions).complete, true);
+	const timedOutSamples = completeSamples.map(sample => sample.subject === 'code-oss' && sample.sample === 1
+		? { ...sample, elapsedMs: null, error: 'Timed out' } : sample);
+	const incompleteRun = assessRunCompleteness(timedOutSamples, sampleApps, sampleOptions);
+	assert.equal(incompleteRun.complete, false);
+	assert.deepEqual(incompleteRun.failures[0], {
+		subject: 'code-oss', type: 'launchToEditableFile', expected: 2, recorded: 2, valid: 1, failedSamples: [1]
+	});
 
 	const rows = parsePsRows([
 		'100 1 2048 /Applications/Lean VS Code.app/Contents/MacOS/Electron',

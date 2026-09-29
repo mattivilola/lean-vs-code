@@ -871,6 +871,27 @@ function makeSummary(samples, apps) {
 	return summary;
 }
 
+function assessRunCompleteness(samples, apps, options) {
+	const expectedByType = [
+		['launchWarmup', 1, 'elapsedMs'],
+		['launchToEditableFile', options.memoryOnly ? 0 : options.samples, 'elapsedMs'],
+		['existingWindowFileOpen', options.memoryOnly || options.startupOnly ? 0 : options.samples, 'elapsedMs'],
+		['wholeProcessTreeMemory', options.startupOnly ? 0 : options.memoryLaunches * options.memorySamples, 'physicalFootprintBytes']
+	];
+	const failures = [];
+	for (const app of apps) {
+		for (const [type, expected, metric] of expectedByType) {
+			const actual = samples.filter(sample => sample.subject === app.key && sample.type === type);
+			const valid = actual.filter(sample => Number.isFinite(sample[metric]) && sample[metric] >= 0 && !sample.error && !sample.captureError);
+			if (actual.length !== expected || valid.length !== expected) {
+				failures.push({ subject: app.key, type, expected, recorded: actual.length, valid: valid.length,
+					failedSamples: actual.filter(sample => !valid.includes(sample)).map(sample => sample.sample) });
+			}
+		}
+	}
+	return { complete: failures.length === 0, failures };
+}
+
 async function run(options) {
 	validateOptions(options);
 	const apps = SUBJECTS.map(subject => readApp(
@@ -1021,9 +1042,14 @@ async function run(options) {
 	}
 
 	const summary = makeSummary(samples, apps);
+	Object.assign(summary, assessRunCompleteness(samples, apps, options));
 	writeJson(path.join(runDir, 'summary.json'), summary);
 	process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
 	process.stdout.write(`Raw samples: ${rawSamplesPath}\nSummary: ${path.join(runDir, 'summary.json')}\n`);
+	if (!summary.complete) {
+		process.stderr.write('Incomplete benchmark: one or more planned observations failed. Inspect summary.json and samples.jsonl.\n');
+		process.exitCode = 1;
+	}
 }
 
 async function runOneExistingOpen(state, sampleIndex, runDir, options) {
@@ -1097,6 +1123,7 @@ export {
 	seedWindowBounds,
 	parseFootprintBytes,
 	parsePsRows,
+	assessRunCompleteness,
 	percentile,
 	readApp,
 	selectProcessTree,

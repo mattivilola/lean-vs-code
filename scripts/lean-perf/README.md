@@ -91,7 +91,7 @@ Each unique result directory contains:
 
 - `manifest.json`: machine, product metadata, fixture size, flags, settings, and supplied comparison revision.
 - `samples.jsonl`: raw timing and memory observations, including startup warm-ups, written as the run proceeds. Warm-ups are excluded from percentile summaries.
-- `summary.json`: per-product p50/p95/min/max and sample counts. Percentiles use nearest rank (`sorted[ceil(p*n)-1]`); failed samples stay visible in the raw file and do not enter the percentile calculation.
+- `summary.json`: per-product p50/p95/min/max and sample counts, plus `complete` and any missing or failed observations. Percentiles use nearest rank (`sorted[ceil(p*n)-1]`); failed samples stay visible in the raw file and do not enter the percentile calculation. The harness exits nonzero when the planned run is incomplete, even when some valid percentiles can be calculated; do not compare or publish those partial summaries.
 - `/private/tmp/lean-perf-*`: isolated per-run profiles, kept outside the report directory so Electron's Unix socket paths fit macOS's limit. The relative profile paths in raw samples point to them.
 - `trials/`, `fixtures/`, `harness-extension/`, and `harness-extension.vsix`: harness-owned run artifacts for inspection. Each trial's `control/app.log` captures launch errors.
 
