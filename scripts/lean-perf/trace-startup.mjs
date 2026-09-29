@@ -56,6 +56,8 @@ if (!LAUNCH_MODES.includes(launchMode)) {
 }
 
 const app = readApp(appPath, 'trace', 'Trace app');
+const workbenchHtml = fs.readFileSync(path.join(app.appPath, 'Contents', 'Resources', 'app', 'out', 'vs', 'code', 'electron-browser', 'workbench', 'workbench.html'), 'utf8');
+const hasWorkbenchModulePreload = workbenchHtml.includes('<link rel="modulepreload" href="../../../workbench/workbench.desktop.main.js">');
 const fixture = path.resolve(fixturePath);
 const output = path.resolve(outputPath);
 fs.accessSync(fixture, fs.constants.R_OK);
@@ -282,7 +284,7 @@ try {
 	const resourceTimings = await debuggerClient.evaluate(`performance.getEntriesByType('resource').map(entry => ({ name: entry.name, initiatorType: entry.initiatorType, startTime: entry.startTime, duration: entry.duration, responseEnd: entry.responseEnd, transferSize: entry.transferSize, encodedBodySize: entry.encodedBodySize }))`);
 	const navigationTimings = await debuggerClient.evaluate(`performance.getEntriesByType('navigation').map(entry => ({ startTime: entry.startTime, domInteractive: entry.domInteractive, domContentLoadedEventEnd: entry.domContentLoadedEventEnd, loadEventEnd: entry.loadEventEnd, duration: entry.duration }))`);
 	const controlExtensionActivation = JSON.parse(fs.readFileSync(traceReadyFile, 'utf8'));
-	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, controlExtensionInstall: 'vsix', controlExtensionActivation, chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), rendererTimeOrigin, marks, resourceTimings, navigationTimings }, null, 2) + '\n');
+	fs.writeFileSync(output, JSON.stringify({ app: app.appPath, productCommit: app.commit, fixture, profile, launchMode, profileCondition: reuseProfile ? 'established' : 'fresh', windowBounds: windowBounds ?? null, hasWorkbenchModulePreload, controlExtensionInstall: 'vsix', spawnedAtEpochMs: child.spawnedAt, controlExtensionActivation, chromiumTrace: chromiumTrace ?? null, capturedAt: new Date().toISOString(), rendererTimeOrigin, marks, resourceTimings, navigationTimings }, null, 2) + '\n');
 	console.log(`Captured ${marks.length} startup marks in ${output}`);
 	for (let attempt = 0; attempt < 100 && !fs.existsSync(`${output}.perf.md`) && !fs.existsSync(`${output}.perf.md.error`); attempt++) {
 		await delay(200);
