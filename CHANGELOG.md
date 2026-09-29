@@ -8,7 +8,7 @@ Before each release, move these notes under the new version, link its release no
 
 ## 0.8.0
 
-See the [v0.8.0 release notes](lean/docs/RELEASE_NOTES_0.8.0.md) for the exact build, validation, and limitations.
+See the [v0.8.0 release notes](lean/docs/RELEASE_NOTES_0.8.0.md) and [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.8.0) for the exact build, validation, and limitations.
 
 - Move four retained optional chat, terminal-context, pet-renderer, and image-hash paths out of the initial desktop renderer graph while keeping the editor and extension API intact. The [optimization ledger](lean/docs/OPTIMIZATION_LEDGER.md) records byte-level graph evidence, focused tests, and rejected experiments. These cuts have **no new measured startup or runtime-memory percentage**.
 - Keep all 87 extension API actors registered and pass the AI/service guard. Focused proxy, pet, image-hash, and paste tests passed. The built-in chat and agent UI remain removed.

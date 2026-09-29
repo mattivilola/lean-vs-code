@@ -10,7 +10,7 @@ A signed, notarized v0.8.0 package was built from `cd1c632c1de880b9251cbbe0b7379
 
 An isolated [source functional smoke](../performance/v0.8.0-source-functional-smoke-no-timing.json) and [signed-release functional check](../performance/v0.8.0-release-functional-no-timing.json) passed in a 560 × 360 bottom-left window without collecting GUI timing data. The removed built-in AI UI leaves the retained optional chat paths unavailable as user-facing actions.
 
-The installed Open VSX EditorConfig extension verified its signature, activated, and processed a sample file in both the source and signed-app checks. The installed v0.7-to-v0.8 updater trial remains to be confirmed after the live feed is published.
+The installed Open VSX EditorConfig extension verified its signature, activated, and processed a sample file in both the source and signed-app checks. The public v0.8 release and live feed are available; the owner's installed v0.7-to-v0.8 updater trial remains to be confirmed.
 
 ## Earlier v0.6 and v0.7 leads
 
