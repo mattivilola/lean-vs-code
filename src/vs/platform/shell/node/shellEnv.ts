@@ -227,6 +227,15 @@ async function doResolveUnixShellEnv(logService: ILogService, token: Cancellatio
 
 			try {
 				const env: NodeJS.ProcessEnv = useNativeEnvCollector ? parseNullSeparatedShellEnvironment(raw, mark) : JSON.parse(rawStripped);
+				if (useNativeEnvCollector) {
+					// The old collector's final command was the app executable. Preserve the
+					// values exposed to extensions when zsh optimizes that final command.
+					env._ = process.execPath;
+					const shellLevel = Number(env.SHLVL);
+					if (name === 'zsh' && Number.isSafeInteger(shellLevel) && shellLevel > 0) {
+						env.SHLVL = String(shellLevel - 1);
+					}
+				}
 
 				if (runAsNode) {
 					env['ELECTRON_RUN_AS_NODE'] = runAsNode;
