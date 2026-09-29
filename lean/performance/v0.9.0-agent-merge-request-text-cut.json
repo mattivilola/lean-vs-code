@@ -1,0 +1,27 @@
+{
+  "status": "v0.9 source candidate, not a release benchmark",
+  "baselineCommit": "bf6e44f364371c0d79993d5ad6e69d41d710e53f",
+  "change": "Move Agent Merge request and summary text from the DOM content-part module into a lightweight browser text module. Keep compatibility re-exports from the content part and leave its widget rendering intact.",
+  "method": "Run the same desktop esbuild target and aiBundleAudit before and after the source edit. Compare the workbench entry plus every transitively static JavaScript output. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31520121,
+    "after": 31489745,
+    "difference": 30376
+  },
+  "reachableAiSourceBytesUnminified": {
+    "before": 3029465,
+    "after": 3014856,
+    "difference": 14609
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "clientCompile": "passed",
+    "changedFileLint": "passed",
+    "headlessChromiumRequestText": "1 passed",
+    "headlessChromiumAgentMergeWidget": "9 passed",
+    "aiGuard": "new lightweight module reviewed and allowed; guard passed",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present"
+  },
+  "claimLimit": "This is an initial static JavaScript size reduction and a plausible cold-parse opportunity, not a measured startup, installed disk, or runtime memory gain."
+}

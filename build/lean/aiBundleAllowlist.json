@@ -228,6 +228,7 @@
     "src/vs/workbench/contrib/chat/browser/chatEditing/notebook/notebookCellChanges.ts",
     "src/vs/workbench/contrib/chat/browser/chatEditing/notebook/overlayToolbarDecorator.ts",
     "src/vs/workbench/contrib/chat/browser/chatGoalSummaryService.ts",
+    "src/vs/workbench/contrib/chat/browser/chatAgentMergeRequestText.ts",
     "src/vs/workbench/contrib/chat/browser/chatIcons.ts",
     "src/vs/workbench/contrib/chat/browser/chatImageCarouselService.ts",
     "src/vs/workbench/contrib/chat/browser/chatImageUtils.ts",

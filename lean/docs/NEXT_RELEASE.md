@@ -6,6 +6,8 @@ Keep small, plausible cuts only when emitted graph output improves and focused c
 
 For v0.9, inspect a current startup CPU trace before choosing another renderer cut, or make a narrow safe change supported by the emitted graph and focused tests. Preserve extension activation, editing, Git review, terminal, and search. An upstream-base upgrade requires its own planned compatibility release. The sub-one-second p95 target remains unproven.
 
+The first v0.9 candidate [extracts Agent Merge request labels from the DOM widget](../performance/v0.9.0-agent-merge-request-text-cut.json). It removes 30,376 unminified bytes from the initial static JavaScript graph relative to v0.8.0, with typecheck, lint, AI/DI/actor guard, and focused headless Chromium checks passing. This is source-graph evidence only; hold it for the owner's combined GUI timing test rather than assigning an isolated speed gain.
+
 A signed, notarized v0.8.0 package was built from `cd1c632c1de880b9251cbbe0b737946d88359fb1`. The [v0.8 notes](RELEASE_NOTES_0.8.0.md) record its static, functional, extension, and packaging checks without a new GUI speed claim.
 
 An isolated [source functional smoke](../performance/v0.8.0-source-functional-smoke-no-timing.json) and [signed-release functional check](../performance/v0.8.0-release-functional-no-timing.json) passed in a 560 × 360 bottom-left window without collecting GUI timing data. The removed built-in AI UI leaves the retained optional chat paths unavailable as user-facing actions.

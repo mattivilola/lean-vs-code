@@ -16,7 +16,7 @@ import { posix } from '../../../../../../base/common/path.js';
 import { ThemeIcon } from '../../../../../../base/common/themables.js';
 import { URI } from '../../../../../../base/common/uri.js';
 import { localize } from '../../../../../../nls.js';
-import { IAgentMergePromptSummary, parseAgentMergePrompt } from '../../../../../../platform/agentHost/common/agentMergePrompt.js';
+import { IAgentMergePromptSummary } from '../../../../../../platform/agentHost/common/agentMergePrompt.js';
 import { CommandsRegistry, ICommandService } from '../../../../../../platform/commands/common/commands.js';
 import { IHoverService } from '../../../../../../platform/hover/browser/hover.js';
 import { IMarkdownRenderer } from '../../../../../../platform/markdown/browser/markdownRenderer.js';
@@ -24,8 +24,10 @@ import { IOpenerService } from '../../../../../../platform/opener/common/opener.
 import { ChatPillActionViewItem } from '../../../../../browser/chatPills.js';
 import { formatChatRequestTimestamp } from '../../../common/chatProgressFormatting.js';
 import { AgentFeedbackReviewCommandId, IChatAgentFeedbackPullRequestThreadLink } from '../../../common/chatService/chatService.js';
-import { IChatRequestViewModel } from '../../../common/model/chatViewModel.js';
+import { agentMergeSource, describeAgentMergeStatus, getAgentMergeSummaryLabel } from '../../chatAgentMergeRequestText.js';
 import './media/chatAgentMergeContent.css';
+
+export { getAgentMergeRequestLabel, getAgentMergeRequestSummary, getAgentMergeSummaryLabel } from '../../chatAgentMergeRequestText.js';
 
 /** The widget draws its own chrome, so the button contributes no colors of its own. */
 const transparentButtonStyles: IButtonStyles = {
@@ -63,75 +65,6 @@ interface IAgentMergeCommentItem extends IAgentMergeFileLocation {
 	readonly body: string;
 	/** GitHub review thread id, used to link the comment to local feedback. */
 	readonly threadId?: string;
-}
-
-const agentMergeSource = localize('chat.agentMerge.source', "Agent Merge");
-
-/** The status shown in the header, describing why the turn was started. */
-function describeAgentMergeStatus(summary: IAgentMergePromptSummary, commentCount: number): string {
-	const events: string[] = [];
-	if (commentCount > 0) {
-		events.push(commentCount === 1
-			? localize('chat.agentMerge.oneReviewComment', "1 Review Comment")
-			: localize('chat.agentMerge.reviewComments', "{0} Review Comments", commentCount));
-	}
-	if (summary.failedChecks.length > 0) {
-		events.push(summary.failedChecks.length === 1
-			? localize('chat.agentMerge.oneFailingCheck', "1 Failing Check")
-			: localize('chat.agentMerge.failingChecks', "{0} Failing Checks", summary.failedChecks.length));
-	}
-	if (summary.conflicting) {
-		events.push(localize('chat.agentMerge.mergeConflicts', "Merge Conflicts"));
-	}
-	if (summary.behind) {
-		events.push(localize('chat.agentMerge.behindBaseBranch', "Behind Base Branch"));
-	}
-	if (events.length === 0) {
-		events.push(localize('chat.agentMerge.noPendingFeedback', "No Pending Feedback"));
-	}
-
-	return formatAgentMergeEvents(events);
-}
-
-function formatAgentMergeEvents(events: readonly string[]): string {
-	switch (events.length) {
-		case 1:
-			return events[0];
-		case 2:
-			return localize('chat.agentMerge.twoEvents', "{0} and {1}", events[0], events[1]);
-		case 3:
-			return localize('chat.agentMerge.threeEvents', "{0}, {1}, and {2}", events[0], events[1], events[2]);
-		default:
-			return localize('chat.agentMerge.fourEvents', "{0}, {1}, {2}, and {3}", events[0], events[1], events[2], events[3]);
-	}
-}
-
-/**
- * Plain-text rendering of the widget's collapsed header. The request's own text
- * is the machine-facing prompt, which is never displayed, so screen readers and
- * transcript find use this in its place.
- */
-export function getAgentMergeSummaryLabel(summary: IAgentMergePromptSummary): string {
-	const status = describeAgentMergeStatus(summary, collectComments(summary).length);
-	return localize('chat.agentMerge.summaryLabel', "{0}, {1}", status, agentMergeSource);
-}
-
-/**
- * Stand-in label for a system-initiated Agent Merge request, whose own text is
- * the machine-facing prompt this widget renders in place of. Returns
- * `undefined` for every other request, which keeps its own text.
- */
-export function getAgentMergeRequestLabel(element: IChatRequestViewModel): string | undefined {
-	const summary = getAgentMergeRequestSummary(element);
-	return summary && getAgentMergeSummaryLabel(summary);
-}
-
-/** Extracts display data only for explicitly identified Agent Merge requests. */
-export function getAgentMergeRequestSummary(element: IChatRequestViewModel): IAgentMergePromptSummary | undefined {
-	if (!element.isSystemInitiated || element.requestSource !== 'agentMerge' || element.systemInitiatedLabel !== undefined) {
-		return undefined;
-	}
-	return parseAgentMergePrompt(element.messageText);
 }
 
 /** Renders the Agent Merge prompt as a compact disclosure whose header action switches between merge details and the agent message. Mirrored review file labels link to their local comments. */

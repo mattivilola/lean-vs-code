@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { IChatRequestViewModel } from '../common/model/chatViewModel.js';
-import { getAgentMergeRequestLabel } from './widget/chatContentParts/chatAgentMergeContentPart.js';
+import { getAgentMergeRequestLabel } from './chatAgentMergeRequestText.js';
 
 /**
  * Text that stands for a request wherever its row is described rather than
