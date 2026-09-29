@@ -2999,6 +2999,7 @@ export default defineConfig(
 			'src/vs/workbench/contrib/inlineChat/browser/inlineChatAccess.ts',
 			'src/vs/workbench/contrib/leanAi/browser/leanAi.contribution.ts',
 			'src/vs/workbench/contrib/leanAi/browser/lazyQuickChatService.ts',
+			'src/vs/workbench/contrib/leanAi/test/browser/lazyQuickChatService.test.ts',
 			'src/vs/workbench/contrib/leanAi/electron-browser/leanAi.contribution.ts',
 			'src/vs/workbench/contrib/terminalContrib/chat/browser/leanTerminalChatService.contribution.ts',
 			'src/vs/platform/update/electron-main/leanMacUpdateFeed.ts',

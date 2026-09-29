@@ -89,7 +89,7 @@ export class LazyQuickChatService extends Disposable implements IQuickChatServic
 		if (this.loading) {
 			return;
 		}
-		this.loading = import('../../chat/browser/widgetHosts/chatQuick.js').then(({ QuickChatService }) => {
+		this.loading = this.loadQuickChatModule().then(({ QuickChatService }) => {
 			if (this._store.isDisposed || !this.pendingOperations.length) {
 				return;
 			}
@@ -114,6 +114,10 @@ export class LazyQuickChatService extends Disposable implements IQuickChatServic
 			this.pendingOperations = [];
 			this._onDidClose.fire();
 		}).finally(() => { this.loading = undefined; });
+	}
+
+	protected loadQuickChatModule(): Promise<typeof import('../../chat/browser/widgetHosts/chatQuick.js')> {
+		return import('../../chat/browser/widgetHosts/chatQuick.js');
 	}
 
 	override dispose(): void {
