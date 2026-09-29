@@ -23,6 +23,11 @@
     "mainShellCompletionToHostFork": 65,
     "hostForkToControlExtensionActivation": 99
   },
+  "separateNonGuiShellProbeMilliseconds": {
+    "shellOnly": [765, 663, 660],
+    "nativeEnvCommand": [707, 718, 667],
+    "setup": "Three /bin/zsh -i -l -c runs per command with VSCODE_RESOLVING_ENVIRONMENT=1 and output suppressed; not paired with the GUI trace or original Code-OSS."
+  },
   "method": "An environment-gated main-process log records wall-clock shell start and completion; renderer and extension-host marks use absolute epoch milliseconds. The trace tool correlates them after an isolated warm-up and normal quit. The control extension's activation is not the extension-editable-file benchmark endpoint. One launch cannot estimate p95 or recoverable time.",
-  "limits": "The final shell environment is required at utilityProcess.fork. The 119 ms wrapper wait is an observed gate, not a safe speed saving. This trace does not compare against original Code-OSS, and no public startup gain is claimed."
+  "limits": "The separate shell-only probe suggests user login-shell initialization dominates this local interval; it does not isolate a product regression or justify skipping shell initialization. The final shell environment is required at utilityProcess.fork. The 119 ms wrapper wait is an observed gate, not a safe speed saving. This trace does not compare against original Code-OSS, and no public startup gain is claimed."
 }
