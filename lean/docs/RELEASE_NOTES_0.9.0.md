@@ -24,4 +24,4 @@ The updater ZIP and mounted DMG contained 2,209 matching app entries, with no fi
 
 ## Publication and remaining checks
 
-The signed release is ready for publication on GitHub. The live latest-release feed and native update path can be verified only after publication. The owner's installed app is not modified by this build. The sub-one-second p95 extension-backed editable-file target remains open until a signed matched Code-OSS comparison proves it; the last paired speed results remain version-labeled as v0.6.0.
+The [v0.9.0 GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.9.0) contains the verified DMG, ZIP, and feed. The live latest-release feed advertises v0.9.0 with the expected ZIP hash and size. The owner's installed app was not modified by this build; a native update trial on that app remains to be confirmed by the owner. The sub-one-second p95 extension-backed editable-file target remains open until a signed matched Code-OSS comparison proves it; the last paired speed results remain version-labeled as v0.6.0.
