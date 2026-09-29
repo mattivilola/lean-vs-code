@@ -6,6 +6,13 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.9.0 candidate
+
+See the [v0.9.0 release notes](lean/docs/RELEASE_NOTES_0.9.0.md) for the exact build, focused validation, and publication status.
+
+- Extract Agent Merge request labels from the DOM widget, defer the optional session hover widget until first use, and defer terminal approval analysis modules until a nonempty command needs suggestions. The three cuts remove 58,471 unminified bytes from the initial desktop static JavaScript graph compared with v0.8.0; this is not a measured startup or runtime-memory saving.
+- Keep editing, local Git review, search, terminal, and extension APIs intact. Focused typecheck, lint, AI/DI/actor guard, and headless Chromium tests passed. A compact signed-app functional check and release packaging remain pending.
+
 ## 0.8.0
 
 See the [v0.8.0 release notes](lean/docs/RELEASE_NOTES_0.8.0.md) and [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.8.0) for the exact build, validation, and limitations.
