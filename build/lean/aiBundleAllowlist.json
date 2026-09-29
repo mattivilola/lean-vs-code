@@ -135,6 +135,7 @@
     "src/vs/workbench/contrib/chat/browser/actions/chatToolActions.ts",
     "src/vs/workbench/contrib/chat/browser/actions/chatToolPicker.ts",
     "src/vs/workbench/contrib/chat/browser/actions/configureVoiceInstructionsAction.ts",
+    "src/vs/workbench/contrib/chat/browser/actions/terminalContext.ts",
     "src/vs/workbench/contrib/chat/browser/agentPluginRepositoryService.ts",
     "src/vs/workbench/contrib/chat/browser/agentSessions/agentHost/agentCustomizationSyncProvider.ts",
     "src/vs/workbench/contrib/chat/browser/agentSessions/agentHost/agentHostActiveClientService.ts",

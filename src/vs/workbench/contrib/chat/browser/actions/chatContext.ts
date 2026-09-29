@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Codicon } from '../../../../../base/common/codicons.js';
 import { CancellationToken } from '../../../../../base/common/cancellation.js';
-import { Disposable, DisposableStore } from '../../../../../base/common/lifecycle.js';
+import { Disposable } from '../../../../../base/common/lifecycle.js';
 import { isElectron } from '../../../../../base/common/platform.js';
 import { ThemeIcon } from '../../../../../base/common/themables.js';
 import { localize } from '../../../../../nls.js';
@@ -34,15 +34,15 @@ import { convertBufferToScreenshotVariable } from '../attachments/chatScreenshot
 import { ChatInstructionsPickerPick } from '../promptSyntax/attachInstructionsAction.js';
 import { IChatSessionsService, isAgentHostTarget } from '../../common/chatSessionsService.js';
 import { getAgentSessionProviderIcon, AgentSessionProviders } from '../agentSessions/agentSessions.js';
-import { ITerminalService } from '../../../terminal/browser/terminal.js';
 import { URI } from '../../../../../base/common/uri.js';
-import { ITerminalCommand, TerminalCapability } from '../../../../../platform/terminal/common/capabilities/capabilities.js';
 import { getChatSessionType } from '../../common/model/chatUri.js';
 import { buildHostLocalEventsPath } from '../copilotCliEventsUri.js';
 import { IGitService } from '../../../git/common/gitService.js';
 import { getGitHubRemoteInfo } from '../../../git/common/utils.js';
 import { IWorkspaceContextService } from '../../../../../platform/workspace/common/workspace.js';
 import { isEqual } from '../../../../../base/common/resources.js';
+
+export { TerminalContext } from './terminalContext.js';
 
 const OPEN_GITHUB_ISSUE_COMMAND = 'github.copilot.chat.cloudSessions.openIssue';
 const OPEN_GITHUB_PULL_REQUEST_COMMAND = 'github.copilot.chat.cloudSessions.openPullRequest';
@@ -370,73 +370,6 @@ class ClipboardImageContextValuePick implements IChatContextValueItem {
 			value: fileBuffer,
 			kind: 'image',
 		};
-	}
-}
-
-export class TerminalContext implements IChatContextValueItem {
-
-	readonly type = 'valuePick';
-	readonly icon = Codicon.terminal;
-	readonly label = localize('terminal', 'Terminal');
-	constructor(private readonly _resource: URI, @ITerminalService private readonly _terminalService: ITerminalService) {
-
-	}
-	isEnabled(widget: IChatWidget) {
-		const terminal = this._terminalService.getInstanceFromResource(this._resource);
-		return !!widget.attachmentCapabilities.supportsTerminalAttachments && terminal?.isDisposed === false;
-	}
-	async asAttachment(widget: IChatWidget): Promise<IChatRequestVariableEntry | undefined> {
-		const terminal = this._terminalService.getInstanceFromResource(this._resource);
-		if (!terminal) {
-			return;
-		}
-		const params = new URLSearchParams(this._resource.query);
-		const command = terminal.capabilities.get(TerminalCapability.CommandDetection)?.commands.find(cmd => cmd.id === params.get('command'));
-		if (!command) {
-			return;
-		}
-		const attachment: IChatRequestVariableEntry = {
-			kind: 'terminalCommand',
-			id: `terminalCommand:${Date.now()}}`,
-			value: this.asValue(command),
-			name: command.command,
-			command: command.command,
-			output: command.getOutput(),
-			exitCode: command.exitCode,
-			resource: this._resource
-		};
-		const cleanup = new DisposableStore();
-		let disposed = false;
-		const disposeCleanup = () => {
-			if (disposed) {
-				return;
-			}
-			disposed = true;
-			cleanup.dispose();
-		};
-		cleanup.add(widget.attachmentModel.onDidChange(e => {
-			if (e.deleted.includes(attachment.id)) {
-				disposeCleanup();
-			}
-		}));
-		cleanup.add(terminal.onDisposed(() => {
-			widget.attachmentModel.delete(attachment.id);
-			widget.refreshParsedInput();
-			disposeCleanup();
-		}));
-		return attachment;
-	}
-
-	private asValue(command: ITerminalCommand): string {
-		let value = `Command: ${command.command}`;
-		const output = command.getOutput();
-		if (output) {
-			value += `\nOutput:\n${output}`;
-		}
-		if (typeof command.exitCode === 'number') {
-			value += `\nExit Code: ${command.exitCode}`;
-		}
-		return value;
 	}
 }
 

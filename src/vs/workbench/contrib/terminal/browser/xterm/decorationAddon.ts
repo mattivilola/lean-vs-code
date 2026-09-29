@@ -29,7 +29,7 @@ import { MarkdownString } from '../../../../../base/common/htmlContent.js';
 import { IChatContextPickService } from '../../../chat/browser/attachments/chatContextPickService.js';
 import { IChatWidgetService } from '../../../chat/browser/chat.js';
 import { IInstantiationService } from '../../../../../platform/instantiation/common/instantiation.js';
-import { TerminalContext } from '../../../chat/browser/actions/chatContext.js';
+import { TerminalContext } from '../../../chat/browser/actions/terminalContext.js';
 import { getTerminalUri, parseTerminalUri } from '../terminalUri.js';
 import { URI } from '../../../../../base/common/uri.js';
 import { ChatAgentLocation } from '../../../chat/common/constants.js';

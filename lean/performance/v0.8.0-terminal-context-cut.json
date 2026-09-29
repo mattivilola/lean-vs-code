@@ -1,0 +1,25 @@
+{
+  "status": "v0.8 source candidate, not a release benchmark",
+  "baselineCommit": "91819301ee909554368af36f64be9341bd79ae99",
+  "change": "Move TerminalContext unchanged into its own module and import it directly from the terminal decoration addon, so the optional chat-context contribution is no longer in the desktop initial static graph.",
+  "method": "Run the same desktop esbuild target and aiBundleAudit before and after the source edit. The audit sums the workbench entry and every transitively static JavaScript output. Compare source class bodies against the baseline commit. No GUI timing, production-minified package size, runtime memory, or Code-OSS comparison was measured.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31756066,
+    "after": 31694631,
+    "difference": 61435
+  },
+  "reachableAiSourceBytesUnminified": {
+    "before": 3256350,
+    "after": 3199689,
+    "difference": 56661
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "changedFileLint": "passed",
+    "sourceImplementationMatch": "TerminalContext class body matches the baseline commit exactly",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present",
+    "realTerminalAttachToChatUi": "not exercised yet; include in the combined functional release check"
+  },
+  "claimLimit": "This is an initial static JavaScript size reduction and a plausible cold-parse opportunity, not a measured startup, disk, or memory gain."
+}
