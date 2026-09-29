@@ -6,7 +6,14 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
-The [v0.8.0 source-candidate notes](lean/docs/RELEASE_NOTES_0.8.0.md) track four retained startup-graph cuts and their focused checks. This is not a signed release or a new speed claim; final functional, packaging, update, and documentation gates remain open.
+## 0.8.0
+
+See the [v0.8.0 release notes](lean/docs/RELEASE_NOTES_0.8.0.md) for the exact build, validation, and limitations.
+
+- Move four retained optional chat, terminal-context, pet-renderer, and image-hash paths out of the initial desktop renderer graph while keeping the editor and extension API intact. The [optimization ledger](lean/docs/OPTIMIZATION_LEDGER.md) records byte-level graph evidence, focused tests, and rejected experiments. These cuts have **no new measured startup or runtime-memory percentage**.
+- Keep all 87 extension API actors registered and pass the AI/service guard. Focused proxy, pet, image-hash, and paste tests passed. The built-in chat and agent UI remain removed.
+- Build, sign, and notarize the Apple Silicon app, updater ZIP, and DMG. The exact signed app passed compact, isolated, no-timing checks for edit/save, search, terminal, Git diff, extension webview, and Open VSX EditorConfig installation and activation.
+- The signed app bundle is **64.9% smaller by apparent file content** than the original same-revision, locally repaired minified Code-OSS source package: 514 versus 1,463 MiB. This disk result is not a runtime-memory or download-size claim. The full paired GUI performance comparison remains deferred until a major release or explicit request.
 
 ## 0.7.0
 

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "kind": "packaged-app-bundle-size",
+  "createdAt": "2026-09-29T12:35:05.709Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "osRelease": "27.0.0"
+  },
+  "method": "macOS /usr/bin/du -A -sk for apparent app-bundle size and /usr/bin/du -sk for allocated space; symlinks are not followed. KiB units are 1024 bytes. App bundles were measured in place on the same Mac. DMG byte sizes are recorded only for supplied files and are not compared unless both exist.",
+  "apps": [
+    {
+      "key": "lean",
+      "label": "Lean VS Code",
+      "version": "0.8.0",
+      "extensionApiVersion": "1.139.1",
+      "productCommit": "cd1c632c1de880b9251cbbe0b737946d88359fb1",
+      "appBundleApparentKiB": 526171,
+      "appBundleAllocatedKiB": 529780,
+      "sectionsApparentKiB": {
+        "workbenchOut": 41560,
+        "bundledExtensions": 9482,
+        "nodeModulesAsar": 83290,
+        "nodeModulesLoose": 5100,
+        "electronFrameworks": 284133
+      },
+      "bundledExtensionDirectories": 33,
+      "sourceMapFiles": 50,
+      "dmgBytes": 205127879,
+      "dmgSha256": "d6eb112d99d0323310693ea099af9a49c21688c0f52be349c95f5dd4be8f9a0c"
+    },
+    {
+      "key": "code-oss",
+      "label": "Code-OSS",
+      "version": "1.139.1",
+      "extensionApiVersion": "1.139.1",
+      "productCommit": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+      "appBundleApparentKiB": 1498032,
+      "appBundleAllocatedKiB": 1554840,
+      "sectionsApparentKiB": {
+        "workbenchOut": 302287,
+        "bundledExtensions": 630645,
+        "nodeModulesAsar": 85950,
+        "nodeModulesLoose": 26664,
+        "electronFrameworks": 284022
+      },
+      "bundledExtensionDirectories": 96,
+      "sourceMapFiles": 8915
+    }
+  ],
+  "comparison": {
+    "appBundleApparentPercentLess": 64.9,
+    "appBundleAllocatedPercentLess": 65.9
+  },
+  "limitations": "This is a comparison with a locally repaired, ad-hoc-signed original Code-OSS source package, not Microsoft VS Code. It reflects bundled extensions, generated assets, and filesystem allocation. It does not establish process-memory use, download-size savings without two comparable DMGs, or the size of user-installed extensions and data."
+}
