@@ -1,0 +1,19 @@
+{
+  "status": "rejected and reverted source experiment, not a release benchmark",
+  "baselineCommit": "995f9dcf0d14ce87e1c6f89c436d433c08f9c4f8",
+  "changeTried": "Replace the main-thread language-model actor's static resizeImage import with a dynamic import made only for image_url request parts.",
+  "method": "Run the same desktop esbuild target and aiBundleAudit on the baseline and experiment, summing the entry and every transitively static JavaScript output. Inspect static importers of chatImageUtils.ts in the experimental metafile. The source and experimental test were reverted after this static check; no GUI timing was run.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 31552220,
+    "experimental": 31557260,
+    "increase": 5040
+  },
+  "remainingEagerPath": "The registered chat attachment-resolve service still imports chatImageUtils.ts, so the helper remained in the initial static graph.",
+  "checks": {
+    "aiGuard": "passed for the experiment",
+    "diRegistrations": "0 missing",
+    "extensionApiActors": "87 of 87 present",
+    "functionalOrTimingTests": "not run after the static regression was found"
+  },
+  "decision": "Revert the experiment; it added a lazy boundary without deferring the implementation."
+}
