@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-29T07:42:22.199Z",
+  "comparisonBaseRevision": "04c0d99f4fb0d8afe6ce4f0c58e31e183ac3e4b1",
+  "machine": {
+    "platform": "darwin",
+    "osRelease": "27.0.0",
+    "architecture": "arm64",
+    "cpuModel": "Apple M3 Max",
+    "logicalCpuCount": 14,
+    "totalMemoryBytes": 38654705664,
+    "nodeVersion": "v26.9.0"
+  },
+  "apps": [
+    {
+      "key": "lean",
+      "label": "v0.7 shell candidate",
+      "version": "1.139.1",
+      "commit": "cae9e6c00b7dfdd8ee14697f12eafac8b64e4269"
+    },
+    {
+      "key": "code-oss",
+      "label": "installed v0.6.0",
+      "version": "1.139.1",
+      "commit": "b9fc5a6015027ab57a33bc9476824db977cbb825"
+    }
+  ],
+  "metrics": {
+    "lean.launchToEditableFile": {
+      "unit": "ms",
+      "count": 9,
+      "p50": 1396.356,
+      "p95": 1527.576,
+      "min": 1271.506,
+      "max": 1527.576
+    },
+    "code-oss.launchToEditableFile": {
+      "unit": "ms",
+      "count": 9,
+      "p50": 1483.557,
+      "p95": 2653.832,
+      "min": 1418.889,
+      "max": 2653.832
+    }
+  },
+  "kind": "extension-backed-file",
+  "settings": {
+    "samplesPerApp": 9,
+    "launchMode": "direct",
+    "windowBounds": {
+      "x": 16,
+      "y": 546,
+      "width": 560,
+      "height": 360
+    },
+    "profileCondition": "established",
+    "controlExtensionInstall": "vsix"
+  },
+  "samples": [
+    {
+      "subject": "lean",
+      "sample": 1,
+      "elapsedMs": 1425.604
+    },
+    {
+      "subject": "code-oss",
+      "sample": 1,
+      "elapsedMs": 2653.832
+    },
+    {
+      "subject": "code-oss",
+      "sample": 2,
+      "elapsedMs": 1626.238
+    },
+    {
+      "subject": "lean",
+      "sample": 2,
+      "elapsedMs": 1527.576
+    },
+    {
+      "subject": "lean",
+      "sample": 3,
+      "elapsedMs": 1389.128
+    },
+    {
+      "subject": "code-oss",
+      "sample": 3,
+      "elapsedMs": 1771.693
+    },
+    {
+      "subject": "code-oss",
+      "sample": 4,
+      "elapsedMs": 1483.557
+    },
+    {
+      "subject": "lean",
+      "sample": 4,
+      "elapsedMs": 1396.356
+    },
+    {
+      "subject": "lean",
+      "sample": 5,
+      "elapsedMs": 1310.092
+    },
+    {
+      "subject": "code-oss",
+      "sample": 5,
+      "elapsedMs": 1459.668
+    },
+    {
+      "subject": "code-oss",
+      "sample": 6,
+      "elapsedMs": 1477.259
+    },
+    {
+      "subject": "lean",
+      "sample": 6,
+      "elapsedMs": 1474.638
+    },
+    {
+      "subject": "lean",
+      "sample": 7,
+      "elapsedMs": 1453.801
+    },
+    {
+      "subject": "code-oss",
+      "sample": 7,
+      "elapsedMs": 1458.492
+    },
+    {
+      "subject": "code-oss",
+      "sample": 8,
+      "elapsedMs": 1418.889
+    },
+    {
+      "subject": "lean",
+      "sample": 8,
+      "elapsedMs": 1358.02
+    },
+    {
+      "subject": "lean",
+      "sample": 9,
+      "elapsedMs": 1271.506
+    },
+    {
+      "subject": "code-oss",
+      "sample": 9,
+      "elapsedMs": 1530.01
+    }
+  ]
+}

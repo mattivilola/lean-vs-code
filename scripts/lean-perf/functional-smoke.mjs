@@ -11,13 +11,25 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const appArg = process.argv[2];
 if (!appArg) {
-	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app> [scenario]');
+	console.error('Usage: node scripts/lean-perf/functional-smoke.mjs <App.app> [scenario] [--window-bounds x,y,width,height]');
 	process.exit(2);
 }
-const scenario = process.argv[3] ?? 'all';
+const options = process.argv.slice(3);
+const scenario = options[0] && !options[0].startsWith('--') ? options.shift() : 'all';
 const scenarios = new Set(['all', 'editableFileAndSave', 'workspaceSearch', 'workspaceTextSearch', 'integratedTerminal', 'gitReview', 'extensionWebview']);
 if (!scenarios.has(scenario)) {
 	throw new Error(`Unknown functional smoke scenario: ${scenario}`);
+}
+if (options.length && (options.length !== 2 || options[0] !== '--window-bounds')) {
+	throw new Error('Expected --window-bounds x,y,width,height after the scenario.');
+}
+const boundsMatch = options.length ? /^(-?\d+),(-?\d+),(\d+),(\d+)$/.exec(options[1]) : null;
+if (options.length && !boundsMatch) {
+	throw new Error('--window-bounds must be x,y,width,height.');
+}
+const windowBounds = boundsMatch ? Object.fromEntries(['x', 'y', 'width', 'height'].map((key, index) => [key, Number(boundsMatch[index + 1])])) : undefined;
+if (windowBounds && (!Object.values(windowBounds).every(Number.isSafeInteger) || windowBounds.width < 400 || windowBounds.height < 270)) {
+	throw new Error('--window-bounds needs safe integer coordinates, width >= 400, and height >= 270.');
 }
 const usesTextSearchProposal = scenario === 'all' || scenario === 'workspaceTextSearch';
 
@@ -44,6 +56,14 @@ fs.writeFileSync(path.join(profile, 'user-data/User/settings.json'), JSON.string
 	'security.workspace.trust.enabled': false,
 	'terminal.integrated.defaultProfile.osx': 'zsh'
 }, null, 2) + '\n');
+if (windowBounds) {
+	const storagePath = path.join(profile, 'user-data/User/globalStorage/storage.json');
+	fs.mkdirSync(path.dirname(storagePath), { recursive: true });
+	fs.writeFileSync(storagePath, JSON.stringify({ windowsState: {
+		lastActiveWindow: { uiState: { mode: 1, ...windowBounds } },
+		openedWindows: []
+	} }) + '\n');
+}
 fs.writeFileSync(path.join(workspace, 'src/main.ts'), 'export const value = 1;\n');
 if (usesTextSearchProposal) {
 	for (let index = 0; index < 400; index++) {
