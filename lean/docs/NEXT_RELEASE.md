@@ -14,6 +14,8 @@ The [MCP route deferral](../performance/v0.11.0-mcp-gateway-route-lazy-cut.json)
 
 The [v0.11 investigation](V0.11_STARTUP_INVESTIGATION.md) records Astra's review and the bundler findings. Current CPU profiling, compact packaged feature checks, signing/notarization and release publication remain pending. No v0.11 speed or memory claim is established.
 
+The CPU diagnostic now supports compact bounds, starts sampling before debugger resume, verifies the workbench target and labels partial attachment coverage. Eight mocked checks pass without opening an app. Use this tool only during an authorized GUI interval; its extension-registration endpoint does not replace the extension-editable-file benchmark.
+
 ## Prior v0.10 planning record
 
 v0.8.0 retained four cold-renderer cuts: the [optional Quick Chat split](V0.8_COLD_RENDERER_SPLIT_DESIGN.md), the [terminal chat-context helper isolation](../performance/v0.8.0-terminal-context-cut.json), the [chat-pet renderer boundary](../performance/v0.8.0-chat-pet-renderer-cut.json), and the [image-hash helper isolation](../performance/v0.8.0-image-hash-helper-cut.json). Its desktop initial static graph is 31,520,121 unminified JavaScript bytes. This is **bundle evidence**, not a measured startup-time or memory gain. The [ledger](OPTIMIZATION_LEDGER.md) also records rejected cuts, including a language-model image-helper lazy import that made the graph larger and a chat-session status extraction that broke required service registration.

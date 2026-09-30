@@ -165,3 +165,7 @@ test/unit/electron/renderer.js
 test/unit/fullJsonStreamReporter.js
 test/unit/node/index.js
 test/unit/reporter.js
+
+# Standalone Node performance diagnostic and its no-app regression checks.
+scripts/lean-perf/profile-renderer-startup.mjs
+scripts/lean-perf/profile-renderer-startup.test.mjs
