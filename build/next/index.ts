@@ -60,6 +60,7 @@ const options = {
 	target: getArgValue('--target') ?? 'desktop', // 'desktop' | 'server' | 'server-web' | 'web'
 	sourceMapBaseUrl: getArgValue('--source-map-base-url'),
 	metafileOutput: getArgValue('--metafile-output'),
+	processMetafileDir: getArgValue('--process-metafile-dir'),
 };
 
 const SRC_DIR = 'src';
@@ -490,17 +491,20 @@ async function bundle(outDir: string, doMinify: boolean, doNls: boolean, doMangl
 		// For entry points that bundle CSS, we need to use outdir instead of outfile
 		// because esbuild can't produce multiple output files (JS + CSS) with outfile
 		const needsCssBundling = bundleCssEntryPoints.has(entryPoint);
+		const splitSharedProcess = entryPoint === 'vs/code/electron-utility/sharedProcess/sharedProcessMain';
 
 		const buildOptions: esbuild.BuildOptions = {
 			...getBundleOptions(doMinify, 'neutral'),
 			...(entryPoint === 'vs/workbench/workbench.desktop.main'
 				? { splitting: true, chunkNames: 'vs/workbench/chunks/[name]-[hash]' }
+				: splitSharedProcess
+					? { splitting: true, chunkNames: 'vs/code/electron-utility/sharedProcess/chunks/[name]-[hash]' }
 				: {}),
-			metafile: !!options.metafileOutput && entryPoint === 'vs/workbench/workbench.desktop.main',
-			entryPoints: needsCssBundling
+			metafile: (!!options.metafileOutput && entryPoint === 'vs/workbench/workbench.desktop.main') || (!!options.processMetafileDir && splitSharedProcess),
+			entryPoints: needsCssBundling || splitSharedProcess
 				? [{ in: entryPath, out: entryPoint }]
 				: [entryPath],
-			...(needsCssBundling
+			...(needsCssBundling || splitSharedProcess
 				? { outdir: path.join(REPO_ROOT, outDir) }
 				: { outfile: outPath }),
 			loader: {
@@ -514,9 +518,13 @@ async function bundle(outDir: string, doMinify: boolean, doNls: boolean, doMangl
 		};
 
 		const result = await esbuild.build(buildOptions);
-		if (result.metafile && options.metafileOutput) {
+		if (result.metafile && options.metafileOutput && entryPoint === 'vs/workbench/workbench.desktop.main') {
 			await fs.promises.mkdir(path.dirname(options.metafileOutput), { recursive: true });
 			await fs.promises.writeFile(options.metafileOutput, JSON.stringify(result.metafile));
+		}
+		if (result.metafile && options.processMetafileDir && splitSharedProcess) {
+			await fs.promises.mkdir(options.processMetafileDir, { recursive: true });
+			await fs.promises.writeFile(path.join(options.processMetafileDir, 'shared-process.json'), JSON.stringify(result.metafile));
 		}
 
 		buildResults.push({ outPath, result });
@@ -829,6 +837,7 @@ Options for 'bundle':
 	--target <target>  Build target: desktop (default), server, server-web, web
 	--source-map-base-url <url>  Rewrite sourceMappingURL to CDN URL
 	--metafile-output <path>      Write the desktop workbench esbuild input/output graph
+	--process-metafile-dir <dir>  Write the shared-process esbuild input/output graph
 
 Examples:
 	npx tsx build/next/index.ts build-fast

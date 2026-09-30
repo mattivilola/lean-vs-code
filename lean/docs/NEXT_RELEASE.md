@@ -8,9 +8,11 @@ For v0.11, first obtain a current startup CPU trace and identify a reproducible 
 
 On 30 September 2026, the owner restricted GUI benchmarks until **16:00 CET (15:00 UTC)**. Keep work to source review, implementation and non-GUI checks during that interval; do not launch the profiling tools during it. The normal major-release/explicit-request benchmark cadence still applies after that time.
 
-The first candidate [defers MCP gateway routes and sessions](../performance/v0.11.0-mcp-gateway-route-lazy-cut.json) until the existing asynchronous gateway server start. The service and IPC channel stay registered immediately; dynamic route refresh stays synchronous. A rebuilt isolated main-app graph falls from 2,070,863 to 2,055,580 unminified static JavaScript bytes (15,283 fewer). Typecheck, lint and 23 focused MCP HTTP/session tests pass. Service disposal and client disconnect during the load cannot publish late gateways; a failed load can retry. This is source evidence, not a production package or speed claim. Current CPU profiling and compact release checks remain pending.
+The [shared-process browser boundary](../performance/v0.11.0-shared-playwright-lazy-cut.json) enables scoped chunks and loads Playwright service code only on its first real operation. Initialization options remain synchronous, and idle session cleanup avoids loading. Ten channel lifecycle/first-use tests and the existing network-filter Tab test pass. The exact minified/NLS build report records the eager-byte reduction and total-byte growth; neither is a latency or memory measurement.
 
-The [v0.11 investigation](V0.11_STARTUP_INVESTIGATION.md) records Astra's focused review, the safe optional boundaries and the trace needed before scheduling changes.
+The [MCP route deferral](../performance/v0.11.0-mcp-gateway-route-lazy-cut.json) was rejected after the production build configuration showed main bundles remain unsplit. Its prospective 15,283-byte split-graph cut is not shipped savings: an isolated unsplit graph grew by 49,063 unminified bytes. Keep the route source boundary and tested lifecycle fixes, with a static import. Eight HTTP/lifecycle and sixteen session tests pass, including socket-listening teardown. The [remote CLI installer split](../performance/v0.11.0-remote-cli-installer-rejected.json) was also reverted after its exploratory graph grew by 1,397 bytes.
+
+The [v0.11 investigation](V0.11_STARTUP_INVESTIGATION.md) records Astra's review and the bundler findings. Current CPU profiling, compact packaged feature checks, signing/notarization and release publication remain pending. No v0.11 speed or memory claim is established.
 
 ## Prior v0.10 planning record
 

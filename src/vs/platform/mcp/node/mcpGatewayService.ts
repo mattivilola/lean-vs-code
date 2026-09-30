@@ -11,7 +11,7 @@ import { URI } from '../../../base/common/uri.js';
 import { generateUuid } from '../../../base/common/uuid.js';
 import { ILogger, ILoggerService } from '../../log/common/log.js';
 import { IMcpGatewayInfo, IMcpGatewayServerDescriptor, IMcpGatewayServerInfo, IMcpGatewayService, IMcpGatewaySingleServerInvoker, IMcpGatewayToolInvoker } from '../common/mcpGateway.js';
-import type { McpGatewayRoute } from './mcpGatewayRoute.js';
+import { McpGatewayRoute } from './mcpGatewayRoute.js';
 
 /**
  * Node.js implementation of the MCP Gateway Service.
@@ -35,7 +35,7 @@ export class McpGatewayService extends Disposable implements IMcpGatewayService 
 	/** Per-gateway disposables (e.g. event listeners) */
 	private readonly _gatewayDisposables = new Map<string, DisposableStore>();
 	private _serverStartPromise: Promise<void> | undefined;
-	private _routeConstructor: typeof McpGatewayRoute | undefined;
+	private _cancelServerStart: (() => void) | undefined;
 	private readonly _pendingGatewayCreates = new Set<{ clientId: unknown; canceled: boolean }>();
 	private readonly _logger: ILogger;
 
@@ -51,7 +51,7 @@ export class McpGatewayService extends Disposable implements IMcpGatewayService 
 		const pending = { clientId, canceled: false };
 		this._pendingGatewayCreates.add(pending);
 		try {
-			// Resolve optional code before accepting requests or creating synchronous routes.
+			// Do not publish a gateway if its owner disconnects during server startup.
 			await this._ensureServer();
 			this._throwIfDisposed();
 			if (pending.canceled) {
@@ -201,7 +201,7 @@ export class McpGatewayService extends Disposable implements IMcpGatewayService 
 			listResourceTemplates: () => toolInvoker.listResourceTemplatesForServer(serverId),
 		};
 
-		const route = new this._routeConstructor!(routeId, this._logger, singleServerInvoker, label);
+		const route = new McpGatewayRoute(routeId, this._logger, singleServerInvoker, label);
 		this._routes.set(routeId, route);
 		routeIds.add(routeId);
 		serverRouteMap.set(serverId, routeId);
@@ -308,24 +308,32 @@ export class McpGatewayService extends Disposable implements IMcpGatewayService 
 	}
 
 	private async _startServer(): Promise<void> {
-		const [{ createServer }, McpGatewayRoute] = await Promise.all([
-			import('http'), // Lazy due to https://github.com/nodejs/node/issues/59686
-			this._loadRouteConstructor(),
-		]);
+		const createServer = await this._loadHttpServerConstructor();
 		this._throwIfDisposed();
-		this._routeConstructor = McpGatewayRoute;
 		const deferredPromise = new DeferredPromise<void>();
 
-		this._server = createServer((req, res) => {
+		const server = createServer((req, res) => {
 			this._handleRequest(req, res);
 		});
+		this._server = server;
 
 		const portTimeout = setTimeout(() => {
 			deferredPromise.error(new Error('[McpGatewayService] Timeout waiting for server to start'));
 		}, 5000);
+		const cancelServerStart = () => {
+			clearTimeout(portTimeout);
+			if (!deferredPromise.isSettled) {
+				deferredPromise.error(new Error('[McpGatewayService] Server stopped during startup'));
+			}
+		};
+		this._cancelServerStart = cancelServerStart;
 
-		this._server.on('listening', () => {
-			const address = this._server!.address();
+		server.on('listening', () => {
+			if (this._store.isDisposed || this._server !== server) {
+				cancelServerStart();
+				return;
+			}
+			const address = server.address();
 			if (typeof address === 'string') {
 				this._port = parseInt(address);
 			} else if (address instanceof Object) {
@@ -341,11 +349,15 @@ export class McpGatewayService extends Disposable implements IMcpGatewayService 
 			deferredPromise.complete();
 		});
 
-		this._server.on('error', (err: NodeJS.ErrnoException) => {
+		server.on('error', (err: NodeJS.ErrnoException) => {
+			if (this._store.isDisposed || this._server !== server) {
+				cancelServerStart();
+				return;
+			}
 			if (err.code === 'EADDRINUSE') {
 				this._logger.warn('[McpGatewayService] Port in use, retrying with random port...');
 				// Try with a random port
-				this._server!.listen(0, '127.0.0.1');
+				server.listen(0, '127.0.0.1');
 				return;
 			}
 			clearTimeout(portTimeout);
@@ -354,16 +366,23 @@ export class McpGatewayService extends Disposable implements IMcpGatewayService 
 		});
 
 		// Use dynamic port assignment (port 0)
-		this._server.listen(0, '127.0.0.1');
+		server.listen(0, '127.0.0.1');
 
-		return deferredPromise.p;
+		return deferredPromise.p.finally(() => {
+			clearTimeout(portTimeout);
+			if (this._cancelServerStart === cancelServerStart) {
+				this._cancelServerStart = undefined;
+			}
+		});
 	}
 
-	protected async _loadRouteConstructor(): Promise<typeof McpGatewayRoute> {
-		return (await import('./mcpGatewayRoute.js')).McpGatewayRoute;
+	protected async _loadHttpServerConstructor(): Promise<typeof import('http').createServer> {
+		return (await import('http')).createServer; // Lazy due to https://github.com/nodejs/node/issues/59686
 	}
 
 	private _stopServer(): void {
+		this._cancelServerStart?.();
+		this._cancelServerStart = undefined;
 		if (!this._server) {
 			return;
 		}

@@ -9,7 +9,6 @@ import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/c
 import { NullLoggerService } from '../../../log/common/log.js';
 import { IMcpGatewayServerDescriptor, IMcpGatewayToolInvoker } from '../../common/mcpGateway.js';
 import { McpGatewayService } from '../../node/mcpGatewayService.js';
-import type { McpGatewayRoute } from '../../node/mcpGatewayRoute.js';
 
 suite('McpGatewayService', () => {
 	const store = ensureNoDisposablesAreLeakedInTestSuite();
@@ -147,15 +146,15 @@ suite('McpGatewayService', () => {
 		await initialize(gateway.servers[0].address.toString());
 	});
 
-	test('module-load failure propagates and a later attempt can retry', async () => {
+	test('HTTP module-load failure propagates and a later attempt can retry', async () => {
 		class FailingFirstLoadService extends McpGatewayService {
 			private first = true;
-			protected override async _loadRouteConstructor(): Promise<typeof McpGatewayRoute> {
+			protected override async _loadHttpServerConstructor(): Promise<typeof import('http').createServer> {
 				if (this.first) {
 					this.first = false;
 					throw new Error('Test module-load failure');
 				}
-				return super._loadRouteConstructor();
+				return super._loadHttpServerConstructor();
 			}
 		}
 		const service = store.add(new FailingFirstLoadService(store.add(new NullLoggerService())));
@@ -163,5 +162,22 @@ suite('McpGatewayService', () => {
 		await assert.rejects(service.createGateway('client', invoker), /Test module-load failure/);
 		const gateway = await service.createGateway('client', invoker);
 		await initialize(gateway.servers[0].address.toString());
+	});
+
+	test('disposal as the socket starts listening rejects creation without a late callback error', async () => {
+		class DisposeDuringListenService extends McpGatewayService {
+			protected override async _loadHttpServerConstructor(): Promise<typeof import('http').createServer> {
+				const createServer = await super._loadHttpServerConstructor();
+				return new Proxy(createServer, {
+					apply: (target, receiver, args) => {
+						const server: ReturnType<typeof createServer> = Reflect.apply(target, receiver, args);
+						server.once('listening', () => this.dispose());
+						return server;
+					},
+				});
+			}
+		}
+		const service = store.add(new DisposeDuringListenService(store.add(new NullLoggerService())));
+		await assert.rejects(service.createGateway('client', createInvoker().invoker), /Server stopped during startup/);
 	});
 });

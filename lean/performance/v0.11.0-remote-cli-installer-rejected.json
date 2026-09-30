@@ -1,0 +1,18 @@
+{
+  "status": "Rejected and reverted v0.11 source experiment",
+  "baselineCommit": "eaeb13fec6b5",
+  "change": "Temporarily defer the SSH and dev-container remote CLI installer imports to their existing async install calls. Restore both original imports after graph evaluation.",
+  "method": "Isolated sharedProcessMain.ts Node esbuild graph using getBundleOptions(false, node), splitting enabled; sum the entry and transitively static JS chunks, excluding source maps. This is not production-package or runtime evidence.",
+  "initialStaticJavaScriptBytesUnminified": {
+    "before": 2373856,
+    "after": 2375253,
+    "increase": 1397
+  },
+  "reason": "The new shared chunk/export layout outweighed the installer code moved off the static graph. The current unsplit production shared bundle also needs an explicit splitting boundary for a real parse/loading reduction.",
+  "checks": {
+    "changedFileLint": "passed before revert",
+    "sshHelperNodeSuite": "102 passed; includes installer reuse/install outcomes"
+  },
+  "candidateReverted": true,
+  "claimLimit": "No GUI, speed or memory measurement; no retained optimization claim."
+}

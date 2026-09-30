@@ -1,20 +1,21 @@
 {
-  "status": "v0.11 source candidate, not a release benchmark",
+  "status": "Rejected loading experiment; MCP lifecycle hardening retained in v0.11 source candidate",
   "baselineCommit": "602e4d2465465335930b58389902bee317f39b31",
-  "change": "Keep the main MCP service and IPC channel registered; load the HTTP route/session implementation during the existing asynchronous first gateway server start. Guard service disposal and pending client disconnect so late loading cannot create orphan gateways.",
+  "change": "Route extraction is retained as a source boundary, with a static import in the final candidate. Reject the lazy route import under the current unsplit main packaging. Retain guards for service disposal, client disconnect and socket-start cancellation; service/channel registration and synchronous route refresh stay unchanged.",
   "method": "Use build/next/bundle.ts getBundleOptions(false, node) with esbuild, splitting enabled, app.ts as the entry point, and packages external. Sum entry output plus all transitively static JavaScript outputs from its metafile, excluding dynamic imports and source maps. This is an isolated source graph, not the production desktop package, renderer graph, runtime memory, or a Code-OSS comparison.",
-  "initialMainAppStaticJavaScriptBytesUnminified": {
-    "before": 2070863,
-    "after": 2055580,
-    "difference": 15283
-  },
   "checks": {
     "typescriptClient": "passed",
     "clientTranspile": "passed",
     "changedFileLint": "passed",
-    "mcpGatewayServiceNodeTests": "7 passed",
+    "mcpGatewayServiceNodeTests": "8 passed, including disposal at socket listening",
     "mcpGatewaySessionNodeTests": "16 passed",
     "nodeVersion": "24.21.0"
   },
-  "claimLimit": "No GUI was launched or timed. No latency or memory improvement is established. First gateway use now pays an optional module load; HTTP initialize, initialized notification, tool call, SSE notifications/DELETE, route refresh, concurrent creation, load failure retry, disposal and client disconnect were checked without an editor window."
+  "claimLimit": "The prospective 15,283-byte split-graph reduction is not retained release savings. The final candidate retains only the source route boundary and tested lifecycle fixes. No GUI, latency or memory result.",
+  "isolatedMainAppGraphWithExperimentalSplitting": {
+    "before": 2070863,
+    "after": 2055580,
+    "difference": 15283
+  },
+  "productionBuildLimit": "Main/bootstrap bundles are not split in the current release pipeline. The experimental split graph does not describe shipped parse/loading bytes. An otherwise matched unsplit isolated app.ts build grew from 2,070,863 to 2,119,926 unminified bytes (+49,063), so reject the deferral absent runtime evidence. No main code-splitting flag is enabled."
 }

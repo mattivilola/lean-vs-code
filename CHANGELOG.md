@@ -6,7 +6,8 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
-- v0.11 candidate: load MCP HTTP route/session code on first gateway creation, retaining immediate service/channel registration. Node HTTP and lifecycle checks cover initialize, tool requests, SSE, concurrent gateways, route refresh, teardown races and load retry. The isolated main-app static graph is 15,283 unminified bytes smaller; no startup or memory gain is claimed.
+- v0.11 candidate: enable scoped shared-process chunks and load browser automation on its first operation. Initialization options stay synchronous; focused tests cover first use, concurrent calls, failure/retry, disconnect/reconnect and disposal. Initial minified shared-process JavaScript is 11,269 bytes smaller while total JavaScript grows by 3,911 bytes; the optimization ledger records both; no new speed or memory percentage is claimed.
+- Fix MCP gateway creation continuing after its client disconnects or the service is disposed. Cancel socket startup cleanly and preserve protocol, tool calls, SSE and synchronous route refresh. Revert the MCP lazy-route experiment because the current unsplit main bundle grew; record it and the rejected remote CLI split without promoting their hypothetical byte savings.
 
 ## 0.10.0
 

@@ -1,0 +1,57 @@
+{
+  "status": "v0.11 source candidate, not a release or GUI benchmark",
+  "baselineForkRelease": "0.10.0",
+  "baselineProductCommit": "c4952a32041ef1640af75f557c3c6b804ee62c50",
+  "baselineSharedEntrySha256": "3ec649c3002c8a8f95f3182000106fa50bc4db474c3f44f3089a14a0900d62c7",
+  "change": "Split only sharedProcessMain with a stable entry path and dedicated chunks; load the Playwright implementation on first operation. Retain synchronous option registration, per-context ownership and all service/channel registrations. Do not load for idle session cleanup.",
+  "method": "Standard desktop build with --minify --nls --mangle-privates; use the shared-process metafile to traverse static imports and measure final post-processed files on disk. Count eager common chunks, exclude dynamic chunks and source maps from initial bytes; separately sum all shared-process JavaScript. Baseline is the installed signed v0.10 shared entry and matches the configuration-only full-build control after normalizing only its embedded 40-character product commit. This is an internal Lean source-loading comparison, not a Code-OSS performance claim.",
+  "initialMinifiedSharedJavaScriptBytes": {
+    "before": 1176112,
+    "after": 1164843,
+    "difference": 11269
+  },
+  "allMinifiedSharedJavaScriptBytes": {
+    "before": 1176112,
+    "after": 1180023,
+    "increase": 3911
+  },
+  "optionalModuleBytes": 15180,
+  "checks": {
+    "typescriptClient": "passed",
+    "buildTypecheck": "passed",
+    "changedFileLint": "passed",
+    "productionModeBundle": "passed",
+    "playwrightChannelNodeTests": "10 passed",
+    "playwrightTabNodeTest": "1 passed",
+    "buildBundleNlsSourceMapTests": "58 passed",
+    "builtJavaScriptFilesParsed": 3,
+    "internalImportTargetsResolved": 3,
+    "builtSourceMapsPresent": true,
+    "builtOptionalModuleNodeImport": "passed; unused session disposed without starting a browser",
+    "nlsDictionaryUnchanged": true,
+    "aiDiActorGuard": "passed; 0 missing DI registrations, 87 MainContext actors, 0 missing actors",
+    "baselineControlEquivalence": "byte-identical after normalizing only the embedded 40-character product commit"
+  },
+  "sourceFiles": [
+    {
+      "file": "vs/code/electron-utility/sharedProcess/sharedProcessMain.js",
+      "bytes": 1021905,
+      "sha256": "05697dca3f57a4a89fcd0f13b29eaa68cd3354ff2cb31994c3f0928fb6596534",
+      "eager": true
+    },
+    {
+      "file": "vs/code/electron-utility/sharedProcess/chunks/playwrightService-45FUDWEJ.js",
+      "bytes": 15180,
+      "sha256": "54306e0bb3e13a7035f61dc9be93c19452210b31e37266d0cbc1c6e0283bbabc",
+      "eager": false
+    },
+    {
+      "file": "vs/code/electron-utility/sharedProcess/chunks/chunk-Q2HV55OU.js",
+      "bytes": 142938,
+      "sha256": "9a1ed9d34241a07f5608e4845acec49a5a2f8d008538c482622c263e12d70a22",
+      "eager": true
+    }
+  ],
+  "claimLimit": "No GUI app was launched, no timing/memory was collected, and no signed v0.11 package is established. Shared-process source bytes do not translate directly into editable-file latency. Current startup CPU profiling and compact packaged core-feature checks remain pending.",
+  "buildSourceState": "eaeb13fec6b50a5fbe791a91a80ccd904576eec7 plus the tested v0.11 source edits, before their checkpoint commit"
+}
