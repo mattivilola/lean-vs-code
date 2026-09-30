@@ -17,6 +17,7 @@
     "extensionWebview": "passed; temporary extension webview panel created and HTML assigned"
   },
   "openVsxCheck": "EditorConfig.EditorConfig 0.18.2 installed and activated",
+  "dmgCopyCheck": "a fresh app copied from the read-only mounted DMG independently passed the same seven no-timing functional checks in an isolated profile",
   "archiveIdentity": "mounted DMG and updater ZIP apps had 2219 matching file, directory, and symlink entries with no content or link-target differences by rsync checksum dry run",
   "trust": "release script passed deep strict app signature, app and DMG stapled tickets, and Gatekeeper; extracted ZIP and mounted DMG apps passed deep strict signature independently",
   "feed": "v0.10.0 ZIP SHA-256 e75af3f736b34a452ad49484ee1f36c99d64e018101924d3f91b9cbf07b221de and size 192342908 matched generated static update feed",

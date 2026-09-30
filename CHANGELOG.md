@@ -8,7 +8,7 @@ Before each release, move these notes under the new version, link its release no
 
 ## 0.10.0
 
-See the [v0.10.0 release notes](lean/docs/RELEASE_NOTES_0.10.0.md) for the exact build, focused validation, and limitations.
+See the [v0.10.0 release notes](lean/docs/RELEASE_NOTES_0.10.0.md) and [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.0) for the exact build, validation, and limitations.
 
 - Load automatic chat-instruction collection only for eligible extension-backed requests and MCP request handling only after a server starts. Preserve cancellation and stop behavior; focused ChatService, instruction, and MCP tests pass.
 - Isolate two small constants so the initial renderer no longer loads their larger optional modules solely for a string. The tunnel cut saves only 144 emitted bytes and is documented without a standalone speed claim.
