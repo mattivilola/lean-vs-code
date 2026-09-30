@@ -1,0 +1,25 @@
+{
+  "status": "signed release functional checks; no GUI timing in this check",
+  "productCommit": "c4952a32041ef1640af75f557c3c6b804ee62c50",
+  "version": "0.10.0",
+  "extensionApiVersion": "1.139.1",
+  "bundleIdentifier": "com.mattivilola.leanvscode",
+  "app": "signed and notarized Apple Silicon app extracted from the updater ZIP",
+  "profile": "isolated temporary user-data and extension directories",
+  "windowBounds": { "x": 16, "y": 546, "width": 560, "height": 360 },
+  "timing": "--no-timing; no startup or per-check durations collected",
+  "coreChecks": {
+    "editableFileAndSave": "passed; inserted, saved, and verified on disk",
+    "workspaceSearch": "passed; 401 TypeScript files found and search UI opened",
+    "workspaceTextSearch": "passed; 10 expected matches returned across 400 source files",
+    "integratedTerminal": "passed; command output verified on disk",
+    "gitReview": "passed; bundled Git API discovered fixture repository and returned local diff",
+    "extensionWebview": "passed; temporary extension webview panel created and HTML assigned"
+  },
+  "openVsxCheck": "EditorConfig.EditorConfig 0.18.2 installed and activated",
+  "archiveIdentity": "mounted DMG and updater ZIP apps had 2219 matching file, directory, and symlink entries with no content or link-target differences by rsync checksum dry run",
+  "trust": "release script passed deep strict app signature, app and DMG stapled tickets, and Gatekeeper; extracted ZIP and mounted DMG apps passed deep strict signature independently",
+  "feed": "v0.10.0 ZIP SHA-256 e75af3f736b34a452ad49484ee1f36c99d64e018101924d3f91b9cbf07b221de and size 192342908 matched generated static update feed",
+  "passed": true,
+  "limitations": "The release functional check collects no GUI timing. A prior check timed out when the machine slept between invocation and app start; an immediate isolated one-pair benchmark and this complete rerun passed. A macOS trust-store certificate parsing message and Node url.parse deprecation warning appeared without failing checks. The native update trial against the published live feed remains for the owner to confirm on the installed app."
+}

@@ -6,6 +6,17 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.10.0
+
+See the [v0.10.0 release notes](lean/docs/RELEASE_NOTES_0.10.0.md) for the exact build, focused validation, and limitations.
+
+- Load automatic chat-instruction collection only for eligible extension-backed requests and MCP request handling only after a server starts. Preserve cancellation and stop behavior; focused ChatService, instruction, and MCP tests pass.
+- Isolate two small constants so the initial renderer no longer loads their larger optional modules solely for a string. The tunnel cut saves only 144 emitted bytes and is documented without a standalone speed claim.
+- Together, v0.10.0 reduces the initial static unminified desktop JavaScript graph by 49,387 bytes versus v0.9.0. This is code-loading evidence, not a measured launch-time or runtime-memory saving. Routine minor releases use focused checks by default; full paired GUI runs need a major release or the owner's request.
+- At the owner's request, a complete 30-pair signed-app GUI comparison against original same-revision minified Code-OSS measured **1.471 versus 1.903 s median** to an extension-editable file from launch: **23% less time**. The p95 was **1.596 versus 2.141 s**. Existing-window file opens were **416 versus 403 ms median**, a small Lean regression. The sub-second p95 goal remains open.
+- Sign and notarize the Apple Silicon app, updater ZIP, and DMG. The exact signed app passed compact no-timing edit/save, search, terminal, Git diff, webview, and installed Open VSX extension checks. Its apparent app content is **64.9% smaller** than original same-revision minified Code-OSS: 514 versus 1,463 MiB. This is a disk-bundle result, not a runtime-memory or download-size claim.
+- A separate nine-pair signed short-idle memory run recorded 395 versus 524 MiB median app-tree footprint, but three pairs favored Code-OSS as GPU modes varied; keep the raw result and do not present this as a stable per-launch memory reduction.
+
 ## 0.9.0
 
 See the [v0.9.0 release notes](lean/docs/RELEASE_NOTES_0.9.0.md) and [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.9.0) for the exact build, focused validation, and limitations.
