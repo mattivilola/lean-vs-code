@@ -1,0 +1,84 @@
+{
+  "kind": "experimental-main-process-split-production-graph",
+  "guiLaunched": false,
+  "speedGainMeasured": false,
+  "sourceCommit": "2b351452abd77c7023a1cdc78e1f230e8c2bf103",
+  "uncommittedChanges": [
+    "default-off experimental main split flag and layout validator"
+  ],
+  "buildMode": "minify + NLS + private-field conversion",
+  "reports": [
+    {
+      "label": "control",
+      "entry": ".build/lean-artifacts/v011-main-production-control/main.js",
+      "application": null,
+      "requiredFiles": [
+        ".build/lean-artifacts/v011-main-production-control/main.js"
+      ],
+      "finalRequiredJavaScriptBytes": 1245881,
+      "finalTotalJavaScriptBytes": 1245881,
+      "repeatedInputs": [],
+      "files": [
+        {
+          "path": ".build/lean-artifacts/v011-main-production-control/main.js",
+          "bytes": 1245881,
+          "sha256": "5b04d3d35338e6022c10f2de37124931e99d8b5c86316ebaeffa6af0ecb0235a"
+        }
+      ],
+      "postprocessedLayoutValidated": false,
+      "parsedJavaScriptFiles": 1,
+      "nlsMessagesSHA256": "59a56fa76d71950b42ac8a16c018e9ea6e37196cfb466838a297e5a6cc57cfca"
+    },
+    {
+      "label": "split",
+      "entry": ".build/lean-artifacts/v011-main-production-split/main.js",
+      "application": ".build/lean-artifacts/v011-main-production-split/main-main-Q3TPNJUP.js",
+      "requiredFiles": [
+        ".build/lean-artifacts/v011-main-production-split/main.js",
+        ".build/lean-artifacts/v011-main-production-split/main-chunk-ONJJQB5O.js",
+        ".build/lean-artifacts/v011-main-production-split/main-main-Q3TPNJUP.js"
+      ],
+      "finalRequiredJavaScriptBytes": 1231069,
+      "finalTotalJavaScriptBytes": 1231069,
+      "repeatedInputs": [],
+      "files": [
+        {
+          "path": ".build/lean-artifacts/v011-main-production-split/main.js",
+          "bytes": 19326,
+          "sha256": "1579c8975e0fea5e5e90bcbc2b32b71b6f7b0b40173710435a52c25f022bdb53"
+        },
+        {
+          "path": ".build/lean-artifacts/v011-main-production-split/main-main-Q3TPNJUP.js",
+          "bytes": 1053547,
+          "sha256": "b49a5519fee044880721bb8a7d6c0766d06b5ac1b377d7e012853f9e2c93d227"
+        },
+        {
+          "path": ".build/lean-artifacts/v011-main-production-split/main-chunk-ONJJQB5O.js",
+          "bytes": 158196,
+          "sha256": "d51c0cabdd84d9a256ccb8510afd81c088e5213dc4a8672620dff64b814e21e1"
+        }
+      ],
+      "postprocessedLayoutValidated": true,
+      "parsedJavaScriptFiles": 3,
+      "nlsMessagesSHA256": "59a56fa76d71950b42ac8a16c018e9ea6e37196cfb466838a297e5a6cc57cfca"
+    }
+  ],
+  "toolchain": {
+    "node": "v24.21.0",
+    "esbuild": "0.27.2"
+  },
+  "status": "experimental, default off; not a signed app or release",
+  "normalBuildBehaviorChanged": false,
+  "finalRequiredJavaScriptReductionBytes": 14812,
+  "finalTotalJavaScriptReductionBytes": 14812,
+  "nlsDictionaryUnchanged": true,
+  "validation": {
+    "layoutGuard": "passes on postprocessed minified files",
+    "syntax": "all four main-graph files across both builds parsed",
+    "sharedSourceIdentity": "no source input emitted with positive weight in more than one JS output",
+    "focusedNodeTests": 4,
+    "guiRuntime": "not run; prohibited until 16:00 CET on 30 September 2026",
+    "speedOrMemoryGain": "unmeasured",
+    "resolvedInternalImportEdges": 3
+  }
+}

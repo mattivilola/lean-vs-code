@@ -9,6 +9,7 @@ Before each release, move these notes under the new version, link its release no
 - v0.11 candidate: enable scoped shared-process chunks and load browser automation on its first operation. Initialization options stay synchronous; focused tests cover first use, concurrent calls, failure/retry, disconnect/reconnect and disposal. Initial minified shared-process JavaScript is 11,269 bytes smaller while total JavaScript grows by 3,911 bytes; the optimization ledger records both; no new speed or memory percentage is claimed.
 - Fix MCP gateway creation continuing after its client disconnects or the service is disposed. Cancel socket startup cleanly and preserve protocol, tool calls, SSE and synchronous route refresh. Revert the MCP lazy-route experiment because the current unsplit main bundle grew; record it and the rejected remote CLI split without promoting their hypothetical byte savings.
 - Improve developer CPU profiling with compact test-window bounds, sampling before debugger resume, verified workbench targets and explicit partial-capture labels. Eight mocked checks pass; actual GUI capture remains pending and no app speed gain is inferred.
+- Add a default-off desktop-main splitting experiment with root-level chunks and bootstrap/metadata/evaluation-order guards. Its production-style source graph is 14,812 minified bytes smaller; ordinary release builds remain unchanged, and runtime performance is unmeasured. Record the prospective browser-construction boundary separately from shipped savings.
 
 ## 0.10.0
 

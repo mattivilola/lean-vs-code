@@ -26,6 +26,7 @@ import { copyResources } from './resources.ts';
 import { optimizeSvgFiles } from './svg.ts';
 import { getBundleOptions } from './bundle.ts';
 import { compileStandaloneFiles } from './standalone.ts';
+import { validateMainProcessSplit } from './main-process-split.ts';
 
 const globAsync = promisify(glob);
 
@@ -61,6 +62,7 @@ const options = {
 	sourceMapBaseUrl: getArgValue('--source-map-base-url'),
 	metafileOutput: getArgValue('--metafile-output'),
 	processMetafileDir: getArgValue('--process-metafile-dir'),
+	experimentalMainSplit: process.argv.includes('--experimental-main-split'),
 };
 
 const SRC_DIR = 'src';
@@ -534,6 +536,8 @@ async function bundle(outDir: string, doMinify: boolean, doNls: boolean, doMangl
 	for (const entry of bootstrapEntryPoints) {
 		const entryPath = path.join(REPO_ROOT, SRC_DIR, `${entry}.ts`);
 		const outPath = path.join(REPO_ROOT, outDir, `${entry}.js`);
+		const isDesktopMain = target === 'desktop' && entry === 'main';
+		const splitMainProcess = isDesktopMain && options.experimentalMainSplit;
 
 		const bootstrapPlugins: esbuild.Plugin[] = [inlineMinimistPlugin(), contentMapperPlugin];
 		if (doNls) {
@@ -545,10 +549,19 @@ async function bundle(outDir: string, doMinify: boolean, doNls: boolean, doMangl
 
 		const result = await esbuild.build({
 			...getBundleOptions(doMinify, 'node'),
-			entryPoints: [entryPath],
-			outfile: outPath,
+			metafile: isDesktopMain && (!!options.processMetafileDir || splitMainProcess),
+			...(splitMainProcess
+				? { entryPoints: [{ in: entryPath, out: entry }], outdir: path.join(REPO_ROOT, outDir), splitting: true, chunkNames: 'main-[name]-[hash]' }
+				: { entryPoints: [entryPath], outfile: outPath }),
 			plugins: bootstrapPlugins,
 		});
+		if (splitMainProcess) {
+			validateMainProcessSplit(result.metafile!, result.outputFiles!, path.join(REPO_ROOT, SRC_DIR));
+		}
+		if (isDesktopMain && result.metafile && options.processMetafileDir) {
+			await fs.promises.mkdir(options.processMetafileDir, { recursive: true });
+			await fs.promises.writeFile(path.join(options.processMetafileDir, 'main-process.json'), JSON.stringify(result.metafile));
+		}
 
 		buildResults.push({ outPath, result });
 	}
@@ -837,7 +850,8 @@ Options for 'bundle':
 	--target <target>  Build target: desktop (default), server, server-web, web
 	--source-map-base-url <url>  Rewrite sourceMappingURL to CDN URL
 	--metafile-output <path>      Write the desktop workbench esbuild input/output graph
-	--process-metafile-dir <dir>  Write the shared-process esbuild input/output graph
+	--process-metafile-dir <dir>  Write shared-process and desktop-main esbuild graphs
+	--experimental-main-split    Split desktop main into root-level chunks (default off)
 
 Examples:
 	npx tsx build/next/index.ts build-fast
