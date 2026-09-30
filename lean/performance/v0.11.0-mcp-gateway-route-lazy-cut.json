@@ -1,0 +1,20 @@
+{
+  "status": "v0.11 source candidate, not a release benchmark",
+  "baselineCommit": "602e4d2465465335930b58389902bee317f39b31",
+  "change": "Keep the main MCP service and IPC channel registered; load the HTTP route/session implementation during the existing asynchronous first gateway server start. Guard service disposal and pending client disconnect so late loading cannot create orphan gateways.",
+  "method": "Use build/next/bundle.ts getBundleOptions(false, node) with esbuild, splitting enabled, app.ts as the entry point, and packages external. Sum entry output plus all transitively static JavaScript outputs from its metafile, excluding dynamic imports and source maps. This is an isolated source graph, not the production desktop package, renderer graph, runtime memory, or a Code-OSS comparison.",
+  "initialMainAppStaticJavaScriptBytesUnminified": {
+    "before": 2070863,
+    "after": 2055580,
+    "difference": 15283
+  },
+  "checks": {
+    "typescriptClient": "passed",
+    "clientTranspile": "passed",
+    "changedFileLint": "passed",
+    "mcpGatewayServiceNodeTests": "7 passed",
+    "mcpGatewaySessionNodeTests": "16 passed",
+    "nodeVersion": "24.21.0"
+  },
+  "claimLimit": "No GUI was launched or timed. No latency or memory improvement is established. First gateway use now pays an optional module load; HTTP initialize, initialized notification, tool call, SSE notifications/DELETE, route refresh, concurrent creation, load failure retry, disposal and client disconnect were checked without an editor window."
+}

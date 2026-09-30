@@ -4,6 +4,14 @@ The signed v0.10.0 release reached an extension-editable requested file in **1.4
 
 For v0.11, first obtain a current startup CPU trace and identify a reproducible critical-path segment large enough to matter. Prioritize extension-host readiness for an installed language extension and renderer work before the editable-file event. Next, review the remaining main/shared-process AI entry points for a narrow safe cut that leaves MCP provider and language-model extension APIs registered. Finally, investigate the small existing-window median regression and first use of newly deferred MCP request handling. Keep or revert each change according to emitted-graph evidence and focused correctness checks; record even negligible retained cuts in the ledger. The default release cadence remains compact feature checks for minor and patch releases, with full paired GUI timing only at a major release or the owner's explicit request.
 
+## v0.11 source progress
+
+On 30 September 2026, the owner restricted GUI benchmarks until **16:00 CET (15:00 UTC)**. Keep work to source review, implementation and non-GUI checks during that interval; do not launch the profiling tools during it. The normal major-release/explicit-request benchmark cadence still applies after that time.
+
+The first candidate [defers MCP gateway routes and sessions](../performance/v0.11.0-mcp-gateway-route-lazy-cut.json) until the existing asynchronous gateway server start. The service and IPC channel stay registered immediately; dynamic route refresh stays synchronous. A rebuilt isolated main-app graph falls from 2,070,863 to 2,055,580 unminified static JavaScript bytes (15,283 fewer). Typecheck, lint and 23 focused MCP HTTP/session tests pass. Service disposal and client disconnect during the load cannot publish late gateways; a failed load can retry. This is source evidence, not a production package or speed claim. Current CPU profiling and compact release checks remain pending.
+
+The [v0.11 investigation](V0.11_STARTUP_INVESTIGATION.md) records Astra's focused review, the safe optional boundaries and the trace needed before scheduling changes.
+
 ## Prior v0.10 planning record
 
 v0.8.0 retained four cold-renderer cuts: the [optional Quick Chat split](V0.8_COLD_RENDERER_SPLIT_DESIGN.md), the [terminal chat-context helper isolation](../performance/v0.8.0-terminal-context-cut.json), the [chat-pet renderer boundary](../performance/v0.8.0-chat-pet-renderer-cut.json), and the [image-hash helper isolation](../performance/v0.8.0-image-hash-helper-cut.json). Its desktop initial static graph is 31,520,121 unminified JavaScript bytes. This is **bundle evidence**, not a measured startup-time or memory gain. The [ledger](OPTIMIZATION_LEDGER.md) also records rejected cuts, including a language-model image-helper lazy import that made the graph larger and a chat-session status extraction that broke required service registration.

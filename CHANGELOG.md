@@ -6,6 +6,8 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+- v0.11 candidate: load MCP HTTP route/session code on first gateway creation, retaining immediate service/channel registration. Node HTTP and lifecycle checks cover initialize, tool requests, SSE, concurrent gateways, route refresh, teardown races and load retry. The isolated main-app static graph is 15,283 unminified bytes smaller; no startup or memory gain is claimed.
+
 ## 0.10.0
 
 See the [v0.10.0 release notes](lean/docs/RELEASE_NOTES_0.10.0.md) and [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.0) for the exact build, validation, and limitations.
