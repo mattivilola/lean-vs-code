@@ -10,6 +10,7 @@ Before each release, move these notes under the new version, link its release no
 - Fix MCP gateway creation continuing after its client disconnects or the service is disposed. Cancel socket startup cleanly and preserve protocol, tool calls, SSE and synchronous route refresh. Revert the MCP lazy-route experiment because the current unsplit main bundle grew; record it and the rejected remote CLI split without promoting their hypothetical byte savings.
 - Improve developer CPU profiling with compact test-window bounds, sampling before debugger resume, verified workbench targets and explicit partial-capture labels. Eight mocked checks pass; actual GUI capture remains pending and no app speed gain is inferred.
 - Add a default-off desktop-main splitting experiment with root-level chunks and bootstrap/metadata/evaluation-order guards. Its production-style source graph is 14,812 minified bytes smaller; ordinary release builds remain unchanged, and runtime performance is unmeasured. Record the prospective browser-construction boundary separately from shipped savings.
+- v0.11 source candidate: load browser-group construction on first use, sharing the load while keeping each group independent. Guard shutdown and activation cleanup; nine focused Node tests pass. The split-build experiment removes 12,344 required minified bytes but grows total JavaScript by 5,392 bytes; ordinary unsplit output grows 504 bytes. Pending packaged/runtime validation; no new speed claim or release.
 
 ## 0.10.0
 

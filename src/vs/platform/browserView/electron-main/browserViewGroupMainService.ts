@@ -9,8 +9,9 @@ import { createDecorator, IInstantiationService } from '../../instantiation/comm
 import { generateUuid } from '../../../base/common/uuid.js';
 import { IBrowserViewGroupFilter, IBrowserViewGroupService } from '../common/browserViewGroup.js';
 import { IBrowserViewCreationContext } from '../common/browserView.js';
-import { BrowserViewGroup } from './browserViewGroup.js';
+import type { BrowserViewGroup } from './browserViewGroup.js';
 import { CDPEvent, CDPRequest, CDPResponse } from '../common/cdp/types.js';
+import { CancellationError } from '../../../base/common/errors.js';
 
 export const IBrowserViewGroupMainService = createDecorator<IBrowserViewGroupMainService>('browserViewGroupMainService');
 
@@ -28,6 +29,7 @@ export class BrowserViewGroupMainService extends Disposable implements IBrowserV
 	declare readonly _serviceBrand: undefined;
 
 	private readonly groups = this._register(new DisposableMap<string, BrowserViewGroup>());
+	private groupConstructor: Promise<typeof BrowserViewGroup> | undefined;
 
 	constructor(
 		@IInstantiationService private readonly instantiationService: IInstantiationService
@@ -36,8 +38,22 @@ export class BrowserViewGroupMainService extends Disposable implements IBrowserV
 	}
 
 	async createGroup(filter: IBrowserViewGroupFilter, targetContext: IBrowserViewCreationContext): Promise<string> {
+		if (this._store.isDisposed) {
+			throw new CancellationError();
+		}
+		const Group = await (this.groupConstructor ??= this._loadGroupConstructor().catch(error => {
+			this.groupConstructor = undefined;
+			throw error;
+		}));
+		if (this._store.isDisposed) {
+			throw new CancellationError();
+		}
 		const id = generateUuid();
-		const group = this.instantiationService.createInstance(BrowserViewGroup, id, filter, targetContext);
+		const group = this.instantiationService.createInstance(Group, id, filter, targetContext);
+		if (this._store.isDisposed) {
+			group.dispose();
+			throw new CancellationError();
+		}
 		this.groups.set(id, group);
 
 		Event.once(group.onDidDestroy)(() => {
@@ -46,11 +62,20 @@ export class BrowserViewGroupMainService extends Disposable implements IBrowserV
 
 		try {
 			await group.activate();
+			if (this.groups.get(id) !== group) {
+				throw new CancellationError();
+			}
 			return id;
 		} catch (error) {
-			this.groups.deleteAndDispose(id);
+			if (this.groups.get(id) === group) {
+				this.groups.deleteAndDispose(id);
+			}
 			throw error;
 		}
+	}
+
+	protected async _loadGroupConstructor(): Promise<typeof BrowserViewGroup> {
+		return (await import('./browserViewGroup.js')).BrowserViewGroup;
 	}
 
 	async destroyGroup(groupId: string): Promise<void> {

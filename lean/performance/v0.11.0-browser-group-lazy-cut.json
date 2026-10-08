@@ -1,0 +1,177 @@
+{
+  "kind": "browser-group-lazy-production-source-graph",
+  "status": "v0.11 source candidate; split main remains default off; no packaged runtime or timing proof",
+  "sourceCommit": "481f4832b6d8eec3b57d7b6d2f3d5e0a5ac185a4",
+  "sourceEdits": [
+    "browserViewGroupMainService type-only group import, shared first-use constructor load and cancellation guards"
+  ],
+  "controlProvenance": "Existing matched production-style control builds from 30 September 2026; unchanged main source except the group-service edit. Same Node 24.21.0, esbuild 0.27.2, minification, NLS and private-field conversion. Internal Lean graph comparison, not a Code-OSS performance result.",
+  "method": "Final file bytes, excluding source maps; required graph includes root main.js AND its always-awaited dynamic application entry and each static import closure. Optional group chunks count in total bytes. Do not count only main.js or treat all dynamic imports as optional at startup.",
+  "toolchain": {
+    "node": "v24.21.0",
+    "esbuild": "0.27.2"
+  },
+  "guiLaunched": false,
+  "speedGainMeasured": false,
+  "graphs": [
+    {
+      "label": "unsplit-control",
+      "directory": ".build/lean-artifacts/v011-main-production-control",
+      "roots": [
+        ".build/lean-artifacts/v011-main-production-control/main.js"
+      ],
+      "requiredJavaScriptBytes": 1245881,
+      "totalJavaScriptBytes": 1245881,
+      "files": [
+        {
+          "path": ".build/lean-artifacts/v011-main-production-control/main.js",
+          "bytes": 1245881,
+          "sha256": "5b04d3d35338e6022c10f2de37124931e99d8b5c86316ebaeffa6af0ecb0235a",
+          "required": true
+        }
+      ],
+      "repeatedInputs": [],
+      "validatedLayout": false,
+      "parsedFiles": 1,
+      "resolvedInternalImportEdges": 0,
+      "groupLocations": [
+        ".build/lean-artifacts/v011-main-production-control/main.js"
+      ],
+      "nlsMessagesSHA256": "59a56fa76d71950b42ac8a16c018e9ea6e37196cfb466838a297e5a6cc57cfca"
+    },
+    {
+      "label": "split-control",
+      "directory": ".build/lean-artifacts/v011-main-production-split",
+      "roots": [
+        ".build/lean-artifacts/v011-main-production-split/main.js",
+        ".build/lean-artifacts/v011-main-production-split/main-main-Q3TPNJUP.js"
+      ],
+      "requiredJavaScriptBytes": 1231069,
+      "totalJavaScriptBytes": 1231069,
+      "files": [
+        {
+          "path": ".build/lean-artifacts/v011-main-production-split/main.js",
+          "bytes": 19326,
+          "sha256": "1579c8975e0fea5e5e90bcbc2b32b71b6f7b0b40173710435a52c25f022bdb53",
+          "required": true
+        },
+        {
+          "path": ".build/lean-artifacts/v011-main-production-split/main-main-Q3TPNJUP.js",
+          "bytes": 1053547,
+          "sha256": "b49a5519fee044880721bb8a7d6c0766d06b5ac1b377d7e012853f9e2c93d227",
+          "required": true
+        },
+        {
+          "path": ".build/lean-artifacts/v011-main-production-split/main-chunk-ONJJQB5O.js",
+          "bytes": 158196,
+          "sha256": "d51c0cabdd84d9a256ccb8510afd81c088e5213dc4a8672620dff64b814e21e1",
+          "required": true
+        }
+      ],
+      "repeatedInputs": [],
+      "validatedLayout": true,
+      "parsedFiles": 3,
+      "resolvedInternalImportEdges": 3,
+      "groupLocations": [
+        ".build/lean-artifacts/v011-main-production-split/main-main-Q3TPNJUP.js"
+      ],
+      "nlsMessagesSHA256": "59a56fa76d71950b42ac8a16c018e9ea6e37196cfb466838a297e5a6cc57cfca"
+    },
+    {
+      "label": "group-unsplit",
+      "directory": ".build/lean-artifacts/v011-group-lazy-unsplit",
+      "roots": [
+        ".build/lean-artifacts/v011-group-lazy-unsplit/main.js"
+      ],
+      "requiredJavaScriptBytes": 1246385,
+      "totalJavaScriptBytes": 1246385,
+      "files": [
+        {
+          "path": ".build/lean-artifacts/v011-group-lazy-unsplit/main.js",
+          "bytes": 1246385,
+          "sha256": "50281b0b9ec18032ece7327c756b882e301f601c6600c75c36b45341bb80897f",
+          "required": true
+        }
+      ],
+      "repeatedInputs": [],
+      "validatedLayout": false,
+      "parsedFiles": 1,
+      "resolvedInternalImportEdges": 0,
+      "groupLocations": [
+        ".build/lean-artifacts/v011-group-lazy-unsplit/main.js"
+      ],
+      "nlsMessagesSHA256": "59a56fa76d71950b42ac8a16c018e9ea6e37196cfb466838a297e5a6cc57cfca"
+    },
+    {
+      "label": "group-split",
+      "directory": ".build/lean-artifacts/v011-group-lazy-split",
+      "roots": [
+        ".build/lean-artifacts/v011-group-lazy-split/main.js",
+        ".build/lean-artifacts/v011-group-lazy-split/main-main-DUM2TT2Q.js"
+      ],
+      "requiredJavaScriptBytes": 1218725,
+      "totalJavaScriptBytes": 1236461,
+      "files": [
+        {
+          "path": ".build/lean-artifacts/v011-group-lazy-split/main.js",
+          "bytes": 19362,
+          "sha256": "f5984fc044c023504e069db3be3778bf4b792612ffc0ff920ef3f116ec871238",
+          "required": true
+        },
+        {
+          "path": ".build/lean-artifacts/v011-group-lazy-split/main-browserViewGroup-F75VF45X.js",
+          "bytes": 17736,
+          "sha256": "1ea3928e8695977b51883791e911e492425da67043d65df956f107b71c6fcb7f",
+          "required": false
+        },
+        {
+          "path": ".build/lean-artifacts/v011-group-lazy-split/main-main-DUM2TT2Q.js",
+          "bytes": 624351,
+          "sha256": "7741aa2278de75075bfb00f949fb37e13dbcdd3fdd4cdfc9b5afdcf6b716952a",
+          "required": true
+        },
+        {
+          "path": ".build/lean-artifacts/v011-group-lazy-split/main-chunk-QEVL5ZPA.js",
+          "bytes": 4790,
+          "sha256": "a18b3b63a6c068bf2e87ae91f2e6df6c9f041c95bfc8d790502c19537cde433f",
+          "required": true
+        },
+        {
+          "path": ".build/lean-artifacts/v011-group-lazy-split/main-chunk-7KSPAN6B.js",
+          "bytes": 416590,
+          "sha256": "8c05336a8ec1b4eee75d9495dfb0427929d8ead1557c6f47ec562750592e9541",
+          "required": true
+        },
+        {
+          "path": ".build/lean-artifacts/v011-group-lazy-split/main-chunk-Z7IVD5YL.js",
+          "bytes": 153632,
+          "sha256": "2f12e7327ebeb0cd03685298b521b74e56ecb403035cb6fc36e61a6715de03ff",
+          "required": true
+        }
+      ],
+      "repeatedInputs": [],
+      "validatedLayout": true,
+      "parsedFiles": 6,
+      "resolvedInternalImportEdges": 11,
+      "groupLocations": [
+        ".build/lean-artifacts/v011-group-lazy-split/main-browserViewGroup-F75VF45X.js"
+      ],
+      "nlsMessagesSHA256": "59a56fa76d71950b42ac8a16c018e9ea6e37196cfb466838a297e5a6cc57cfca"
+    }
+  ],
+  "comparison": {
+    "splitRequiredJavaScriptReductionBytes": 12344,
+    "splitTotalJavaScriptGrowthBytes": 5392,
+    "unsplitRequiredJavaScriptGrowthBytes": 504
+  },
+  "checks": {
+    "serviceLifecycleTests": 9,
+    "harnessUnexpectedErrorCheck": 1,
+    "typescriptClient": "passed",
+    "changedFileLint": "passed",
+    "nlsDictionary": "identical across all four builds",
+    "actualElectronGroupActivation": "not tested",
+    "mainSplitPackagedRuntime": "not tested"
+  },
+  "limitations": "Mocks exercise the actual service, with a replacement group constructor and activation. Real group, browser, popup, CDP/Playwright, localized startup and core editing/extension compatibility need compact packaged checks before shipping. The group deferral alone grows normal unsplit output; it is pending the complete optional-browser/main-split experiment and must not be sold as shipped savings."
+}
