@@ -12,7 +12,20 @@ npm ci
 npm run gulp vscode-darwin-arm64
 ```
 
-The app is written to `.build/lean-artifacts/LeanVSCode-darwin-arm64/Lean VS Code.app`. Run that app directly for local development. It uses its own bundle identifier and user-data directory, separate from Visual Studio Code. The build downloads Electron and compiles native dependencies; allow ample disk space. On a machine where the npm or Electron cache is restricted, point those caches to writable locations or adjust their permissions.
+The app is written to `.build/lean-artifacts/LeanVSCode-darwin-arm64/Lean VS Code.app`. Run that app directly for local development. It uses its own bundle identifier and user-data directory, separate from Visual Studio Code. Development bundles declare document roles as `None` and do not claim the `lean-code://` URL scheme, so launching builds does not add file handlers to Finder's **Open With** menu. The release script restores those associations in its staged copy before signing. The build downloads Electron and compiles native dependencies; allow ample disk space. On a machine where the npm or Electron cache is restricted, point those caches to writable locations or adjust their permissions.
+
+## Keep one installed app and Finder entry
+
+Always install or replace `/Applications/Lean VS Code.app`. Keep the app name unversioned; versions belong in bundle metadata, DMG/ZIP filenames, and release notes. Do not install version-named copies or leave extracted verification apps in Applications. macOS remembers apps launched from build, test, and temporary directories, and adds version suffixes when several registered copies can handle the same file. The release script unregisters its staging copies in `finally`; the shared performance launcher and functional smoke harness unregister their test copies on cleanup while preserving the canonical installation.
+
+After manual signed-app/update trials or to clean registrations from older builds, preview and then apply the targeted cleanup from a terminal with access to the macOS Launch Services database:
+
+```sh
+node build/darwin/lean-registration.mjs
+node build/darwin/lean-registration.mjs --apply
+```
+
+This keeps `/Applications/Lean VS Code.app`, unregisters only other primary bundles with the exact Lean VS Code bundle identifier, and verifies that one registration remains. It does not delete app copies, modify signatures, reset file defaults, or rebuild the global database. Close and reopen Finder's context menu after cleanup. Retained signed release copies can register again if manually launched; run this cleanup after those trials. Keep historical releases archived as ZIP/DMG files rather than installed bundles.
 
 For a release candidate, build with `npm run gulp vscode-darwin-arm64-min`. In a Git worktree, set `BUILD_SOURCEVERSION` to the exact 40-character `git rev-parse HEAD` value for that build; the upstream packaging helper reads `.git/HEAD` directly and otherwise omits commit metadata from worktree bundles. This uses the production minification and private-field conversion pipeline and writes to the **same app path**, replacing the previous local build. Run `npm run lean:check-ai` before building a candidate: it bundles the desktop workbench and fails if built-in AI modules outside `build/lean/aiBundleAllowlist.json` return after an upstream merge, if a bundled module injects an unregistered service, or if an extension-host protocol actor is missing. Update the allowlist only after reviewing why a module became reachable. Benchmark and test that exact candidate before signing it; a normal `vscode-darwin-arm64` build is useful for development but is not the optimized release bundle.
 

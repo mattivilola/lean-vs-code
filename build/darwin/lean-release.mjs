@@ -11,6 +11,7 @@ import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { sign } from '@electron/osx-sign';
+import { enableReleaseHandlers, unregisterApp } from './lean-registration.mjs';
 
 const run = promisify(execFile);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -172,6 +173,7 @@ try {
 	appPackage.version = version;
 	await fs.writeFile(appPackagePath, `${JSON.stringify(appPackage, null, 2)}\n`);
 	const info = path.join(app, 'Contents/Info.plist');
+	await enableReleaseHandlers(app, product);
 	const shortVersion = version.split('-')[0];
 	await run('plutil', ['-replace', 'CFBundleShortVersionString', '-string', shortVersion, info]);
 	await run('plutil', ['-replace', 'CFBundleVersion', '-string', shortVersion, info]);
@@ -237,5 +239,9 @@ try {
 	console.log(`Signed and notarized update ZIP: ${zipOutput} (SHA-256 ${zipHash})`);
 	console.log(`Static update feed: ${feedOutput}`);
 } finally {
+	// Signing/Gatekeeper checks can register staging copies even though they are temporary.
+	for (const stagedApp of [app, path.join(volume, appName)]) {
+		await unregisterApp(stagedApp).catch(error => console.warn(`Could not unregister staging app: ${error.message}`));
+	}
 	await fs.rm(stage, { recursive: true, force: true });
 }

@@ -6,6 +6,7 @@
 import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { unregisterApp } from '../../build/darwin/lean-registration.mjs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 
@@ -179,5 +180,9 @@ try {
 	if (child.exitCode === null && child.signalCode === null) {
 		child.kill('SIGTERM');
 	}
+	await unregisterApp(app).catch(error => {
+		console.error(`Could not unregister test app: ${error.message}`);
+		process.exitCode = 1;
+	});
 	console.log(`Functional smoke artifacts: ${runDir}`);
 }

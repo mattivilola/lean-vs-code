@@ -6,6 +6,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
+import { unregisterApp } from '../../build/darwin/lean-registration.mjs';
 
 export const LAUNCH_MODES = ['direct', 'cli', 'finder'];
 
@@ -135,7 +136,13 @@ export async function launchApp(app, args, { mode = 'direct', env = process.env,
 		},
 		isRunning() { return root ? alive(root) : child.exitCode === null && child.signalCode === null; },
 		async terminate() {
-			if (!owned || !root || !alive(root)) {
+			if (!owned) {
+				return;
+			}
+			if (!root || !alive(root)) {
+				if (app.nameShort === 'Lean VS Code') {
+					await unregisterApp(app.appPath);
+				}
 				return;
 			}
 			// Recheck the profile marker before every signal to avoid PID reuse.
@@ -162,6 +169,9 @@ export async function launchApp(app, args, { mode = 'direct', env = process.env,
 						throw error;
 					}
 				}
+			}
+			if (app.nameShort === 'Lean VS Code') {
+				await unregisterApp(app.appPath);
 			}
 		}
 	};
