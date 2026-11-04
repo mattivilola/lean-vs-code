@@ -154,6 +154,21 @@ async function verifyNoAgentsWindowResources(app) {
 	console.log('Verified Agents window resources are absent');
 }
 
+async function verifyProductBranding(app) {
+	const manifest = JSON.parse(await fs.readFile(path.join(root, 'resources/branding/crt-family-manifest.json'), 'utf8'));
+	const info = path.join(app, 'Contents/Info.plist');
+	const { stdout: identifier } = await run('plutil', ['-extract', 'CFBundleIdentifier', 'raw', info]);
+	if (identifier.trim() !== product.darwinBundleIdentifier) {
+		throw new Error('Release bundle identifier does not match product.json.');
+	}
+	const { stdout: iconName } = await run('plutil', ['-extract', 'CFBundleIconFile', 'raw', info]);
+	const icon = iconName.trim().endsWith('.icns') ? iconName.trim() : `${iconName.trim()}.icns`;
+	if (await sha256(path.join(app, 'Contents/Resources', icon)) !== manifest.files['lean-vs-code/LeanVSCode.icns'].sha256) {
+		throw new Error('Packaged application icon does not match the approved CRT family artwork.');
+	}
+	console.log('Verified unchanged app identity and exact approved teal CRT icon bytes');
+}
+
 try {
 	console.log(`Copying ${appName} to release staging`);
 	await run('ditto', [source, app]);
@@ -161,6 +176,7 @@ try {
 	console.log(`Removed ${removedSourceMaps} development source maps from release copy`);
 	await verifyBundledExtensions(app);
 	await verifyNoAgentsWindowResources(app);
+	await verifyProductBranding(app);
 	await fs.access(path.join(app, 'Contents/Resources/app/node_modules.asar.unpacked/@vscode/vsce-sign/bin/vsce-sign'));
 	// Electron/Squirrel reads the packaged app version, not the upstream extension API version.
 	// Keep the source package at the Code-OSS API version while giving the app its own release version.
@@ -199,6 +215,7 @@ try {
 	await run('xcrun', ['stapler', 'validate', app]);
 	await run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app]);
 	await run('spctl', ['-a', '-vv', app]);
+	await verifyProductBranding(app);
 
 	await run('ditto', ['-c', '-k', '--sequesterRsrc', '--keepParent', app, updateZip]);
 	await run('unzip', ['-tq', updateZip]);

@@ -6,6 +6,15 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.10.1
+
+See the [v0.10.1 release notes](lean/docs/RELEASE_NOTES_0.10.1.md) for build, distribution, and validation evidence.
+
+- Adopt the approved CRT family: teal display and mint braces identify Lean VS Code; the emerald terminal prompt now identifies sibling Lean Term. Refresh app/product marks, README branding, and website wordmarks, favicons, touch icons and metadata.
+- Keep development/test app copies out of Finder's Open With menu. Restore document and URL handlers only in the staged release before signing, and unregister task-owned temporary app copies during cleanup.
+- Add modest Lean Term cross-promotion on the website, clearly marked in development.
+- Build from the known-good v0.10 base. Unfinished v0.11 main-process/startup experiments are excluded. Preserve bundle, settings, extension-storage and update identities. No new speed or memory claim; existing benchmark figures retain their measured version labels.
+
 ## 0.10.0
 
 See the [v0.10.0 release notes](lean/docs/RELEASE_NOTES_0.10.0.md) and [GitHub release](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.0) for the exact build, validation, and limitations.

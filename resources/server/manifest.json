@@ -1,6 +1,7 @@
 {
-	"name": "Code - OSS",
-	"short_name": "Code- OSS",
+	"name": "Lean VS Code",
+	"short_name": "Lean VS Code",
+	"theme_color": "#073e46",
 	"start_url": "/",
 	"lang": "en-US",
 	"display": "standalone",

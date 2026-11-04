@@ -1,16 +1,18 @@
 # Lean VS Code
 
-![Lean VS Code emerald icon](resources/branding/lean-code.png)
+![Lean VS Code teal CRT icon with mint braces](resources/branding/lean-code.png)
 
 **A quieter Code-OSS editor for writing code and reviewing local changes.** Lean VS Code is a free, open-source fork of [Code - OSS](https://github.com/microsoft/vscode). It keeps the familiar editor, search, terminal, Git diff view, and extension platform, while shipping with a smaller set of built-in extensions and fewer unsolicited surfaces. It has its own app identity and data directory, so it can live beside Visual Studio Code.
 
-## Get v0.10.0
+## Get v0.10.1
 
-The current release supports **Apple Silicon Macs**. Download the signed and notarized [v0.10.0 DMG](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.0), open it, and drag **Lean VS Code** into **Applications**. It has its own settings and extensions, so it can run alongside VS Code. Releases since v0.3.2 can receive signed updates through the app; v0.3.0 and the withdrawn v0.3.1 candidate need a manual install of v0.3.2 or newer once.
+The current release supports **Apple Silicon Macs**. Download the signed and notarized [v0.10.1 DMG](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.1), open it, and drag **Lean VS Code** into **Applications**. It has its own settings and extensions, so it can run alongside VS Code. Releases since v0.3.2 can receive signed updates through the app; v0.3.0 and the withdrawn v0.3.1 candidate need a manual install of v0.3.2 or newer once.
 
 Starting with v0.3.2, the macOS app checks its **GitHub stable-release feed** after startup and periodically while running. It downloads an update ZIP containing the signed and notarized app when a newer release is available and offers **Restart to Update**; a staged update can also install on normal quit. Choose `update.mode` in Settings to use automatic, startup-only, manual, or no future checks. Previously staged updates may still apply after checks are disabled. Initial installs remain available as DMGs on the [Releases page](https://github.com/mattivilola/lean-vs-code/releases).
 
-See the [changelog](CHANGELOG.md) and [v0.10 release notes](lean/docs/RELEASE_NOTES_0.10.0.md) for what changed and how the signed app was checked. For a source build and the maintainer's signing/notarization procedure, see [Build and release on macOS](lean/docs/BUILDING.md).
+See the [changelog](CHANGELOG.md) and [v0.10.1 release notes](lean/docs/RELEASE_NOTES_0.10.1.md) for what changed and how the signed app was checked. For a source build and the maintainer's signing/notarization procedure, see [Build and release on macOS](lean/docs/BUILDING.md).
+
+The new teal CRT and mint braces distinguish the editor from its sibling [Lean Term](https://leanterm.com), an emerald terminal app for macOS currently in development. v0.10.1 brings this shared visual identity and keeps development/test app copies out of Finder’s **Open With** list. It stays on the tested v0.10 editor base.
 
 ## Why this fork exists
 
@@ -25,7 +27,7 @@ The [performance history](lean/docs/PERFORMANCE.md) keeps raw Code-OSS compariso
 - **Editing and review first.** Open a file, navigate a project, inspect local Git changes, and compare them side by side without an AI prompt or onboarding flow taking over the workbench.
 - **Small default extension set.** The [33 bundled extensions](lean/bundled-extensions.json) provide syntax, themes, and local Git. Only Git and Git Base have executable entry points in the packaged set. Add language servers, formatters, and other tools when you need them.
 - **Extensions remain available.** The Extensions view uses [Open VSX](https://open-vsx.org/) for deliberate searches and installs, with verification against its pinned Ed25519 public key. Local VSIX installation is also supported. Extensions may have their own resource use and network behavior.
-- **A separate, recognizable app.** Choose **Lean VS Code Dark** or the daylight-friendly **Lean VS Code Light** from the Color Theme picker; the emerald theme and icon make the app easy to distinguish from VS Code. Independent storage keeps settings and installed extensions separate.
+- **A separate, recognizable app.** Choose **Lean VS Code Dark** or the daylight-friendly **Lean VS Code Light** from the Color Theme picker; the emerald theme and teal braces icon make the app easy to distinguish from VS Code. Independent storage keeps settings and installed extensions separate.
 - **Less shipped development baggage.** Release packaging removes generated JavaScript source maps from the app copy. The v0.10.0 release continues to omit the unused separate Agents-window resources while retaining the optimized production bundle. Package size alone does not prove a runtime-memory saving.
 - **Git ready after startup.** In trusted projects, the bundled Git extension starts after the workbench is ready. Gutter markers, branch status, and local diffs are available without opening Source Control first.
 - **Updates with the same controls you already know.** The existing update UI uses Electron's macOS updater, a signed and notarized app ZIP on GitHub Releases, and a static feed containing the ZIP's hash and size. Checks begin after the workbench opens; metered connections defer automatic work.
@@ -38,7 +40,7 @@ The screenshots show this fork's own source and its local Git change view.
 
 ## What to expect
 
-Lean VS Code v0.10.0 is based on Code-OSS **1.139.1** and keeps that extension API version; **0.10.0** is this fork's release number. Core editor features, file search, integrated terminal, local Git review, and extension management remain available. Optional extensions are not installed by default. Telemetry, experiments, and extension recommendations are off by default; built-in chat and agent UI are removed. Extension APIs remain registered, although an installed extension that depends on the removed built-in AI UI may need its own interface. The macOS update feed is the one background service enabled by default; user-installed extensions can add their own functionality or traffic.
+Lean VS Code v0.10.1 is based on Code-OSS **1.139.1** and keeps that extension API version; **0.10.1** is this fork's release number. Core editor features, file search, integrated terminal, local Git review, and extension management remain available. Optional extensions are not installed by default. Telemetry, experiments, and extension recommendations are off by default; built-in chat and agent UI are removed. Extension APIs remain registered, although an installed extension that depends on the removed built-in AI UI may need its own interface. The macOS update feed is the one background service enabled by default; user-installed extensions can add their own functionality or traffic.
 
 This is an early release, not a claim of native-editor memory use or universal VS Code extension compatibility. The [implementation plan's](IMPLEMENTATION_PLAN.md) 1-second file-ready and 250 MiB idle targets remain unmet: signed v0.10.0 reached 1.596 s p95 in its matched run. The next optimization work needs a larger measured critical-path reduction. Core editing and extension compatibility remain release gates.
 
