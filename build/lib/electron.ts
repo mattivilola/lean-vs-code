@@ -71,7 +71,9 @@ function darwinBundleDocumentType(extensions: string[], icon: string, nameOrSuff
 
 	return {
 		name: nameOrSuffix,
-		role: 'Editor',
+		// Development bundles retain file icons but must not join Finder's Open With menu.
+		// lean-release.mjs restores Editor roles in the copy it signs for installation.
+		role: 'None',
 		ostypes: ['TEXT', 'utxt', 'TUTX', '****'],
 		extensions,
 		iconFile: 'resources/darwin/' + icon.toLowerCase() + '.icns',
@@ -95,7 +97,7 @@ function darwinBundleDocumentTypes(types: { [name: string]: string | string[] },
 		const extensions = types[name];
 		return {
 			name,
-			role: 'Editor',
+			role: 'None',
 			ostypes: ['TEXT', 'utxt', 'TUTX', '****'],
 			extensions: Array.isArray(extensions) ? extensions : [extensions],
 			iconFile: 'resources/darwin/' + icon + '.icns'
@@ -229,11 +231,8 @@ export const config = {
 		// Folder support ()
 		darwinBundleDocumentType([], 'default', 'Folder', ['public.folder'])
 	],
-	darwinBundleURLTypes: [{
-		role: 'Viewer',
-		name: product.nameLong,
-		urlSchemes: [product.urlProtocol]
-	}],
+	// Only the installed release should handle lean-code:// links.
+	darwinBundleURLTypes: [],
 	darwinForceDarkModeSupport: true,
 	darwinCredits: darwinCreditsTemplate ? Buffer.from(darwinCreditsTemplate({ commit: commit, date: new Date().toISOString() })) : undefined,
 	linuxExecutableName: product.applicationName,
