@@ -1,0 +1,49 @@
+{
+  "version": "0.10.1",
+  "binarySourceCommit": "5cec70a501f3d9dfa3d82d5828faedab9dd78a53",
+  "assetManifestSHA256": "18a7151b799295c67a73fecc146b4e8f2dba5ddf962e56eb5947787fbc907b6a",
+  "packagedIconSHA256": "3daf00736f79a805ba120be9448c80aef673868e9d2153d5ba73538527f9cfe9",
+  "bundleIdentity": "com.mattivilola.leanvscode",
+  "appName": "Lean VS Code.app",
+  "archives": [
+    {
+      "name": "Lean-VS-Code-0.10.1-macos-arm64.zip",
+      "size": 192180212,
+      "sha256": "8504fe2c2543fb98803d496deef0a23408cd17c613ccdb05f69ff68fcb5eb758"
+    },
+    {
+      "name": "Lean-VS-Code-0.10.1-macos-arm64.dmg",
+      "size": 205596353,
+      "sha256": "0443bbc15810c20e53009d2d716fb66b705f05b73da9104296044c94dabe3807"
+    }
+  ],
+  "appleAcceptedSubmissions": [
+    {
+      "artifact": "notarization.zip",
+      "id": "ee28cdfd-ec7f-4e8d-985b-f3a27835bc64"
+    },
+    {
+      "artifact": "Lean-VS-Code-0.10.1-macos-arm64.dmg",
+      "id": "ecb59ba7-ce84-4b45-aebc-228672781916"
+    }
+  ],
+  "initialAttempt": {
+    "id": "7cac0b68-ffce-42e0-be7d-d2452833a22a",
+    "result": "upload connectTimeout; Apple info returned submission does not exist"
+  },
+  "checks": {
+    "zipAndDmgTreesIdentical": true,
+    "matchingTreeEntries": 2218,
+    "deepStrictSignaturesBothApps": true,
+    "staplingBothAppsAndDmg": true,
+    "gatekeeperBothAppsAndDmg": true,
+    "updateFeedHashAndSize": true,
+    "releaseDocumentAndURLHandlers": true,
+    "approvedIconBytesBothApps": true,
+    "readOnlyDmgMountDetached": true
+  },
+  "guiTimingCollected": false,
+  "functionalVerification": "recorded separately",
+  "verificationDirectory": "/Users/matti/Development/ILOapps/lean-vs-code/.build/lean-artifacts/v0101-verified",
+  "cleanupNote": "Initial mounted-copy unregister returned -10814. Recovery confirmed absence in a full registration dump containing the canonical installation; the mount was then detached successfully. Six registration tests cover the absence guard, aliases, incomplete dumps and genuine errors."
+}

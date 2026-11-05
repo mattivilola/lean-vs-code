@@ -1,0 +1,36 @@
+{
+  "createdAt": "2026-11-05T07:22:17.512Z",
+  "app": "Lean VS Code",
+  "scenario": "all",
+  "checks": {
+    "editableFileAndSave": {
+      "ok": true,
+      "detail": "inserted, saved, and verified on disk"
+    },
+    "workspaceSearch": {
+      "ok": true,
+      "detail": "401 TypeScript files found; search UI opened"
+    },
+    "workspaceTextSearch": {
+      "ok": true,
+      "detail": "10 expected text matches returned across 400 source files"
+    },
+    "integratedTerminal": {
+      "ok": true,
+      "detail": "integrated terminal executed a command"
+    },
+    "gitReview": {
+      "ok": true,
+      "detail": "bundled Git API discovered repository and reviewed its diff"
+    },
+    "extensionWebview": {
+      "ok": true,
+      "detail": "extension webview panel created and HTML assigned"
+    },
+    "installedExtension": {
+      "ok": true,
+      "detail": "EditorConfig.EditorConfig 0.18.2 installed and activated"
+    }
+  },
+  "passed": true
+}

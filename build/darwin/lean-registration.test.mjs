@@ -65,3 +65,44 @@ test('release preparation restores document and URL handlers using macOS plist t
 		await fs.rm(directory, { recursive: true, force: true });
 	}
 });
+
+test('already-unregistered copies require a complete dump proving their absence', { skip: process.platform !== 'darwin' }, async () => {
+	const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'lean-registration-absent-'));
+	try {
+		const app = path.join(directory, 'Fixture.app');
+		await fs.mkdir(path.join(app, 'Contents'), { recursive: true });
+		await fs.writeFile(path.join(app, 'Contents/Info.plist'), '{}');
+		const block = app => `--------------------------------------------------------------------------------\npath: ${app}\nidentifier: com.mattivilola.leanvscode\n`;
+		const failure = Object.assign(new Error('not registered'), { stderr: 'failed to scan: -10814 from spotlight' });
+		const runner = dump => async (command, args) => {
+			if (command.endsWith('/plutil')) return { stdout: 'com.mattivilola.leanvscode' };
+			if (args[0] === '-u') throw failure;
+			assert.deepStrictEqual(args, ['-dump']);
+			return { stdout: dump };
+		};
+		await unregisterApp(app, runner(block('/Applications/Lean VS Code.app')));
+		await assert.rejects(unregisterApp(app, runner('handlerpref only')), error => error === failure);
+		await assert.rejects(unregisterApp(app, runner(block('/Applications/Lean VS Code.app') + block(app))), error => error === failure);
+		const realApp = await fs.realpath(app);
+		await assert.rejects(unregisterApp(app, runner(block('/Applications/Lean VS Code.app') + block(realApp))), error => error === failure);
+	} finally {
+		await fs.rm(directory, { recursive: true, force: true });
+	}
+});
+
+test('unrelated unregister failures are not suppressed or followed by a dump', { skip: process.platform !== 'darwin' }, async () => {
+	const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'lean-registration-error-'));
+	try {
+		const app = path.join(directory, 'Fixture.app');
+		await fs.mkdir(path.join(app, 'Contents'), { recursive: true });
+		await fs.writeFile(path.join(app, 'Contents/Info.plist'), '{}');
+		const failure = Object.assign(new Error('permission denied'), { stderr: 'EPERM' });
+		await assert.rejects(unregisterApp(app, async (command, args) => {
+			if (command.endsWith('/plutil')) return { stdout: 'com.mattivilola.leanvscode' };
+			assert.strictEqual(args[0], '-u');
+			throw failure;
+		}), error => error === failure);
+	} finally {
+		await fs.rm(directory, { recursive: true, force: true });
+	}
+});

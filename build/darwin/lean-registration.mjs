@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { execFile } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { pathToFileURL } from 'node:url';
@@ -13,6 +13,14 @@ const run = promisify(execFile);
 const lsregister = '/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister';
 const bundleIdentifier = 'com.mattivilola.leanvscode';
 const installedApp = '/Applications/Lean VS Code.app';
+
+function canonicalPath(app) {
+	try {
+		return realpathSync(app);
+	} catch {
+		return path.resolve(app);
+	}
+}
 
 /** Extract only primary Lean VS Code bundles, never helpers or other applications. */
 export function registeredApps(dump) {
@@ -38,18 +46,33 @@ export async function enableReleaseHandlers(app, product) {
 }
 
 /** Remove a test/staging copy's registration, preserving the canonical installation and all files. */
-export async function unregisterApp(app) {
-	if (process.platform !== 'darwin' || path.resolve(app) === installedApp) {
+export async function unregisterApp(app, runner = run) {
+	if (process.platform !== 'darwin' || canonicalPath(app) === canonicalPath(installedApp)) {
 		return;
 	}
 	const info = path.join(app, 'Contents/Info.plist');
 	if (existsSync(info)) {
-		const { stdout } = await run('/usr/bin/plutil', ['-extract', 'CFBundleIdentifier', 'raw', info]);
+		const { stdout } = await runner('/usr/bin/plutil', ['-extract', 'CFBundleIdentifier', 'raw', info]);
 		if (stdout.trim() !== bundleIdentifier) {
 			return;
 		}
 	}
-	await run(lsregister, ['-u', path.resolve(app)]);
+	try {
+		await runner(lsregister, ['-u', path.resolve(app)]);
+	} catch (error) {
+		// Mounted/staged copies can already be absent from Launch Services. Do not
+		// hide a real failure or mistake an incomplete sandbox dump for that case.
+		if (String(error.stderr ?? '').includes('-10814')) {
+			try {
+				const { stdout } = await runner(lsregister, ['-dump'], { maxBuffer: 64 * 1024 * 1024 });
+				const apps = registeredApps(stdout).map(canonicalPath);
+				if (apps.includes(canonicalPath(installedApp)) && !apps.includes(canonicalPath(app))) {
+					return;
+				}
+			} catch { /* Preserve the original failure if absence cannot be proved. */ }
+		}
+		throw error;
+	}
 }
 
 /** Consolidate this app's registrations without rebuilding the system database or deleting bundles. */
