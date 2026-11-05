@@ -1,0 +1,22 @@
+{
+  "kind": "macos-icon-cache-repair",
+  "version": "0.10.1",
+  "app": "/Applications/Lean VS Code.app",
+  "bundleID": "com.mattivilola.leanvscode",
+  "iconSHA256": "3daf00736f79a805ba120be9448c80aef673868e9d2153d5ba73538527f9cfe9",
+  "bundleModificationTimeBefore": 315529200,
+  "bundleModificationTimeAfter": 1793869719.576244,
+  "before": "Installed ICNS had teal braces; NSWorkspace icon image had previous emerald prompt; no app instance running. Restarting Dock alone had not corrected it.",
+  "action": "Refresh only app folder modification time; reopen installed editor; restart Dock. No icon file, signed contents, Dock preferences, global caches or user settings changed.",
+  "after": "NSWorkspace icon and freshly launched NSRunningApplication icon both visually show teal braces.",
+  "signatureVerificationBeforeAndAfter": "codesign --verify --deep --strict passed",
+  "observedRunningAppPID": 94903,
+  "diagnosticImages": {
+    "before": "27c54c5aa0871e4d409a01f5558bfe2a07094b8698936da43676c2c94be2f717",
+    "afterTouch": "a898b2b874413cc8eab7472c32353e327c702fe46124918183652c92c94a571a",
+    "runningAppAfter": "dc04cb88c7e3153ccf70327d7e9a36c4db68f2248ee9a90347a9bef274ed15ed"
+  },
+  "guiBenchmarkRun": false,
+  "publishedReleaseAssetsChanged": false,
+  "futureBuildFix": "Refresh staged app folder time after stapling, before final signing checks and ZIP/DMG creation."
+}

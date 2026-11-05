@@ -16,6 +16,22 @@ The app is written to `.build/lean-artifacts/LeanVSCode-darwin-arm64/Lean VS Cod
 
 ## Keep one installed app and Finder entry
 
+### Updated app still shows its previous Dock icon
+
+Check the installed version first. On the maintainer's Mac, v0.10.1 contained the exact approved teal ICNS, but macOS's icon service still returned the earlier emerald artwork even after restarting the Dock. The app folder retained Electron's 1 January 1980 modification timestamp. Refreshing only that folder timestamp made `NSWorkspace.icon(forFile:)` return the new icon; a fresh editor launch also returned it through `NSRunningApplication.icon`. Strict signature verification passed before and after; signed resources and user settings were unchanged.
+
+With the editor closed, a targeted refresh is:
+
+```sh
+touch "/Applications/Lean VS Code.app"
+killall Dock
+open "/Applications/Lean VS Code.app"
+```
+
+This changes directory metadata, not the icon file or signed app contents. It does not delete global caches or reset Dock preferences. Starting with the next release build, `lean-release.mjs` refreshes the staged app folder's timestamp after stapling, before its final signature/Gatekeeper checks and ZIP/DMG packaging. Existing v0.10.1 release archives remain unchanged. The observed repair is recorded in [`v0.10.1-icon-refresh.json`](../performance/v0.10.1-icon-refresh.json).
+
+### Preserve the canonical installation
+
 Always install or replace `/Applications/Lean VS Code.app`. Keep the app name unversioned; versions belong in bundle metadata, DMG/ZIP filenames, and release notes. Do not install version-named copies or leave extracted verification apps in Applications. macOS remembers apps launched from build, test, and temporary directories, and adds version suffixes when several registered copies can handle the same file. The release script unregisters its staging copies in `finally`; the shared performance launcher and functional smoke harness unregister their test copies on cleanup while preserving the canonical installation.
 
 After manual signed-app/update trials or to clean registrations from older builds, preview and then apply the targeted cleanup from a terminal with access to the macOS Launch Services database:

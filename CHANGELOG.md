@@ -6,6 +6,8 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+- Refresh the staged macOS app folder's timestamp before packaging. A retained 1980 timestamp left macOS serving the previous Dock artwork after a correctly installed v0.10.1 update; the targeted metadata refresh corrected the icon without changing signed file contents. This build-workflow fix applies to the next release; existing v0.10.1 archives are unchanged.
+
 ## 0.10.1
 
 See the [v0.10.1 release notes](lean/docs/RELEASE_NOTES_0.10.1.md) for build, distribution, and validation evidence.

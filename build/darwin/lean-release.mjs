@@ -224,6 +224,10 @@ try {
 	await notarize(notarizationZip);
 	await run('xcrun', ['stapler', 'staple', app]);
 	await run('xcrun', ['stapler', 'validate', app]);
+	// Electron's reproducible bundle date can remain in 1980 across updates.
+	// Give macOS a fresh folder timestamp so its icon service notices new artwork.
+	const bundleTimestamp = new Date();
+	await fs.utimes(app, bundleTimestamp, bundleTimestamp);
 	await run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app]);
 	await run('spctl', ['-a', '-vv', app]);
 	await verifyProductBranding(app);
