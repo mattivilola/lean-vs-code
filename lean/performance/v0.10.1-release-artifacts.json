@@ -45,5 +45,6 @@
   "guiTimingCollected": false,
   "functionalVerification": "recorded separately",
   "verificationDirectory": "/Users/matti/Development/ILOapps/lean-vs-code/.build/lean-artifacts/v0101-verified",
-  "cleanupNote": "Initial mounted-copy unregister returned -10814. Recovery confirmed absence in a full registration dump containing the canonical installation; the mount was then detached successfully. Six registration tests cover the absence guard, aliases, incomplete dumps and genuine errors."
+  "cleanupNote": "Initial mounted-copy unregister returned -10814. Recovery confirmed absence in a full registration dump containing the canonical installation; the mount was then detached successfully. Six registration tests cover the absence guard, aliases, incomplete dumps and genuine errors.",
+  "temporaryVerificationCopiesRemovedAfterChecks": true
 }

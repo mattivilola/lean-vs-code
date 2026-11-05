@@ -1,0 +1,44 @@
+{
+  "version": "0.10.1",
+  "binarySourceCommit": "5cec70a501f3d9dfa3d82d5828faedab9dd78a53",
+  "releaseTagCommit": "4c0bb7720b6c3d408830c8dd9710f7ad9e7644f6",
+  "releaseURL": "https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.1",
+  "githubAssets": {
+    "count": 3,
+    "serverDigestsAndSizesMatchLocal": true,
+    "publicStableLatest": true,
+    "liveFeedMatchesLocalBytes": true
+  },
+  "site": {
+    "projectID": "appgprj_6ab788fc2ad081919bf11b70e6ca5cb1",
+    "sourceCommit": "74266c3533b36220011578c9ce5ce867b90ad056",
+    "versionNumber": 31,
+    "savedVersionID": "appgprj_6ab788fc2ad081919bf11b70e6ca5cb1~appgver_cf39480eb56c819192ea87454a0499a6",
+    "deploymentID": "appgdep_6aec323afce48191aa7b23eacbf8c290",
+    "url": "https://leanvscode.com",
+    "status": "succeeded",
+    "audience": "public",
+    "liveHomeStoryPerformanceAndBrandAssetsVerified": true,
+    "historicalBenchmarksPreserved": true,
+    "siblingPromotion": "Lean Term; explicitly in development; reciprocal live link checked"
+  },
+  "checks": {
+    "registrationTests": 6,
+    "signedCoreAndInstalledExtensionChecks": 7,
+    "nativePublic0_10_0To0_10_1Update": true,
+    "updatedBundleSignatureGatekeeperAndStapling": true,
+    "settingAndProbeExtensionPersisted": true,
+    "canonicalInstalledAppMetadataUnchanged": true
+  },
+  "installation": {
+    "registeredApps": [
+      "/Applications/Lean VS Code.app"
+    ],
+    "taskCopiesRemoved": true,
+    "installedAppVersion": "0.10.0"
+  },
+  "fullGUIBenchmarksRun": false,
+  "newSpeedOrMemoryClaim": false,
+  "v011OptimizationChangesIncluded": false,
+  "localPreviewBrowserQA": "not run; source checks and live HTTP/asset verification recorded separately"
+}

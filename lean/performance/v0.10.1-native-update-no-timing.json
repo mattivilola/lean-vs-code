@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "from": "0.10.0",
+  "to": "0.10.1",
+  "sourceCommit": "5cec70a501f3d9dfa3d82d5828faedab9dd78a53",
+  "appRoot": "/private/tmp/lean-update-KnuhiK/Lean VS Code.app/Contents/Resources/app",
+  "preservedFontSize": 17,
+  "preservedProbeExtension": true,
+  "guiTimingCollected": false,
+  "actualUpdatedBundleVersion": "0.10.1",
+  "actualUpdatedPackageVersion": "0.10.1",
+  "signatureGatekeeperAndStapling": true,
+  "canonicalInstalledAppMetadataUnchanged": true,
+  "method": "Native public stable feed; isolated signed v0.10.0 clone and portable data, preserved font setting and probe extension; Ready state and native restart; actual target versions and signature verified."
+}
