@@ -45,6 +45,8 @@ node build/darwin/lean-release.mjs
 
 The DMG, update ZIP, and `releases-darwin-arm64.json` are placed in `.build/lean-artifacts/releases/`. The script refuses to overwrite an existing DMG or ZIP. This command requires the `build` package dependencies installed by `npm ci` and a valid Developer ID identity and notarytool profile.
 
+If Apple's S3 Transfer Acceleration upload fails with a connection timeout, inspect the exact submission with `xcrun notarytool info <id> --keychain-profile lean-vs-code` before retrying. Set `NOTARY_DISABLE_S3_ACCELERATION=1` for a bounded retry through the normal upload endpoint. This changes upload routing only; signing, notarization and Gatekeeper checks remain required. The script prints the accepted submission IDs. On failure, it retains its task-owned temporary stage for diagnosis or recovery; it unregisters staged apps but does not publish incomplete artifacts. A live Apple processing job should be awaited using its existing ID, rather than resubmitted because observation timed out.
+
 ## Verify and publish
 
 Before publication, extract both archives and confirm the same bundle version, bundle ID, and signed app content. Check the update ZIP's hash and size against the JSON feed. Confirm Apple notarization and Gatekeeper acceptance on the app and DMG. Release only stable numeric versions such as `0.3.2`; the stable feed must never point to a prerelease.

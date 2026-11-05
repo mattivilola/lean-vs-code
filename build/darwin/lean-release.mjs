@@ -26,6 +26,8 @@ const zipOutput = path.join(releaseDir, `${basename}.zip`);
 const feedOutput = path.join(releaseDir, 'releases-darwin-arm64.json');
 const identity = process.env.CODESIGN_IDENTITY;
 const notaryProfile = process.env.NOTARY_KEYCHAIN_PROFILE;
+const notaryTransportFlags = process.env.NOTARY_DISABLE_S3_ACCELERATION === '1' ? ['--no-s3-acceleration'] : [];
+let completed = false;
 
 if (!identity) {
 	throw new Error('Set CODESIGN_IDENTITY to a Developer ID Application identity.');
@@ -58,6 +60,15 @@ const notarizationZip = path.join(stage, 'notarization.zip');
 const updateZip = path.join(stage, `${basename}.zip`);
 const dmg = path.join(stage, `${basename}.dmg`);
 const entitlementsDir = path.join(root, 'build/azure-pipelines/darwin');
+
+async function notarize(artifact) {
+	const { stdout } = await run('xcrun', ['notarytool', 'submit', artifact, '--keychain-profile', notaryProfile, '--wait', '--output-format', 'json', ...notaryTransportFlags]);
+	const result = JSON.parse(stdout);
+	console.log(`Notarization ${path.basename(artifact)}: ${result.status} (${result.id})`);
+	if (result.status !== 'Accepted') {
+		throw new Error(`Apple did not accept submission ${result.id}: ${result.status}`);
+	}
+}
 
 function entitlementsForFile(filePath) {
 	let file = 'app-entitlements.plist';
@@ -210,7 +221,7 @@ try {
 	await run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app]);
 	console.log('Notarizing the signed app before packaging updates');
 	await run('ditto', ['-c', '-k', '--sequesterRsrc', '--keepParent', app, notarizationZip]);
-	await run('xcrun', ['notarytool', 'submit', notarizationZip, '--keychain-profile', notaryProfile, '--wait']);
+	await notarize(notarizationZip);
 	await run('xcrun', ['stapler', 'staple', app]);
 	await run('xcrun', ['stapler', 'validate', app]);
 	await run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app]);
@@ -227,7 +238,7 @@ try {
 	await run('hdiutil', ['create', '-volname', 'Lean VS Code', '-srcfolder', volume, '-format', 'UDZO', '-imagekey', 'zlib-level=9', dmg]);
 	await signDmg(dmg);
 	await run('codesign', ['--verify', '--verbose=2', dmg]);
-	await run('xcrun', ['notarytool', 'submit', dmg, '--keychain-profile', notaryProfile, '--wait']);
+	await notarize(dmg);
 	await run('xcrun', ['stapler', 'staple', dmg]);
 	await run('xcrun', ['stapler', 'validate', dmg]);
 	await run('spctl', ['-a', '-vv', '-t', 'open', '--context', 'context:primary-signature', dmg]);
@@ -255,10 +266,15 @@ try {
 	console.log(`Signed and notarized DMG: ${output} (SHA-256 ${dmgHash})`);
 	console.log(`Signed and notarized update ZIP: ${zipOutput} (SHA-256 ${zipHash})`);
 	console.log(`Static update feed: ${feedOutput}`);
+	completed = true;
 } finally {
 	// Signing/Gatekeeper checks can register staging copies even though they are temporary.
 	for (const stagedApp of [app, path.join(volume, appName)]) {
 		await unregisterApp(stagedApp).catch(error => console.warn(`Could not unregister staging app: ${error.message}`));
 	}
-	await fs.rm(stage, { recursive: true, force: true });
+	if (completed) {
+		await fs.rm(stage, { recursive: true, force: true });
+	} else {
+		console.error(`Release failed; task-owned staging files retained for diagnosis/recovery: ${stage}`);
+	}
 }
