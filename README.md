@@ -14,7 +14,7 @@ See the [changelog](CHANGELOG.md) and [v0.10.2 release notes](lean/docs/RELEASE_
 
 The new teal CRT and mint braces distinguish the editor from its sibling [Lean Term](https://leanterm.com), an emerald terminal app for macOS currently in development. v0.10.1 brings this shared visual identity and keeps development/test app copies out of Finder’s **Open With** list. It stays on the tested v0.10 editor base.
 
-In v0.10.2, **Open New External Terminal** opens the project in Lean Term when it is installed in Applications. Apple Terminal remains the default otherwise. An explicit `terminal.external.osxExec` setting still takes priority; the integrated terminal is unchanged.
+In v0.10.2, **Open New External Terminal** opens the project in Lean Term when it is installed in Applications. Apple Terminal remains the default otherwise. An explicit `terminal.external.osxExec` setting still takes priority.
 
 ## Why this fork exists
 

@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-11-07T23:07:39.303Z",
+  "app": "Lean VS Code",
+  "scenario": "editableFileAndSave",
+  "checks": {
+    "editableFileAndSave": {
+      "ok": true,
+      "detail": "inserted, saved, and verified on disk"
+    }
+  },
+  "passed": true
+}
