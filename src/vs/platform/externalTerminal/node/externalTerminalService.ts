@@ -12,7 +12,7 @@ import { sanitizeProcessEnvironment } from '../../../base/common/processes.js';
 import * as pfs from '../../../base/node/pfs.js';
 import * as processes from '../../../base/node/processes.js';
 import * as nls from '../../../nls.js';
-import { DEFAULT_TERMINAL_OSX, IExternalTerminalService, IExternalTerminalSettings, ITerminalForPlatform } from '../common/externalTerminal.js';
+import { DEFAULT_TERMINAL_OSX, IExternalTerminalService, IExternalTerminalSettings, ITerminalForPlatform, LEAN_TERM_OSX } from '../common/externalTerminal.js';
 import { ITerminalEnvironment } from '../../terminal/common/terminal.js';
 
 const TERMINAL_TITLE = nls.localize('console.title', "VS Code Console");
@@ -24,7 +24,7 @@ abstract class ExternalTerminalService {
 		return {
 			windows: WindowsExternalTerminalService.getDefaultTerminalWindows(),
 			linux: await LinuxExternalTerminalService.getDefaultTerminalLinuxReady(),
-			osx: DEFAULT_TERMINAL_OSX
+			osx: await MacExternalTerminalService.getDefaultTerminalOSXReady()
 		};
 	}
 }
@@ -143,6 +143,26 @@ export class WindowsExternalTerminalService extends ExternalTerminalService impl
 
 export class MacExternalTerminalService extends ExternalTerminalService implements IExternalTerminalService {
 	private static readonly OSASCRIPT = '/usr/bin/osascript';	// osascript is the AppleScript interpreter on OS X
+	private static readonly LEAN_TERM_PATH = '/Applications/Lean Term.app';
+	private static _DEFAULT_TERMINAL_OSX_READY: Promise<string> | undefined;
+
+	/**
+	 * Resolves the default macOS terminal app: Lean Term when it is installed, otherwise Terminal.
+	 * @param appExists probes whether an app bundle exists at the given path (injectable for tests)
+	 */
+	public static async detectDefaultTerminalOSX(appExists: (path: string) => Promise<boolean> = pfs.Promises.exists): Promise<string> {
+		return await appExists(MacExternalTerminalService.LEAN_TERM_PATH) ? LEAN_TERM_OSX : DEFAULT_TERMINAL_OSX;
+	}
+
+	/**
+	 * Returns the cached default macOS terminal app, probing for Lean Term on first use.
+	 */
+	public static getDefaultTerminalOSXReady(): Promise<string> {
+		if (!MacExternalTerminalService._DEFAULT_TERMINAL_OSX_READY) {
+			MacExternalTerminalService._DEFAULT_TERMINAL_OSX_READY = env.isMacintosh ? MacExternalTerminalService.detectDefaultTerminalOSX() : Promise.resolve(DEFAULT_TERMINAL_OSX);
+		}
+		return MacExternalTerminalService._DEFAULT_TERMINAL_OSX_READY;
+	}
 
 	public openTerminal(configuration: IExternalTerminalSettings, cwd?: string): Promise<void> {
 		return this.spawnTerminal(cp, configuration, cwd);
@@ -150,7 +170,10 @@ export class MacExternalTerminalService extends ExternalTerminalService implemen
 
 	public runInTerminal(title: string, dir: string, args: string[], envVars: ITerminalEnvironment, settings: IExternalTerminalSettings): Promise<number | undefined> {
 
-		const terminalApp = settings.osxExec || DEFAULT_TERMINAL_OSX;
+		const configured = settings.osxExec || DEFAULT_TERMINAL_OSX;
+		// Lean Term opens folders but cannot host a debuggee command with environment and wait for it,
+		// so debug runs keep using Terminal.app.
+		const terminalApp = configured === LEAN_TERM_OSX ? DEFAULT_TERMINAL_OSX : configured;
 
 		return new Promise<number | undefined>((resolve, reject) => {
 
@@ -210,8 +233,9 @@ export class MacExternalTerminalService extends ExternalTerminalService implemen
 		});
 	}
 
-	spawnTerminal(spawner: typeof cp, configuration: IExternalTerminalSettings, cwd?: string): Promise<void> {
-		const terminalApp = configuration.osxExec || DEFAULT_TERMINAL_OSX;
+	async spawnTerminal(spawner: typeof cp, configuration: IExternalTerminalSettings, cwd?: string): Promise<void> {
+		// The setting is registered asynchronously, so an unset value can reach here early.
+		const terminalApp = configuration.osxExec || await MacExternalTerminalService.getDefaultTerminalOSXReady();
 
 		return new Promise<void>((c, e) => {
 			const args = ['-a', terminalApp];

@@ -5,7 +5,7 @@
 
 import { deepStrictEqual, strictEqual } from 'assert';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
-import { DEFAULT_TERMINAL_OSX, IExternalTerminalConfiguration } from '../../common/externalTerminal.js';
+import { IExternalTerminalConfiguration } from '../../common/externalTerminal.js';
 import { LinuxExternalTerminalService, MacExternalTerminalService, WindowsExternalTerminalService } from '../../node/externalTerminalService.js';
 
 const mockConfig = Object.freeze<IExternalTerminalConfiguration>({
@@ -146,11 +146,56 @@ suite('ExternalTerminalService', () => {
 		);
 	});
 
-	test(`MacTerminalService - uses default terminal when configuration.terminal.external.osxExec is undefined`, done => {
+	test(`MacTerminalService - uses default terminal when configuration.terminal.external.osxExec is undefined`, async () => {
+		const testCwd = 'path/to/workspace';
+		let usedApp: string | undefined;
+		const mockSpawner: any = {
+			spawn: (command: any, args: any, opts: any) => {
+				usedApp = args[1];
+				return {
+					on: (evt: any, cb: any) => {
+						if (evt === 'exit') {
+							cb();
+						}
+					}
+				};
+			}
+		};
+		const testService = new MacExternalTerminalService();
+		await testService.spawnTerminal(
+			mockSpawner,
+			{ osxExec: undefined },
+			testCwd
+		);
+		strictEqual(usedApp, await MacExternalTerminalService.getDefaultTerminalOSXReady());
+	});
+
+	test(`MacTerminalService - defaults to Lean Term.app when installed, otherwise Terminal.app`, async () => {
+		const probed: string[] = [];
+		const installed = await MacExternalTerminalService.detectDefaultTerminalOSX(async path => {
+			probed.push(path);
+			return true;
+		});
+		const missing = await MacExternalTerminalService.detectDefaultTerminalOSX(async path => {
+			probed.push(path);
+			return false;
+		});
+		deepStrictEqual({ installed, missing, probed }, {
+			installed: 'Lean Term.app',
+			missing: 'Terminal.app',
+			probed: ['/Applications/Lean Term.app', '/Applications/Lean Term.app']
+		});
+	});
+
+	test(`MacTerminalService - Lean Term.app opens the folder with open -a`, done => {
 		const testCwd = 'path/to/workspace';
 		const mockSpawner: any = {
 			spawn: (command: any, args: any, opts: any) => {
-				strictEqual(args[1], DEFAULT_TERMINAL_OSX);
+				deepStrictEqual({ command, args, cwd: opts.cwd }, {
+					command: '/usr/bin/open',
+					args: ['-a', 'Lean Term.app', testCwd],
+					cwd: testCwd
+				});
 				done();
 				return {
 					on: (evt: any) => evt
@@ -160,7 +205,7 @@ suite('ExternalTerminalService', () => {
 		const testService = new MacExternalTerminalService();
 		testService.spawnTerminal(
 			mockSpawner,
-			{ osxExec: undefined },
+			{ osxExec: 'Lean Term.app' },
 			testCwd
 		);
 	});

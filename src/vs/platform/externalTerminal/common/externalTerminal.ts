@@ -35,3 +35,8 @@ export interface IExternalTerminalConfiguration {
 }
 
 export const DEFAULT_TERMINAL_OSX = 'Terminal.app';
+
+/**
+ * The sibling Lean Term app, used as the macOS default external terminal when it is installed.
+ */
+export const LEAN_TERM_OSX = 'Lean Term.app';
