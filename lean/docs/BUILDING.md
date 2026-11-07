@@ -28,7 +28,7 @@ killall Dock
 open "/Applications/Lean VS Code.app"
 ```
 
-This changes directory metadata, not the icon file or signed app contents. It does not delete global caches or reset Dock preferences. Starting with the next release build, `lean-release.mjs` refreshes the staged app folder's timestamp after stapling, before its final signature/Gatekeeper checks and ZIP/DMG packaging. Existing v0.10.1 release archives remain unchanged. The observed repair is recorded in [`v0.10.1-icon-refresh.json`](../performance/v0.10.1-icon-refresh.json).
+This changes directory metadata, not the icon file or signed app contents. It does not delete global caches or reset Dock preferences. Starting with v0.10.2, `lean-release.mjs` refreshes the staged app folder's timestamp after stapling, before its final signature/Gatekeeper checks and ZIP/DMG packaging. If the pinned item still displays the old icon, quit Lean VS Code, remove its Dock shortcut, and drag the app from Applications back into the Dock. This final step resolved the stale shortcut on the maintainer’s Mac. Existing v0.10.1 release archives remain unchanged. The observed repair is recorded in [`v0.10.1-icon-refresh.json`](../performance/v0.10.1-icon-refresh.json).
 
 ### Preserve the canonical installation
 

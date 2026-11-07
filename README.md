@@ -4,15 +4,17 @@
 
 **A quieter Code-OSS editor for writing code and reviewing local changes.** Lean VS Code is a free, open-source fork of [Code - OSS](https://github.com/microsoft/vscode). It keeps the familiar editor, search, terminal, Git diff view, and extension platform, while shipping with a smaller set of built-in extensions and fewer unsolicited surfaces. It has its own app identity and data directory, so it can live beside Visual Studio Code.
 
-## Get v0.10.1
+## Get v0.10.2
 
-The current release supports **Apple Silicon Macs**. Download the signed and notarized [v0.10.1 DMG](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.1), open it, and drag **Lean VS Code** into **Applications**. It has its own settings and extensions, so it can run alongside VS Code. Releases since v0.3.2 can receive signed updates through the app; v0.3.0 and the withdrawn v0.3.1 candidate need a manual install of v0.3.2 or newer once.
+The current release supports **Apple Silicon Macs**. Download the signed and notarized [v0.10.2 DMG](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.2), open it, and drag **Lean VS Code** into **Applications**. It has its own settings and extensions, so it can run alongside VS Code. Releases since v0.3.2 can receive signed updates through the app; v0.3.0 and the withdrawn v0.3.1 candidate need a manual install of v0.3.2 or newer once.
 
 Starting with v0.3.2, the macOS app checks its **GitHub stable-release feed** after startup and periodically while running. It downloads an update ZIP containing the signed and notarized app when a newer release is available and offers **Restart to Update**; a staged update can also install on normal quit. Choose `update.mode` in Settings to use automatic, startup-only, manual, or no future checks. Previously staged updates may still apply after checks are disabled. Initial installs remain available as DMGs on the [Releases page](https://github.com/mattivilola/lean-vs-code/releases).
 
-See the [changelog](CHANGELOG.md) and [v0.10.1 release notes](lean/docs/RELEASE_NOTES_0.10.1.md) for what changed and how the signed app was checked. For a source build and the maintainer's signing/notarization procedure, see [Build and release on macOS](lean/docs/BUILDING.md).
+See the [changelog](CHANGELOG.md) and [v0.10.2 release notes](lean/docs/RELEASE_NOTES_0.10.2.md) for what changed and how the signed app was checked. For a source build and the maintainer's signing/notarization procedure, see [Build and release on macOS](lean/docs/BUILDING.md).
 
 The new teal CRT and mint braces distinguish the editor from its sibling [Lean Term](https://leanterm.com), an emerald terminal app for macOS currently in development. v0.10.1 brings this shared visual identity and keeps development/test app copies out of Finder’s **Open With** list. It stays on the tested v0.10 editor base.
+
+In v0.10.2, **Open New External Terminal** opens the project in Lean Term when it is installed in Applications. Apple Terminal remains the default otherwise. An explicit `terminal.external.osxExec` setting still takes priority; the integrated terminal is unchanged.
 
 ## Why this fork exists
 
@@ -40,7 +42,7 @@ The screenshots show this fork's own source and its local Git change view.
 
 ## What to expect
 
-Lean VS Code v0.10.1 is based on Code-OSS **1.139.1** and keeps that extension API version; **0.10.1** is this fork's release number. Core editor features, file search, integrated terminal, local Git review, and extension management remain available. Optional extensions are not installed by default. Telemetry, experiments, and extension recommendations are off by default; built-in chat and agent UI are removed. Extension APIs remain registered, although an installed extension that depends on the removed built-in AI UI may need its own interface. The macOS update feed is the one background service enabled by default; user-installed extensions can add their own functionality or traffic.
+Lean VS Code v0.10.2 is based on Code-OSS **1.139.1** and keeps that extension API version; **0.10.2** is this fork's release number. Core editor features, file search, integrated terminal, local Git review, and extension management remain available. Optional extensions are not installed by default. Telemetry, experiments, and extension recommendations are off by default; built-in chat and agent UI are removed. Extension APIs remain registered, although an installed extension that depends on the removed built-in AI UI may need its own interface. The macOS update feed is the one background service enabled by default; user-installed extensions can add their own functionality or traffic.
 
 This is an early release, not a claim of native-editor memory use or universal VS Code extension compatibility. The [implementation plan's](IMPLEMENTATION_PLAN.md) 1-second file-ready and 250 MiB idle targets remain unmet: signed v0.10.0 reached 1.596 s p95 in its matched run. The next optimization work needs a larger measured critical-path reduction. Core editing and extension compatibility remain release gates.
 
