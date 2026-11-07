@@ -20,3 +20,11 @@ The [artifact report](../performance/v0.10.2-release-artifacts.json) verifies 2,
 - Auto-update ZIP (192,181,320 bytes), SHA-256 `9d1bc2add0329a941f56a365b06d7d8462affd7c0194eb7e178c8229bd305293`
 
 Apple accepted app submission `8bff31fa-3dbe-48e1-a7f9-402a606daa36` and DMG submission `b5b80db1-e172-4c7b-a00a-e52f45aeab90`.
+
+## Published delivery
+
+GitHub marks [v0.10.2](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.2) as the latest stable release. The tag points to the exact build commit. All three assets match the local byte counts and SHA-256 digests. Both download URLs returned the expected lengths, and the live stable feed matches the generated feed byte for byte.
+
+The [native update trial](../performance/v0.10.2-native-update-no-timing.json) and [state journal](../performance/v0.10.2-native-update-events.json) verify the public v0.10.1-to-v0.10.2 update in a disposable portable profile. The app reached Ready, restarted through the updater, and loaded v0.10.2 from the actual replacement bundle. The test setting and installed probe extension persisted. The replacement passed strict signature, stapling and Gatekeeper checks, and the canonical Applications copy retained its original metadata.
+
+The [website](https://leanvscode.com) now links to v0.10.2 from all three download pages. Site version 32 uses source commit `ba50e9ac0976b961803e616358452dc98b06680c`. See the [delivery record](../performance/v0.10.2-delivery.json) for GitHub asset digests and the deployment ID.

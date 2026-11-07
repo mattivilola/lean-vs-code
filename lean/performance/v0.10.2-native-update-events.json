@@ -1,0 +1,44 @@
+[
+  {
+    "event": "activated",
+    "version": "0.10.1",
+    "appRoot": "/private/tmp/lean-update-47zgmb/Lean VS Code.app/Contents/Resources/app",
+    "fontSize": 17
+  },
+  {
+    "event": "update-state",
+    "state": {
+      "type": "checking for updates",
+      "explicit": true
+    }
+  },
+  {
+    "event": "update-state",
+    "state": {
+      "type": "downloading",
+      "explicit": true,
+      "overwrite": false
+    }
+  },
+  {
+    "event": "update-state",
+    "state": {
+      "type": "ready",
+      "update": {
+        "version": "0.10.2",
+        "productVersion": "0.10.2"
+      },
+      "explicit": true,
+      "overwrite": false
+    }
+  },
+  {
+    "event": "restart-requested"
+  },
+  {
+    "event": "activated",
+    "version": "0.10.2",
+    "appRoot": "/private/tmp/lean-update-47zgmb/Lean VS Code.app/Contents/Resources/app",
+    "fontSize": 17
+  }
+]

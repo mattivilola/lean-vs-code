@@ -1,0 +1,38 @@
+{
+  "release": "https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.2",
+  "draft": false,
+  "source": "a3059ad9152daf61a96b25deed201e352abbd3b9",
+  "assets": [
+    {
+      "name": "Lean-VS-Code-0.10.2-macos-arm64.dmg",
+      "size": 204646398,
+      "digest": "sha256:e8ebdcb9ad3bdf3fb9ed19b23b00af154adc81a3f55dc6f0577ae0032039ce9d"
+    },
+    {
+      "name": "Lean-VS-Code-0.10.2-macos-arm64.zip",
+      "size": 192181320,
+      "digest": "sha256:9d1bc2add0329a941f56a365b06d7d8462affd7c0194eb7e178c8229bd305293"
+    },
+    {
+      "name": "releases-darwin-arm64.json",
+      "size": 452,
+      "digest": "sha256:3dbd42a523ed8299fa07f7fbd095f8e9d4081ce89cdfb7d38150168f47fa8b60"
+    }
+  ],
+  "publicFeedMatches": true,
+  "site": {
+    "url": "https://leanvscode.com",
+    "version": 32,
+    "sourceCommit": "ba50e9ac0976b961803e616358452dc98b06680c",
+    "deploymentID": "appgdep_6aefb77db37481918b4f249fd24359d0",
+    "liveDownloadPagesVerified": 3
+  },
+  "checks": {
+    "externalTerminalTests": 19,
+    "signedAppSmokeChecks": 7,
+    "nativeUpdatePreservedSettingAndExtension": true,
+    "temporaryTestCopiesRemoved": true,
+    "installedAppVersion": "0.10.1",
+    "guiBenchmarkTimingsCollected": false
+  }
+}
