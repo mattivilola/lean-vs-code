@@ -1,0 +1,47 @@
+{
+  "version": "0.10.3",
+  "binarySourceCommit": "0728eb43f4a20e73f3e43c5c09d5a5b1a6258b8a",
+  "assetManifestSHA256": "18a7151b799295c67a73fecc146b4e8f2dba5ddf962e56eb5947787fbc907b6a",
+  "packagedIconSHA256": "3daf00736f79a805ba120be9448c80aef673868e9d2153d5ba73538527f9cfe9",
+  "bundleIdentity": "com.mattivilola.leanvscode",
+  "appName": "Lean VS Code.app",
+  "archives": [
+    {
+      "name": "Lean-VS-Code-0.10.3-macos-arm64.zip",
+      "size": 192183344,
+      "sha256": "46df1df5fbd6ad8ca049e5ca2ec98a60d4e083d7ece166e9ae5be37457abb055"
+    },
+    {
+      "name": "Lean-VS-Code-0.10.3-macos-arm64.dmg",
+      "size": 206623477,
+      "sha256": "49717a321eca1605548aeb69ca0711582aab86c62019521fc3e4869b97cd7ca6"
+    }
+  ],
+  "appleAcceptedSubmissions": [
+    {
+      "artifact": "notarization.zip",
+      "id": "a64d05ba-31e6-4882-9927-66961860030f"
+    },
+    {
+      "artifact": "Lean-VS-Code-0.10.3-macos-arm64.dmg",
+      "id": "e509872e-c8b3-43fb-9865-ffb3e8b9c811"
+    }
+  ],
+  "checks": {
+    "zipAndDmgTreesIdentical": true,
+    "matchingTreeEntries": 2218,
+    "deepStrictSignaturesBothApps": true,
+    "staplingBothAppsAndDmg": true,
+    "gatekeeperBothAppsAndDmg": true,
+    "updateFeedHashAndSize": true,
+    "releaseDocumentAndURLHandlers": true,
+    "approvedIconBytesBothApps": true,
+    "freshBundleTimestamps": [
+      1794132437,
+      1794132437
+    ]
+  },
+  "guiTimingCollected": false,
+  "functionalVerification": "recorded separately",
+  "verificationDirectory": ".build/lean-artifacts/v0103-verified"
+}
