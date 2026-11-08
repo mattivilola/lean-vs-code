@@ -23,3 +23,17 @@ The [artifact report](../performance/v0.10.3-release-artifacts.json) verifies th
 - Auto-update ZIP (192,183,344 bytes), SHA-256 `46df1df5fbd6ad8ca049e5ca2ec98a60d4e083d7ece166e9ae5be37457abb055`
 
 Apple accepted app submission `a64d05ba-31e6-4882-9927-66961860030f` and DMG submission `e509872e-c8b3-43fb-9865-ffb3e8b9c811`.
+
+## Published delivery
+
+[v0.10.3](https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.3) is the latest stable GitHub release. The tag points to the exact build commit and all three uploaded digests match the local artifacts. During publication verification, the normal feed, ZIP, and DMG URLs returned HTTP 504 from the test Mac. The fallback code fetched the public v0.10.3 feed and the complete ZIP through the API and verified the archive. The public API also served a DMG with the SHA-256 listed above.
+
+If GitHub's download button returns 504, use Terminal to download the same signed installer through the public API.
+
+```sh
+curl -fL -H 'Accept: application/octet-stream' \
+  'https://api.github.com/repos/mattivilola/lean-vs-code/releases/assets/723588183' \
+  -o Lean-VS-Code-0.10.3-macos-arm64.dmg
+```
+
+The [website](https://leanvscode.com) now links to v0.10.3 from all three download pages. The [delivery record](../performance/v0.10.3-delivery.json) contains the asset digests, public API verification, and deployment ID.

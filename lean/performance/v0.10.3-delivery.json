@@ -1,0 +1,52 @@
+{
+  "release": "https://github.com/mattivilola/lean-vs-code/releases/tag/v0.10.3",
+  "draft": false,
+  "source": "0728eb43f4a20e73f3e43c5c09d5a5b1a6258b8a",
+  "assets": [
+    {
+      "name": "Lean-VS-Code-0.10.3-macos-arm64.dmg",
+      "size": 206623477,
+      "digest": "sha256:49717a321eca1605548aeb69ca0711582aab86c62019521fc3e4869b97cd7ca6"
+    },
+    {
+      "name": "Lean-VS-Code-0.10.3-macos-arm64.zip",
+      "size": 192183344,
+      "digest": "sha256:46df1df5fbd6ad8ca049e5ca2ec98a60d4e083d7ece166e9ae5be37457abb055"
+    },
+    {
+      "name": "releases-darwin-arm64.json",
+      "size": 452,
+      "digest": "sha256:fa9988e33dbcf5956684260b8242e331f6933e2e085254faa8ab45b9f163e314"
+    }
+  ],
+  "normalFeedVerified": false,
+  "apiFeedVerified": true,
+  "verifiedGitHubApiZip": {
+    "release": "0.10.3",
+    "bytes": 192183344,
+    "sha256": "46df1df5fbd6ad8ca049e5ca2ec98a60d4e083d7ece166e9ae5be37457abb055",
+    "archiveVerifiedByFallbackCode": true,
+    "nativeInstallCheckedSeparately": true
+  },
+  "verifiedGitHubApiDmgSHA256": "49717a321eca1605548aeb69ca0711582aab86c62019521fc3e4869b97cd7ca6",
+  "normalDownloadHTTPStatus": {
+    "feed": 504,
+    "zip": 504,
+    "dmg": 504
+  },
+  "site": {
+    "url": "https://leanvscode.com",
+    "version": 33,
+    "sourceCommit": "e4870e462252a1f44d9c175e19bea811ccb0a04f",
+    "deploymentID": "appgdep_6af04e8d67c0819181cadf0f3a101b52",
+    "liveDownloadPagesVerified": 3
+  },
+  "checks": {
+    "focusedUpdateTests": 9,
+    "signedAppSmokeChecks": 7,
+    "signedNativeFallbackTrials": 2,
+    "temporaryTestCopiesRemoved": true,
+    "installedAppVersion": "0.10.2",
+    "fullGUIBenchmarksRun": false
+  }
+}
