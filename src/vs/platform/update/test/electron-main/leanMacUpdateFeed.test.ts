@@ -16,6 +16,7 @@ suite('Lean macOS update feed', () => {
 	test('reports a newer signed release', () => {
 		assert.deepStrictEqual(readLeanMacUpdateFeed(feed, '0.3.1'), {
 			latest: false,
+			size: 123456,
 			update: { version: '0.3.2', productVersion: '0.3.2', url: archive, sha256hash: 'a'.repeat(64), timestamp: undefined }
 		});
 	});
@@ -31,6 +32,7 @@ suite('Lean macOS update feed', () => {
 		assert.strictEqual(readLeanMacUpdateFeed({ ...feed, releases: [{ ...feed.releases[0], updateTo: { ...updateTo, sha256: 'bad' } }] }, '0.3.1'), undefined);
 		assert.strictEqual(readLeanMacUpdateFeed({ ...feed, releases: [{ ...feed.releases[0], updateTo: { ...updateTo, url: archive.replace('arm64', 'x64') } }] }, '0.3.1'), undefined);
 		assert.strictEqual(readLeanMacUpdateFeed({ ...feed, releases: [{ ...feed.releases[0], updateTo: { ...updateTo, url: 'http://example.com/update.zip' } }] }, '0.3.1'), undefined);
+		assert.strictEqual(readLeanMacUpdateFeed({ ...feed, releases: [{ ...feed.releases[0], updateTo: { ...updateTo, url: archive.replace('github.com', 'name@github.com') } }] }, '0.3.1'), undefined);
 		assert.strictEqual(readLeanMacUpdateFeed(feed, '1.139.1-insider'), undefined);
 	});
 });

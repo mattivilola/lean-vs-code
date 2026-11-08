@@ -4,10 +4,9 @@
 
 import { IUpdate } from '../common/update.js';
 
-export interface ILeanMacFeedResult {
-	readonly latest: boolean;
-	readonly update?: IUpdate;
-}
+export type ILeanMacFeedResult =
+	| { readonly latest: true }
+	| { readonly latest: false; readonly update: IUpdate & { url: string; sha256hash: string }; readonly size: number };
 
 function numericVersion(value: unknown): [number, number, number] | undefined {
 	if (typeof value !== 'string' || !/^\d+\.\d+\.\d+$/.test(value)) {
@@ -58,7 +57,7 @@ export function readLeanMacUpdateFeed(value: unknown, installedVersion: string):
 	} catch {
 		return undefined;
 	}
-	if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.pathname !== `/mattivilola/lean-vs-code/releases/download/v${version}/Lean-VS-Code-${version}-macos-arm64.zip` || url.search || url.hash) {
+	if (url.href !== `https://github.com/mattivilola/lean-vs-code/releases/download/v${version}/Lean-VS-Code-${version}-macos-arm64.zip`) {
 		return undefined;
 	}
 	if (typeof updateTo.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(updateTo.sha256) || typeof updateTo.size !== 'number' || !Number.isSafeInteger(updateTo.size) || updateTo.size <= 0) {
@@ -70,6 +69,15 @@ export function readLeanMacUpdateFeed(value: unknown, installedVersion: string):
 	}
 	return {
 		latest: false,
+		size: updateTo.size,
 		update: { version, productVersion: version, url: updateTo.url, sha256hash: updateTo.sha256, timestamp }
 	};
+}
+
+export function canRetryLeanMacUpdate(error: Error & { code?: number; domain?: string }): boolean {
+	if (error.domain === 'SQRLUpdaterErrorDomain') {
+		// HTTP response errors (feed or ZIP) and an invalid feed body.
+		return error.code === 5 || error.code === 7;
+	}
+	return error.domain === 'NSURLErrorDomain' && [-1001, -1003, -1004, -1005, -1006, -1011].includes(error.code ?? 0);
 }

@@ -8,6 +8,7 @@ import { CancellationToken } from '../../../base/common/cancellation.js';
 import { memoize } from '../../../base/common/decorators.js';
 import { Event } from '../../../base/common/event.js';
 import { hash } from '../../../base/common/hash.js';
+import { IDisposable } from '../../../base/common/lifecycle.js';
 import { IConfigurationService } from '../../configuration/common/configuration.js';
 import { IEnvironmentMainService } from '../../environment/electron-main/environmentMainService.js';
 import { ILifecycleMainService, IRelaunchHandler, IRelaunchOptions } from '../../lifecycle/electron-main/lifecycleMainService.js';
@@ -19,11 +20,14 @@ import { ITelemetryService } from '../../telemetry/common/telemetry.js';
 import { AvailableForDownload, IUpdate, State, StateType, UpdateType } from '../common/update.js';
 import { IMeteredConnectionService } from '../../meteredConnection/common/meteredConnection.js';
 import { AbstractUpdateService, createUpdateURL, getUpdateRequestHeaders, IUpdateURLOptions, UpdateErrorClassification } from './abstractUpdateService.js';
-import { readLeanMacUpdateFeed } from './leanMacUpdateFeed.js';
+import { canRetryLeanMacUpdate, ILeanMacFeedResult, readLeanMacUpdateFeed } from './leanMacUpdateFeed.js';
+
+type NativeUpdateError = Error & { code?: number; domain?: string };
+const githubFetch = (url: string, options: RequestInit) => electron.net.fetch(url, options);
 
 export class DarwinUpdateService extends AbstractUpdateService implements IRelaunchHandler {
 
-	@memoize private get onRawError(): Event<string> { return Event.fromNodeEventEmitter(electron.autoUpdater, 'error', (_, message) => message); }
+	@memoize private get onRawError(): Event<NativeUpdateError> { return Event.fromNodeEventEmitter(electron.autoUpdater, 'error', error => error); }
 	@memoize private get onRawCheckingForUpdate(): Event<void> { return Event.fromNodeEventEmitter<void>(electron.autoUpdater, 'checking-for-update'); }
 	@memoize private get onRawUpdateNotAvailable(): Event<void> { return Event.fromNodeEventEmitter<void>(electron.autoUpdater, 'update-not-available'); }
 	@memoize private get onRawUpdateAvailable(): Event<void> { return Event.fromNodeEventEmitter(electron.autoUpdater, 'update-available'); }
@@ -34,6 +38,9 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 			timestamp: releaseDate instanceof Date ? releaseDate.getTime() || undefined : releaseDate
 		}));
 	}
+
+	private nativeCheck: 'primary' | 'fallback' | 'cancelled' | undefined;
+	private githubCheck: { controller: AbortController; bridge?: IDisposable } | undefined;
 
 	constructor(
 		@ILifecycleMainService lifecycleMainService: ILifecycleMainService,
@@ -49,6 +56,7 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		super(lifecycleMainService, configurationService, environmentMainService, requestService, logService, productService, telemetryService, applicationStorageMainService, meteredConnectionService, true);
 
 		lifecycleMainService.setRelaunchHandler(this);
+		this._register(lifecycleMainService.onWillShutdown(() => this.clearGitHubCheck()));
 	}
 
 	handleRelaunch(options?: IRelaunchOptions): boolean {
@@ -80,18 +88,86 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		this.logService.trace('update#onCheckingForUpdate - Electron autoUpdater is checking for updates');
 	}
 
-	private onError(err: string): void {
+	private onError(error: NativeUpdateError): void {
+		const err = error.message;
 		this.telemetryService.publicLog2<{ messageHash: string }, UpdateErrorClassification>('update:error', { messageHash: String(hash(String(err))) });
 		this.logService.error('UpdateService error:', err);
+
+		const nativeCheck = this.nativeCheck;
+		this.nativeCheck = undefined;
+		if (nativeCheck === 'cancelled' || (!nativeCheck && this.githubCheck)) {
+			return;
+		}
 
 		// Only react while actively checking/downloading; a late error must not clobber Disabled or Ready.
 		if (this.state.type !== StateType.CheckingForUpdates && this.state.type !== StateType.Downloading && this.state.type !== StateType.Overwriting) {
 			return;
 		}
 
-		// only show message when explicitly checking for updates
-		const message = (this.state.type === StateType.CheckingForUpdates && this.state.explicit) ? err : undefined;
-		this.setState(State.Idle(UpdateType.Archive, message));
+		const explicit = this.state.explicit;
+		if (nativeCheck === 'primary' && this.productService.leanMacUpdateFeedUrl && canRetryLeanMacUpdate(error)) {
+			const phase = this.state.type === StateType.Downloading ? 'ZIP' : 'feed';
+			this.logService.info(`Lean VS Code update ${phase} request failed; retrying through the GitHub API`);
+			void this.retryWithGitHubApi(explicit, err);
+		} else {
+			this.clearGitHubCheck();
+			const showError = explicit && (this.productService.leanMacUpdateFeedUrl || this.state.type === StateType.CheckingForUpdates);
+			this.setState(State.Idle(UpdateType.Archive, showError ? err : undefined));
+		}
+	}
+
+	private async retryWithGitHubApi(explicit: boolean, originalError: string): Promise<void> {
+		const check: NonNullable<typeof this.githubCheck> = { controller: new AbortController() };
+		this.githubCheck = check;
+		const signal = AbortSignal.any([check.controller.signal, AbortSignal.timeout(180_000)]);
+		try {
+			const { readLeanMacUpdateFromGitHub, stageLeanMacUpdateFromGitHub } = await import('./leanMacUpdateFallback.js');
+			const release = await readLeanMacUpdateFromGitHub(githubFetch, this.productService.leanReleaseVersion!, signal);
+			if (this.githubCheck !== check) {
+				return;
+			}
+			if (release.latest) {
+				this.clearGitHubCheck();
+				this.setState(State.Idle(UpdateType.Archive, undefined, explicit));
+				return;
+			}
+			const bridge = await stageLeanMacUpdateFromGitHub(githubFetch, release, signal);
+			if (this.githubCheck !== check) {
+				bridge.dispose();
+				return;
+			}
+			check.bridge = bridge;
+			signal.throwIfAborted();
+			this.setState(State.CheckingForUpdates(explicit));
+			this.nativeCheck = 'fallback';
+			electron.autoUpdater.setFeedURL({ url: bridge.url, serverType: 'json' });
+			if (this.nativeCheck === 'fallback') {
+				electron.autoUpdater.checkForUpdates();
+			}
+		} catch (error) {
+			if (this.githubCheck === check) {
+				this.logService.warn('Lean VS Code GitHub update fallback failed', error);
+				this.nativeCheck = undefined;
+				this.clearGitHubCheck();
+				this.setState(State.Idle(UpdateType.Archive, explicit ? originalError : undefined));
+			}
+		}
+	}
+
+	private clearGitHubCheck(): void {
+		const check = this.githubCheck;
+		this.githubCheck = undefined;
+		check?.controller.abort();
+		check?.bridge?.dispose();
+	}
+
+	protected override async cancelUpdate(): Promise<void> {
+		if (this.nativeCheck) {
+			// Native events have no attempt ID. Wait for the terminal event before starting another check.
+			this.nativeCheck = 'cancelled';
+		}
+		this.clearGitHubCheck();
+		await super.cancelUpdate();
 	}
 
 	protected override isUpdateConfigured(): boolean {
@@ -108,8 +184,7 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		if (this.productService.leanMacUpdateFeedUrl) {
 			const url = this.productService.leanMacUpdateFeedUrl;
 			try {
-				const parsed = new URL(url);
-				if (parsed.protocol !== 'https:' || parsed.hostname !== 'github.com' || parsed.pathname !== '/mattivilola/lean-vs-code/releases/latest/download/releases-darwin-arm64.json') {
+				if (url !== 'https://github.com/mattivilola/lean-vs-code/releases/latest/download/releases-darwin-arm64.json') {
 					return undefined;
 				}
 				electron.autoUpdater.setFeedURL({ url, serverType: 'json' });
@@ -134,7 +209,7 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 	}
 
 	protected doCheckForUpdates(explicit: boolean, pendingCommit?: string): void {
-		if (!this.quality) {
+		if (!this.quality || this.nativeCheck) {
 			return;
 		}
 
@@ -142,22 +217,29 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 
 		const internalOrg = this.getInternalOrg();
 		const background = !explicit && !internalOrg;
+		const metered = !explicit && this.meteredConnectionService.isConnectionMetered;
+		this.nativeCheck = metered ? undefined : 'primary';
 		const url = this.buildUpdateFeedUrl(this.quality, pendingCommit ?? this.productService.commit!, { background, internalOrg });
 
 		if (!url) {
-			this.setState(State.Idle(UpdateType.Archive));
+			if (this.state.type === StateType.CheckingForUpdates) {
+				this.nativeCheck = undefined;
+				this.setState(State.Idle(UpdateType.Archive));
+			}
 			return;
 		}
 
 		// When connection is metered and this is not an explicit check, avoid electron call as to not to trigger auto-download.
-		if (!explicit && this.meteredConnectionService.isConnectionMetered) {
+		if (metered) {
 			this.logService.info('update#doCheckForUpdates - checking for update without auto-download because connection is metered');
 			this.checkForUpdateNoDownload(url);
 			return;
 		}
 
 		this.logService.trace('update#doCheckForUpdates - using Electron autoUpdater', { url, explicit, background });
-		electron.autoUpdater.checkForUpdates();
+		if (this.nativeCheck === 'primary') {
+			electron.autoUpdater.checkForUpdates();
+		}
 	}
 
 	/**
@@ -170,19 +252,17 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		this.logService.trace('update#checkForUpdateNoDownload - checking update server', { url, headers });
 
 		try {
-			const context = await this.requestService.request({ url, headers, callSite: 'updateService.darwin.checkForUpdates' }, CancellationToken.None);
-			const statusCode = context.res.statusCode;
-			this.logService.trace('update#checkForUpdateNoDownload - response', { statusCode });
-
 			if (this.productService.leanMacUpdateFeedUrl) {
-				const feed = readLeanMacUpdateFeed(await asJson<unknown>(context), this.productService.leanReleaseVersion!);
-				if (feed?.update) {
-					this.setState(State.AvailableForDownload(feed.update, canInstall));
-				} else {
-					this.setState(State.Idle(UpdateType.Archive));
+				const feed = await this.readLeanFeed(url, this.productService.leanReleaseVersion!, CancellationToken.None);
+				if (this.state.type === StateType.CheckingForUpdates) {
+					this.setState(feed.latest ? State.Idle(UpdateType.Archive) : State.AvailableForDownload(feed.update, canInstall));
 				}
 				return;
 			}
+
+			const context = await this.requestService.request({ url, headers, callSite: 'updateService.darwin.checkForUpdates' }, CancellationToken.None);
+			const statusCode = context.res.statusCode;
+			this.logService.trace('update#checkForUpdateNoDownload - response', { statusCode });
 
 			const update = await asJson<IUpdate>(context);
 			if (!update || !update.url || !update.version || !update.productVersion) {
@@ -195,7 +275,9 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 			}
 		} catch (err) {
 			this.logService.error('update#checkForUpdateNoDownload - failed to check for update', err);
-			this.setState(State.Idle(UpdateType.Archive));
+			if (this.state.type === StateType.CheckingForUpdates) {
+				this.setState(State.Idle(UpdateType.Archive));
+			}
 		}
 	}
 
@@ -207,18 +289,40 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 			return undefined;
 		}
 		try {
-			const context = await this.requestService.request({ url: this.productService.leanMacUpdateFeedUrl, callSite: 'updateService.darwin.isLatestVersion' }, token);
-			return readLeanMacUpdateFeed(await asJson<unknown>(context), commit ?? this.productService.leanReleaseVersion!)?.latest;
+			return (await this.readLeanFeed(this.productService.leanMacUpdateFeedUrl, commit ?? this.productService.leanReleaseVersion!, token)).latest;
 		} catch (error) {
 			this.logService.warn('Failed to check Lean VS Code update feed', error);
 			return undefined;
 		}
 	}
 
+	private async readLeanFeed(url: string, version: string, token: CancellationToken): Promise<ILeanMacFeedResult> {
+		try {
+			const context = await this.requestService.request({ url, timeout: 15_000, callSite: 'updateService.darwin.readLeanFeed' }, token);
+			const feed = readLeanMacUpdateFeed(await asJson<unknown>(context), version);
+			if (feed) {
+				return feed;
+			}
+		} catch (error) {
+			this.logService.trace('Lean VS Code update feed request failed', error);
+		}
+		const controller = new AbortController();
+		if (token.isCancellationRequested) {
+			controller.abort();
+		}
+		const listener = token.onCancellationRequested(() => controller.abort());
+		try {
+			const { readLeanMacUpdateFromGitHub } = await import('./leanMacUpdateFallback.js');
+			return await readLeanMacUpdateFromGitHub(githubFetch, version, AbortSignal.any([controller.signal, AbortSignal.timeout(15_000)]));
+		} finally {
+			listener.dispose();
+		}
+	}
+
 	private onUpdateAvailable(): void {
 		this.logService.trace('update#onUpdateAvailable - Electron autoUpdater reported update available');
 
-		if (this.state.type !== StateType.CheckingForUpdates && this.state.type !== StateType.Overwriting) {
+		if (this.nativeCheck === 'cancelled' || (this.state.type !== StateType.CheckingForUpdates && this.state.type !== StateType.Overwriting)) {
 			return;
 		}
 
@@ -226,7 +330,7 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 	}
 
 	private onUpdateDownloaded(update: IUpdate): void {
-		if (this.state.type !== StateType.Downloading) {
+		if (!this.finishNativeCheck() || this.state.type !== StateType.Downloading) {
 			return;
 		}
 
@@ -239,7 +343,7 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 	private onUpdateNotAvailable(): void {
 		this.logService.trace('update#onUpdateNotAvailable - Electron autoUpdater reported no update available');
 
-		if (this.state.type !== StateType.CheckingForUpdates) {
+		if (!this.finishNativeCheck() || this.state.type !== StateType.CheckingForUpdates) {
 			return;
 		}
 
@@ -247,11 +351,15 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		this.setState(State.Idle(UpdateType.Archive, undefined, notAvailable || undefined));
 	}
 
+	private finishNativeCheck(): boolean {
+		const check = this.nativeCheck;
+		this.nativeCheck = undefined;
+		this.clearGitHubCheck();
+		return check === 'primary' || check === 'fallback';
+	}
+
 	protected override async doDownloadUpdate(state: AvailableForDownload): Promise<void> {
-		// Rebuild feed URL and trigger download via Electron's auto-updater
-		this.buildUpdateFeedUrl(this.quality!, state.update.version, { internalOrg: this.getInternalOrg() });
-		this.setState(State.CheckingForUpdates(true));
-		electron.autoUpdater.checkForUpdates();
+		this.doCheckForUpdates(true, state.update.version);
 	}
 
 	protected override doQuitAndInstall(): void {

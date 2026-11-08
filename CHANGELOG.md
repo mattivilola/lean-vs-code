@@ -6,6 +6,12 @@ This file records public Lean VS Code releases and withdrawn candidates. The [re
 
 Before each release, move these notes under the new version, link its release notes, and update the README and website to match the published artifacts. Keep corrections and withdrawn candidates visible rather than rewriting release history.
 
+## 0.10.3
+
+See the [v0.10.3 release notes](lean/docs/RELEASE_NOTES_0.10.3.md) for validation and distribution details.
+
+- The macOS updater retries eligible feed and ZIP download failures through the GitHub API. It checks the fallback ZIP’s size and SHA-256 before passing it to the native updater for signature verification and installation.
+
 ## 0.10.2
 
 See the [v0.10.2 release notes](lean/docs/RELEASE_NOTES_0.10.2.md) for validation and distribution evidence.
