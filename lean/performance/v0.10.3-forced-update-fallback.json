@@ -1,0 +1,63 @@
+{
+  "testedSourceCommit": "0728eb43f4a20e73f3e43c5c09d5a5b1a6258b8a",
+  "versionUnderTest": "0.10.3",
+  "destination": "Official signed public v0.10.2 GitHub release",
+  "runs": [
+    {
+      "passed": true,
+      "from": "0.10.1",
+      "to": "0.10.2",
+      "sourceCommit": "a3059ad9152daf61a96b25deed201e352abbd3b9",
+      "preservedFontSize": 17,
+      "preservedProbeExtension": true,
+      "guiTimingCollected": false,
+      "actualUpdatedBundleVersion": "0.10.2",
+      "actualUpdatedPackageVersion": "0.10.2",
+      "signatureGatekeeperAndStapling": true,
+      "canonicalInstalledAppMetadataUnchanged": true,
+      "method": "Production v0.10.3 code in an isolated signed fixture with an older version number. The fixture replaces only the normal native request URL with a loopback endpoint that returns HTTP 504 at the chosen stage. The API fetch and native installation use their real production paths.",
+      "testedSourceCommit": "0728eb43f4a20e73f3e43c5c09d5a5b1a6258b8a",
+      "primaryFailure": "feed",
+      "primaryHTTPStatus": 504,
+      "fixtureRequests": [
+        "/primary-feed.json"
+      ],
+      "api": "live public GitHub Releases API",
+      "nativeRetryCount": 1,
+      "nativeStates": [
+        "checking for updates",
+        "downloading",
+        "ready"
+      ]
+    },
+    {
+      "passed": true,
+      "from": "0.10.1",
+      "to": "0.10.2",
+      "sourceCommit": "a3059ad9152daf61a96b25deed201e352abbd3b9",
+      "preservedFontSize": 17,
+      "preservedProbeExtension": true,
+      "guiTimingCollected": false,
+      "actualUpdatedBundleVersion": "0.10.2",
+      "actualUpdatedPackageVersion": "0.10.2",
+      "signatureGatekeeperAndStapling": true,
+      "canonicalInstalledAppMetadataUnchanged": true,
+      "method": "Production v0.10.3 code in an isolated signed fixture with an older version number. The fixture replaces only the normal native request URL with a loopback endpoint that returns HTTP 504 at the chosen stage. The API fetch and native installation use their real production paths.",
+      "testedSourceCommit": "0728eb43f4a20e73f3e43c5c09d5a5b1a6258b8a",
+      "primaryFailure": "zip",
+      "primaryHTTPStatus": 504,
+      "fixtureRequests": [
+        "/primary-feed.json",
+        "/primary.zip"
+      ],
+      "api": "live public GitHub Releases API",
+      "nativeRetryCount": 1,
+      "nativeStates": [
+        "checking for updates",
+        "downloading",
+        "ready"
+      ]
+    }
+  ],
+  "guiBenchmarkTimingsCollected": false
+}
